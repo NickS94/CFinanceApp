@@ -15,6 +15,7 @@
         android:layout_marginTop="60dp"
         android:background="@drawable/rounded_corners_general_style"
         android:queryHint="Search"
+        app:searchHintIcon="@color/black"
         app:iconifiedByDefault="false"
         app:layout_constraintBottom_toTopOf="@+id/rvMarketList"
         app:layout_constraintEnd_toEndOf="parent"
@@ -53,6 +54,7 @@
         android:layout_height="50dp"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="10dp"
+
         android:popupBackground="@color/dark_grey_background"
         app:layout_constraintBottom_toBottomOf="@+id/searchViewMarket"
         app:layout_constraintEnd_toEndOf="parent"
