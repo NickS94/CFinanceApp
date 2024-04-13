@@ -62,8 +62,8 @@
                 android:id="@+id/tvName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="44dp"
-                android:layout_marginTop="132dp"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="104dp"
                 android:text="@string/name"
                 android:textColor="@color/black"
                 android:textSize="20sp"
@@ -86,19 +86,32 @@
                 app:layout_constraintTop_toBottomOf="@+id/tvName" />
 
             <TextView
-                android:id="@+id/tvBalanceProfile"
+                android:id="@+id/tvEmailProfile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/balance"
+                android:layout_marginTop="13dp"
+                android:layout_marginEnd="24dp"
+                android:text="@string/email"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/tvSurnameProfile"
+                app:layout_constraintEnd_toEndOf="@+id/tvSurnameProfile"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/tvSurnameProfile"
+                app:layout_constraintTop_toBottomOf="@+id/tvSurnameProfile" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="56dp"
+                android:text="@string/account_id"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="15sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.749"
-                app:layout_constraintStart_toEndOf="@+id/tvSurnameProfile"
-                app:layout_constraintTop_toTopOf="@+id/tvSurnameProfile"
-                app:layout_constraintVertical_bias="1.0" />
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
