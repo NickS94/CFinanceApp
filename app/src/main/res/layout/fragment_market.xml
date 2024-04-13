@@ -13,12 +13,11 @@
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_marginTop="60dp"
+        android:layout_marginStart="10dp"
         android:background="@drawable/rounded_corners_general_style"
         android:queryHint="Search"
         app:iconifiedByDefault="false"
         app:layout_constraintBottom_toTopOf="@+id/rvMarketList"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.144"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.845" />
@@ -49,9 +48,10 @@
 
     <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/spinner"
-        android:layout_width="76dp"
+        android:layout_width="85dp"
         android:layout_height="50dp"
         android:layout_marginStart="5dp"
+        android:layout_marginEnd="10dp"
         android:popupBackground="@color/dark_grey_background"
         app:layout_constraintBottom_toBottomOf="@+id/searchViewMarket"
         app:layout_constraintEnd_toEndOf="parent"
