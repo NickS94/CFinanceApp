@@ -10,7 +10,7 @@
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchViewMarket"
-        android:layout_width="280dp"
+        android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_marginTop="60dp"
         android:background="@drawable/rounded_corners_general_style"
@@ -18,7 +18,7 @@
         app:iconifiedByDefault="false"
         app:layout_constraintBottom_toTopOf="@+id/rvMarketList"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.099"
+        app:layout_constraintHorizontal_bias="0.144"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.845" />
@@ -38,11 +38,25 @@
         android:layout_height="wrap_content"
         android:text="@string/market"
         android:textColor="@color/white"
-        android:textSize="25sp"
+        android:textSize="35sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/searchViewMarket"
+        app:layout_constraintEnd_toEndOf="@+id/searchViewMarket"
+        app:layout_constraintHorizontal_bias="0.131"
         app:layout_constraintStart_toStartOf="@+id/searchViewMarket"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.604" />
+
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/spinner"
+        android:layout_width="76dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="5dp"
+        app:layout_constraintBottom_toBottomOf="@+id/searchViewMarket"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/searchViewMarket"
+        app:layout_constraintTop_toTopOf="@+id/searchViewMarket"
+        app:layout_constraintVertical_bias="0.5" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
