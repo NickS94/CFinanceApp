@@ -10,4 +10,7 @@
     <string name="complete">Complete</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="app_logo">appLogo</string>
+    <string name="watchlist">Watchlist</string>
+    <string name="today_s_hot">Today\'s Hot</string>
+    <string name="market">Market</string>
 </resources>
