@@ -13,4 +13,10 @@
     <string name="watchlist">Watchlist</string>
     <string name="today_s_hot">Today\'s Hot</string>
     <string name="market">Market</string>
+    <string name="profilepicture">profilePicture</string>
+    <string name="name">Name</string>
+    <string name="surname">Surname</string>
+    <string name="balance">Balance</string>
+    <string name="logout">Logout</string>
+    <string name="editprofilefab">editProfileFAB</string>
 </resources>
