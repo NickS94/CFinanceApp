@@ -50,8 +50,9 @@
     <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/spinner"
         android:layout_width="76dp"
-        android:layout_height="28dp"
+        android:layout_height="50dp"
         android:layout_marginStart="5dp"
+        android:popupBackground="@color/dark_grey_background"
         app:layout_constraintBottom_toBottomOf="@+id/searchViewMarket"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/searchViewMarket"
