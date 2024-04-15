@@ -22,7 +22,8 @@
             app:layout_constraintHorizontal_bias="0.077"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/finance_logo" />
+            app:srcCompat="@drawable/finance_logo"
+            android:contentDescription="@string/coin_logo" />
 
         <TextView
             android:id="@+id/tvCoinName"

@@ -26,4 +26,5 @@
     <string name="price_change_24h">Price Change 24h</string>
     <string name="change">Change %</string>
     <string name="coin_symbol">Coin Symbol</string>
+    <string name="coin_logo">Coin Logo</string>
 </resources>
