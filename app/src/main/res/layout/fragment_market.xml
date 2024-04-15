@@ -54,7 +54,6 @@
         android:layout_height="50dp"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="10dp"
-
         android:popupBackground="@color/dark_grey_background"
         app:layout_constraintBottom_toBottomOf="@+id/searchViewMarket"
         app:layout_constraintEnd_toEndOf="parent"

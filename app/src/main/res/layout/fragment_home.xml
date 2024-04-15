@@ -28,24 +28,28 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_marginTop="8dp"
-        android:scrollbars="horizontal"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvWatchlist" />
+        app:layout_constraintTop_toBottomOf="@+id/tvWatchlist"
+        tools:listitem="@layout/watchlist_item" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvHotMarketList"
         android:layout_width="match_parent"
         android:layout_height="400dp"
         android:layout_marginTop="70dp"
-        android:scrollbars="vertical"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rvWatchlist"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"
+        tools:listitem="@layout/market_item"/>
 
     <TextView
         android:id="@+id/textView4"
