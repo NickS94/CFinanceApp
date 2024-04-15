@@ -25,4 +25,6 @@
     <string name="change">Change %</string>
     <string name="coin_symbol">Coin Symbol</string>
     <string name="coin_logo">Coin Logo</string>
+    <string name="current_balance">Current Balance</string>
+    <string name="profit">Profit</string>
 </resources>
