@@ -27,4 +27,7 @@
     <string name="coin_logo">Coin Logo</string>
     <string name="current_balance">Current Balance</string>
     <string name="profit">Profit</string>
+    <string name="assets">Assets</string>
+    <string name="deposit">Deposit</string>
+    <string name="send">Send</string>
 </resources>

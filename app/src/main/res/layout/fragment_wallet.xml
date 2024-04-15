@@ -11,15 +11,14 @@
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/walletCard"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="180dp"
         android:layout_margin="10dp"
         app:cardCornerRadius="40dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/materialCardView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.473"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.101" >
+        app:layout_constraintVertical_bias="0.15">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/clWalletCard"
@@ -46,8 +45,8 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/balance"
-                android:textSize="16sp"
                 android:textColor="@color/white"
+                android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/currentBalanceText" />
 
@@ -56,7 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="56dp"
+                android:layout_marginTop="24dp"
                 android:text="@string/profit"
                 android:textColor="@color/white"
                 android:textSize="14sp"
@@ -70,12 +69,114 @@
                 android:layout_marginEnd="52dp"
                 android:layout_marginBottom="52dp"
                 android:text="@string/change"
-                android:textSize="14sp"
                 android:textColor="@color/white"
+                android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/tvAssets"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/assets"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        app:layout_constraintBottom_toTopOf="@+id/materialCardView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/walletCard"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/materialCardView"
+        android:layout_width="match_parent"
+        android:layout_height="343dp"
+        android:layout_margin="10dp"
+        app:cardBackgroundColor="@color/dark_grey_background"
+        app:cardCornerRadius="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvAssetsWallet"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/market_item" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/btnHistory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/history_icon"
+        app:layout_constraintBottom_toTopOf="@+id/walletCard"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.932"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.457" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnDeposit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/turquoise_50"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/deposit_icon"
+        app:fabCustomSize="40dp"
+        app:layout_constraintBottom_toTopOf="@+id/materialCardView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.336"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/walletCard"
+        app:layout_constraintVertical_bias="0.112" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnSend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/turquoise_50"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/send_icon"
+        app:fabCustomSize="40dp"
+        app:layout_constraintBottom_toTopOf="@+id/materialCardView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.277"
+        app:layout_constraintStart_toEndOf="@+id/btnDeposit"
+        app:layout_constraintTop_toBottomOf="@+id/walletCard"
+        app:layout_constraintVertical_bias="0.111" />
+
+    <TextView
+        android:id="@+id/tvDeposit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/deposit"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/btnDeposit"
+        app:layout_constraintStart_toStartOf="@+id/btnDeposit"
+        app:layout_constraintTop_toBottomOf="@+id/btnDeposit" />
+
+    <TextView
+        android:id="@+id/tvSend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/send"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/btnSend"
+        app:layout_constraintStart_toStartOf="@+id/btnSend"
+        app:layout_constraintTop_toBottomOf="@+id/btnSend" />
 </androidx.constraintlayout.widget.ConstraintLayout>

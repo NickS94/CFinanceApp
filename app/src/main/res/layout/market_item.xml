@@ -11,9 +11,10 @@
         android:id="@+id/clMarketItem"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="5dp"
         android:background="@drawable/rounded_corners_general_style">
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/ivLogoMarketItem"
             android:layout_width="64dp"
             android:layout_height="64dp"
@@ -23,16 +24,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/finance_logo"
-            android:contentDescription="@string/coin_logo" />
+            app:shapeAppearanceOverlay="@style/Circular" />
 
         <TextView
             android:id="@+id/tvCoinName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="3dp"
             android:text="@string/coin_name"
             android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/tvCoinSymbol"
             app:layout_constraintStart_toEndOf="@+id/ivLogoMarketItem"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -41,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="12dp"
             android:text="@string/coin_symbol"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -53,8 +56,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
+            android:layout_marginBottom="3dp"
             android:text="@string/current_price"
             android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/tvChangePercentageMarket"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

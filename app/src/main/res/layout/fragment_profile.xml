@@ -55,7 +55,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.382"
                 app:shapeAppearanceOverlay="@style/Circular"
-                app:strokeColor="@color/turquoise"
+                app:strokeColor="@color/turquoise_50"
                 app:strokeWidth="3dp" />
 
             <TextView
@@ -121,18 +121,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:backgroundTint="@color/turquoise"
+        android:backgroundTint="@color/turquoise_50"
         android:clickable="true"
         android:contentDescription="@string/editprofilefab"
         android:focusable="true"
-        android:outlineAmbientShadowColor="@color/turquoise"
         android:outlineProvider="background"
         android:src="@drawable/edit_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.907"
         app:layout_constraintStart_toStartOf="@+id/profileCardView"
-        app:layout_constraintTop_toBottomOf="@+id/profileCardView"
-        app:shapeAppearanceOverlay="@style/Circular" />
+        app:layout_constraintTop_toBottomOf="@+id/profileCardView" />
 
     <ImageView
         android:id="@+id/imageView3"
