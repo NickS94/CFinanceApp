@@ -30,4 +30,8 @@
     <string name="assets">Assets</string>
     <string name="deposit">Deposit</string>
     <string name="send">Send</string>
+    <string name="buy">BUY</string>
+    <string name="sell">SELL</string>
+    <string name="back">Back</string>
+    <string name="button_back">Button Back</string>
 </resources>
