@@ -8,5 +8,6 @@
     <color name="dark_grey_background">#141414</color>
     <color name="turquoise_50">#8040E0D0</color>
     <color name="dark_grey_light">#8057605F</color>
+    <color name="turquoise_light">#0DA898</color>
 
 </resources>

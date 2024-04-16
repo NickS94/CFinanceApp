@@ -15,6 +15,8 @@
         android:layout_marginTop="80dp"
         android:background="@drawable/rounded_corners_general_style"
         android:queryHint="Search"
+        android:padding="7dp"
+        android:inputType="text"
         app:iconifiedByDefault="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
