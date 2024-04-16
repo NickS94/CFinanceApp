@@ -46,4 +46,7 @@
     <string name="circulating_supply">Circulating Supply</string>
     <string name="total_supply">Total Supply</string>
     <string name="max_supply">Max Supply</string>
+    <string name="home">Home</string>
+    <string name="wallet">Wallet</string>
+    <string name="profile">Profile</string>
 </resources>

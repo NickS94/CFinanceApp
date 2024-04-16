@@ -1,4 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="@string/home"
+        android:id="@+id/homeFragment"
+        android:icon="@drawable/home_icon"
+
+        />
+
+    <item android:title="@string/market"
+        android:id="@+id/marketFragment"
+        android:icon="@drawable/market_icon"/>
+
+
+    <item android:title=""
+        android:enabled="false"/>
+
+    <item android:title="@string/wallet"
+        android:id="@+id/walletFragment"
+        android:icon="@drawable/wallet_icon"/>
+
+    <item android:title="@string/profile"
+        android:id="@+id/profileFragment"
+        android:icon="@drawable/profile_icon"/>
+
+
+
 
 </menu>
