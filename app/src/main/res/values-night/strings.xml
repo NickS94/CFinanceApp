@@ -34,4 +34,14 @@
     <string name="sell">SELL</string>
     <string name="back">Back</string>
     <string name="button_back">Button Back</string>
+    <string name="weekly">Weekly</string>
+    <string name="_24h">24H</string>
+    <string name="_1h">1H</string>
+    <string name="MarketCap">MarketCap</string>
+    <string name="_1h_change">1H Change</string>
+    <string name="_24h_change">24H Change</string>
+    <string name="_7d_change">7D Change</string>
+    <string name="circulating_supply">Circulating Supply</string>
+    <string name="total_supply">Total Supply</string>
+    <string name="max_supply">Max Supply</string>
 </resources>
