@@ -2,9 +2,11 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:backgroundTint="@color/dark_grey_background"
+    android:backgroundTint="@android:color/transparent"
     android:id="@+id/marketItemCard"
+    app:strokeColor="@android:color/transparent"
     android:layout_width="match_parent"
+    android:layout_margin="5dp"
     android:layout_height="80dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -12,12 +14,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="5dp"
-        android:background="@drawable/rounded_corners_general_style">
+        android:background="@android:color/transparent">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/ivLogoMarketItem"
             android:layout_width="64dp"
             android:layout_height="64dp"
+            android:padding="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.077"

@@ -1,9 +1,6 @@
 package com.example.cfinanceapp.data.API
 
-import com.example.cfinanceapp.data.models.CryptoCurrency
 import com.example.cfinanceapp.data.models.ResponseAPI
-import com.example.cfinanceapp.data.models.ResponseAPILogo
-import com.example.cfinanceapp.data.models.Status
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
@@ -12,7 +9,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Header
-import retrofit2.http.Query
 
 const val BASE_URL = "https://pro-api.coinmarketcap.com"
 

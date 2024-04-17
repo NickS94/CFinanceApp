@@ -13,16 +13,16 @@
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_marginTop="80dp"
-        android:background="@drawable/rounded_corners_general_style"
-        android:queryHint="Search"
+        app:queryBackground="@android:color/transparent"
+        app:defaultQueryHint="Search Here"
         android:padding="7dp"
-        android:inputType="text"
         app:iconifiedByDefault="false"
+        android:background="@drawable/round_transparent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:searchHintIcon="@color/black" />
+         />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMarketList"
