@@ -7,17 +7,17 @@ data class Status(
 val timestamp: String,
 
 @Json(name = "error_code")
-val errorCode: Int? =null,
+val errorCode: Int ,
 
 @Json(name = "error_message")
-val errorMessage: String? = null,
+val errorMessage: String,
 
 val elapsed: Int,
 
 @Json(name = "credit_count")
 val creditCount: Int,
 
-val notice: String? = null
+val notice: String
 
 )
 

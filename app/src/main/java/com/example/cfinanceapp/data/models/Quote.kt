@@ -1,12 +1,11 @@
 package com.example.cfinanceapp.data.models
 
+import com.squareup.moshi.Json
 
 
 data class Quote(
-
-val price: USData,
-
-
+    @Json(name = "USD")
+    val usdData: USData,
 
 
-)
+    )

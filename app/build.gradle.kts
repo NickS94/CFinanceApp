@@ -7,6 +7,9 @@ plugins {
 
 }
 
+val apiKey:String = com.android.build.gradle.internal.cxx.configure.gradleLocalProperties(rootDir,providers)
+    .getProperty("apiKey")
+
 android {
     namespace = "com.example.cfinanceapp"
     compileSdk = 34
@@ -23,11 +26,15 @@ android {
 
     buildTypes {
         release {
+            buildConfigField("String","apiKey",apiKey)
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+        debug {
+            buildConfigField("String","apiKey",apiKey)
         }
     }
     compileOptions {
@@ -40,12 +47,13 @@ android {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
 dependencies {
 
-
+val retrofitVersion = "2.9.0"
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -59,21 +67,20 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     //Retrofit
-    implementation(libs.retrofit)
-    implementation(libs.converter.moshi)
+    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
+    implementation("com.squareup.retrofit2:converter-moshi:$retrofitVersion")
     implementation("com.squareup.moshi:moshi-kotlin:1.15.0")
-
-
-
 
     //Coil
     implementation(libs.coil)
-
 
     //Room
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
+
+    // Logging Interceptor
+    implementation(libs.logging.interceptor)
 
 
 
