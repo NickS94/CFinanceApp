@@ -9,15 +9,9 @@ import kotlinx.coroutines.launch
 
 class ViewModel(application: Application):AndroidViewModel(application) {
 
-
     private val repository = Repository(CoinMarketCapAPI)
 
-
-
     val cryptoList = repository.coinsList
-
-    val cryptoLogoList = repository.logoList
-
 
     fun loadCrypto(){
         viewModelScope.launch {
@@ -25,10 +19,6 @@ class ViewModel(application: Application):AndroidViewModel(application) {
         }
     }
 
-    fun loadLogoList(symbol:String){
-        viewModelScope.launch {
-            repository.loadCryptoCurrencyLogoList(symbol)
-        }
-    }
+
 
 }

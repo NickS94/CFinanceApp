@@ -19,8 +19,7 @@ class Repository (private val api: CoinMarketCapAPI){
     val coinsList : LiveData<ResponseAPI>
         get() = _coinsList
 
-    val logoList : LiveData<ResponseAPILogo>
-        get() = _logoList
+
 
 
 
@@ -37,15 +36,7 @@ class Repository (private val api: CoinMarketCapAPI){
     }
 
 
-    suspend fun loadCryptoCurrencyLogoList(symbol: String){
-//        try {
-//            val result = api.retrofitService.getCryptoLogo(symbol,key)
-//            Log.d(TAG,"Crypto Logo List :$result")
-//            _logoList.value = result
-//        }catch (e:Exception){
-//            Log.e(TAG,"Failure due to unexpected : $e")
-//        }
-    }
+
 
 
 }

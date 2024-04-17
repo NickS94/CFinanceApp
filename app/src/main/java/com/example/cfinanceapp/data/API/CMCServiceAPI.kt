@@ -14,7 +14,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
 
-const val BASE_URL = "https://pro-api.coinmarketcap.com/"
+const val BASE_URL = "https://pro-api.coinmarketcap.com"
 
 private val logger:HttpLoggingInterceptor =HttpLoggingInterceptor()
     .setLevel(HttpLoggingInterceptor.Level.HEADERS)
@@ -37,11 +37,9 @@ private val retrofit = Retrofit.Builder()
 
 interface CMCServiceAPI{
 
-    @GET("v1/cryptocurrency/listings/latest")
-    suspend fun getCryptoList(@Header("CMC_PRO_API_KEY")key:String):ResponseAPI
+    @GET("/v1/cryptocurrency/listings/latest")
+    suspend fun getCryptoList(@Header("X-CMC_PRO_API_KEY")key:String):ResponseAPI
 
-//    @GET("v2/cryptocurrency/info")
-//    suspend fun getCryptoLogo(@Header("CMC_PRO_API_KEY")key:String,@Query("symbol")symbol:String):ResponseAPILogo
 }
 
 object CoinMarketCapAPI{
