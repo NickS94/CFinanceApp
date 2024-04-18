@@ -4,15 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import coil.load
 import com.example.cfinanceapp.R
 import com.example.cfinanceapp.ViewModel
+import com.example.cfinanceapp.data.models.CryptoCurrency
 import com.example.cfinanceapp.databinding.FragmentDetailsBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
 class DetailsFragment : Fragment() {
@@ -33,9 +35,26 @@ private val viewModel:ViewModel by activityViewModels()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        var frameText = ""
         val coin = data.cryptoData
 
         viewModel.cryptoList.observe(viewLifecycleOwner){
+            loadChart(coin,frameText)
+
+            viewBinding.btn1h.setOnClickListener {
+                frameText = "1H"
+                loadChart(coin,frameText)
+            }
+            viewBinding.btn24h.setOnClickListener {
+                frameText = "D"
+                loadChart(coin,frameText)
+            }
+            viewBinding.btnWeek.setOnClickListener {
+                frameText = "W"
+                loadChart(coin,frameText)
+            }
+
+
             viewBinding.ivCoinLogoDetails.load(viewModel.getCoinLogo(coin.id.toString()))
             viewBinding.tvCoinNameDetails.text = coin.name
             viewBinding.tvCurrentPriceDetails.text = "${String.format("%.02f",coin.quote.usdData.price)}$"
@@ -85,10 +104,24 @@ private val viewModel:ViewModel by activityViewModels()
                 }
             }
 
-            viewBinding.tvCirculatingSupplyDetails.text ="Circulating:${String.format("%.1f",coin.circulatingSupply)}Mil."
-            viewBinding.tvTotalSupplyDetail.text = "Total:${String.format("%.1f",coin.totalSupply)}Mil."
-            viewBinding.tvMaxSupplyDetail.text = "Max:${String.format("%.1f",coin.maxSupply)}Mil."
-            viewBinding.tvMarketCapDetailsCard.text = "Market Cap \n${String.format("%.1f",coin.quote.usdData.marketCap)}"
+            viewBinding.tvCirculatingSupplyDetails.text =
+                "Circulating: ${String.format("%.0f", coin.circulatingSupply)}Mil."
+
+
+            viewBinding.tvTotalSupplyDetail.text =
+                "Total: ${String.format("%.0f", coin.totalSupply)}Mil."
+
+
+            if (coin.maxSupply == null) {
+                viewBinding.tvMaxSupplyDetail.text = "Max: Unlimited"
+            } else {
+                viewBinding.tvMaxSupplyDetail.text =
+                    "Max: ${String.format("%.0f", coin.maxSupply)}Mil."
+            }
+
+
+            viewBinding.tvMarketCapDetailsCard.text =
+                "Market Cap \n${String.format("%.0f", coin.quote.usdData.marketCap)} $"
 
 
         }
@@ -100,8 +133,18 @@ private val viewModel:ViewModel by activityViewModels()
 
 
 
-
-
-
     }
+
+    private fun loadChart(coin: CryptoCurrency,timeframe:String ){
+
+
+        viewBinding.wvChartDetails.settings.javaScriptEnabled = true
+        viewBinding.wvChartDetails.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
+        viewBinding.wvChartDetails.loadUrl(
+            "https://s.tradingview.com/widgetembed/?frameElementId=tradingview_76d87&symbol="+coin.symbol+"usd&interval="+timeframe+"&hidesidetoolbar=1&hidetoptoolbar=1&symboledit=1&saveimage=1&toolbarbg=F1F3F6&studies=[]&hideideas=1&theme=Dark&style=1&timezone=Etc%2FUTC&studies_overrides={}&overrides={}&enabled_features=[]&disabled_features=[]&locale=en&utm_source=coinmarketcap.com&utm_medium=widget&utm_campaign=chart&utm_term"
+
+        )
+    }
+
+
 }

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
+import androidx.core.view.isGone
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -14,6 +15,7 @@ import com.example.cfinanceapp.R
 import com.example.cfinanceapp.ViewModel
 import com.example.cfinanceapp.adapters.MarketAdapter
 import com.example.cfinanceapp.databinding.FragmentMarketBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
 class MarketFragment : Fragment() {
@@ -59,6 +61,16 @@ class MarketFragment : Fragment() {
 
         }
 
+        val bottomNavigationView =
+            requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+
+       viewBinding.searchViewMarket.setOnQueryTextFocusChangeListener { _, hasFocus ->
+           when(hasFocus){
+               true -> bottomNavigationView.isGone=true
+               false ->bottomNavigationView.isGone=false
+           }
+
+       }
 
 
         viewBinding.searchViewMarket.setOnQueryTextListener(object : OnQueryTextListener {

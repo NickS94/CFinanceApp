@@ -30,6 +30,9 @@
         android:id="@+id/rvMarketList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:scrollbarSize="4dp"
+        android:scrollbars="vertical"
+        android:scrollbarStyle="insideOverlay"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -72,8 +75,8 @@
             android:layout_height="match_parent"
             android:inputType="none"
             android:text="@string/all"
-            android:textAlignment="viewStart"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            tools:ignore="LabelFor" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

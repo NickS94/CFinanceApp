@@ -25,17 +25,13 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         viewBinding.bottomNavigationView.setupWithNavController(navHost.navController)
 
-        window.decorView.setOnApplyWindowInsetsListener { view, insets ->
-            val insetsCompat = toWindowInsetsCompat(insets, view)
-            viewBinding.bottomNavigationView.isGone = insetsCompat.isVisible(ime())
-            view.onApplyWindowInsets(insets)
-        }
+
 
         navHost.navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
+                R.id.detailsFragment -> viewBinding.bottomNavigationView.visibility = View.GONE
                 R.id.registerFragment -> viewBinding.bottomNavigationView.visibility = View.GONE
                 R.id.loginFragment -> viewBinding.bottomNavigationView.visibility = View.GONE
-                R.id.detailsFragment -> viewBinding.bottomNavigationView.visibility = View.GONE
                 else -> viewBinding.bottomNavigationView.visibility = View.VISIBLE
             }
         }
@@ -45,6 +41,8 @@ class MainActivity : AppCompatActivity() {
                 viewBinding.fragmentContainerView.findNavController().navigateUp()
             }
         })
+
+
 
 
     }

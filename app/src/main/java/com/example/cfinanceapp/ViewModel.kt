@@ -56,8 +56,8 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         val losers = cryptoList.value!!.data.filter { it.quote.usdData.percentChange24h < 0 }
 
         return when (input) {
-            "Gainers" -> gainers.sortedByDescending { it.quote.usdData.percentChange24h }
-            "Losers" -> losers.sortedBy { it.quote.usdData.percentChange24h }
+            "Gain" -> gainers.sortedByDescending { it.quote.usdData.percentChange24h }
+            "Lose" -> losers.sortedBy { it.quote.usdData.percentChange24h }
             "All" -> cryptoList.value!!.data
             else -> cryptoList.value!!.data
         }

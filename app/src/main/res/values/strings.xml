@@ -53,7 +53,7 @@
     <string name="all">All</string>
     <string-array name="options">
         <item>All</item>
-        <item>Gainers</item>
-        <item>Losers</item>
+        <item>Gain</item>
+        <item>Lose</item>
     </string-array>
 </resources>
