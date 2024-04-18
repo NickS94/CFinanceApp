@@ -10,5 +10,7 @@ data class USData(
     @Json(name = "percent_change_24h")
     val percentChange24h: Double,
     @Json(name = "percent_change_7d")
-    val percentChange7d: Double
+    val percentChange7d: Double,
+    @Json(name = "market_cap")
+    val marketCap : Double
 )

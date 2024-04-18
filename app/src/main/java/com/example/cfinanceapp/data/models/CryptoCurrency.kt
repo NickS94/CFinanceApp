@@ -1,6 +1,7 @@
 package com.example.cfinanceapp.data.models
 
 import com.squareup.moshi.Json
+import java.io.Serializable
 
 data class CryptoCurrency(
     val name: String,
@@ -17,4 +18,4 @@ data class CryptoCurrency(
     val symbol: String,
     val quote: Quote
 
-)
+):Serializable

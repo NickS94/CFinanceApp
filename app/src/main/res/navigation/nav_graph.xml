@@ -59,5 +59,12 @@
         android:id="@+id/detailsFragment"
         android:name="com.example.cfinanceapp.ui.DetailsFragment"
         android:label="fragment_details"
-        tools:layout="@layout/fragment_details" />
+        tools:layout="@layout/fragment_details" >
+        <argument
+            android:name="position"
+            app:argType="integer" />
+        <argument
+            android:name="cryptoData"
+            app:argType="com.example.cfinanceapp.data.models.CryptoCurrency" />
+    </fragment>
 </navigation>

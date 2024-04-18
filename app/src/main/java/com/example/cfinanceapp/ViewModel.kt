@@ -3,6 +3,8 @@ package com.example.cfinanceapp
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.cfinanceapp.data.API.CoinMarketCapAPI
 import com.example.cfinanceapp.data.Repository
@@ -16,12 +18,14 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = Repository(CoinMarketCapAPI)
 
+    private var _currentCrypto = MutableLiveData<CryptoCurrency>()
+
+
 
     var cryptoList = repository.coinsList
 
-
-
-
+    val currentCrypto : LiveData<CryptoCurrency>
+        get() = _currentCrypto
 
     fun loadCrypto() {
         viewModelScope.launch {
@@ -30,6 +34,8 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         }
 
     }
+
+
 
 
     fun getCoinLogo(id: String): String {
@@ -57,12 +63,8 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun getId(): String {
-        loadCrypto()
-        return cryptoList.value!!.data.forEach {
-            it.id
-        }.toString()
-
+    fun getCurrentCrypto(position: Int) {
+        _currentCrypto.value = cryptoList.value!!.data[position]
     }
 
 

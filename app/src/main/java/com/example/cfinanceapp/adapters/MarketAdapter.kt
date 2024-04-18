@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.cfinanceapp.R
@@ -13,6 +14,7 @@ import com.example.cfinanceapp.data.models.CryptoCurrency
 
 import com.example.cfinanceapp.data.models.ResponseAPI
 import com.example.cfinanceapp.databinding.MarketItemBinding
+import com.example.cfinanceapp.ui.MarketFragmentDirections
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.coroutineContext
 
@@ -56,6 +58,10 @@ class MarketAdapter(
             }
         }
 
+        holder.itemView.setOnClickListener {
+            viewModel.getCurrentCrypto(position)
+            it.findNavController().navigate(MarketFragmentDirections.actionMarketFragmentToDetailsFragment(position,coin))
+        }
     }
 
 

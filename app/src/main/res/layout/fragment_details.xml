@@ -161,8 +161,9 @@
         android:layout_width="match_parent"
         android:layout_height="180dp"
         android:layout_marginTop="18dp"
-        app:cardBackgroundColor="@color/turquoise_dark"
+        app:cardUseCompatPadding="true"
         app:cardCornerRadius="30dp"
+        android:background="@drawable/round_transparent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvCurrentPriceDetails"
@@ -173,60 +174,61 @@
             android:id="@+id/clDetailsCard"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/rounded_corners_general_style">
+            >
 
             <TextView
                 android:id="@+id/tvMarketCapDetailsCard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="19dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="22dp"
                 android:text="@string/MarketCap"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
 
             <TextView
                 android:id="@+id/tv1hChangeDetail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="18dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
                 android:text="@string/_1h_change"
                 android:textColor="@color/white"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/text1hCard"
                 app:layout_constraintTop_toBottomOf="@+id/tvMarketCapDetailsCard" />
 
             <TextView
                 android:id="@+id/tv24hChangeDetail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="18dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/_24h_change"
                 android:textColor="@color/white"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/text24hCard"
                 app:layout_constraintTop_toBottomOf="@+id/tv1hChangeDetail" />
 
             <TextView
                 android:id="@+id/tv7dChangeDetail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="18dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/_7d_change"
                 android:textColor="@color/white"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/text7dCard"
                 app:layout_constraintTop_toBottomOf="@+id/tv24hChangeDetail" />
 
             <TextView
                 android:id="@+id/tvCirculatingSupplyDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:layout_marginEnd="48dp"
+                android:layout_marginTop="52dp"
+                android:layout_marginEnd="4dp"
                 android:text="@string/circulating_supply"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -236,8 +238,8 @@
                 android:id="@+id/tvTotalSupplyDetail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="48dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="4dp"
                 android:text="@string/total_supply"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -247,12 +249,55 @@
                 android:id="@+id/tvMaxSupplyDetail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="48dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="4dp"
                 android:text="@string/max_supply"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvTotalSupplyDetail" />
+
+            <TextView
+                android:id="@+id/text1hCard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="12dp"
+                android:text="1H:"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvMarketCapDetailsCard" />
+
+            <TextView
+                android:id="@+id/text24hCard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="24H:"
+                app:layout_constraintEnd_toEndOf="@+id/text1hCard"
+                app:layout_constraintStart_toStartOf="@+id/text1hCard"
+                app:layout_constraintTop_toBottomOf="@+id/text1hCard" />
+
+            <TextView
+                android:id="@+id/text7dCard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="7D:"
+                app:layout_constraintEnd_toEndOf="@+id/text24hCard"
+                app:layout_constraintStart_toStartOf="@+id/text24hCard"
+                app:layout_constraintTop_toBottomOf="@+id/text24hCard" />
+
+            <TextView
+                android:id="@+id/textSupplyDetails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="21dp"
+                android:layout_marginEnd="40dp"
+                android:text="Supply"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
@@ -266,6 +311,16 @@
         android:text="@string/change"
         app:layout_constraintStart_toEndOf="@+id/tvCurrentPriceDetails"
         app:layout_constraintTop_toBottomOf="@+id/wvChartDetails" />
+
+    <ImageView
+        android:id="@+id/ivArrowDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/price_up_arrow"
+        app:layout_constraintBottom_toBottomOf="@+id/tvChangePercentageDetails"
+        app:layout_constraintStart_toEndOf="@+id/tvChangePercentageDetails"
+        app:layout_constraintTop_toTopOf="@+id/tvChangePercentageDetails"
+        tools:ignore="ContentDescription" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
