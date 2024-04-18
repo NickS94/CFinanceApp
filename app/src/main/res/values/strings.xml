@@ -49,4 +49,11 @@
     <string name="home">Home</string>
     <string name="wallet">Wallet</string>
     <string name="profile">Profile</string>
+    <string name="filter">Filter</string>
+    <string name="all">All</string>
+    <string-array name="options">
+        <item>All</item>
+        <item>Gainers</item>
+        <item>Losers</item>
+    </string-array>
 </resources>

@@ -1,5 +1,6 @@
 package com.example.cfinanceapp.data.API
 
+import com.example.cfinanceapp.data.models.CryptoCurrency
 import com.example.cfinanceapp.data.models.ResponseAPI
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -33,8 +34,9 @@ private val retrofit = Retrofit.Builder()
 
 interface CMCServiceAPI{
 
-    @GET("/v1/cryptocurrency/listings/latest")
-    suspend fun getCryptoList(@Header("X-CMC_PRO_API_KEY")key:String):ResponseAPI
+    @GET("/v1/cryptocurrency/listings/latest?limit=50&convert=USD")
+    suspend fun getCryptoList(@Header("Accept")accept : String = "application/json",
+                              @Header("X-CMC_PRO_API_KEY")key:String):ResponseAPI
 
 }
 

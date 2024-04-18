@@ -47,4 +47,6 @@
     <string name="home">Home</string>
     <string name="wallet">Wallet</string>
     <string name="profile">Profile</string>
+    <string name="filter">Filter</string>
+    <string name="all">All</string>
 </resources>

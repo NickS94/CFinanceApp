@@ -2,21 +2,18 @@ package com.example.cfinanceapp.ui
 
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
-import androidx.core.view.isVisible
-
-
+import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.cfinanceapp.R
 import com.example.cfinanceapp.ViewModel
 import com.example.cfinanceapp.adapters.MarketAdapter
 import com.example.cfinanceapp.databinding.FragmentMarketBinding
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import okhttp3.internal.notify
 
 
 class MarketFragment : Fragment() {
@@ -29,21 +26,38 @@ class MarketFragment : Fragment() {
         viewBinding = FragmentMarketBinding.inflate(inflater)
         return viewBinding.root
 
+
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.loadCrypto()
 
         val recyclerView = viewBinding.rvMarketList
+
+
+        val spinnerOptions = resources.getStringArray(R.array.options)
+        val arrayAdapter = ArrayAdapter(requireContext(), R.layout.drop_down_item, spinnerOptions)
+        viewBinding.textOptionsDropDownMenu.setAdapter(arrayAdapter)
+
+        viewBinding.textOptionsDropDownMenu.addTextChangedListener {
+            viewModel.cryptoList.observe(viewLifecycleOwner) {
+                recyclerView.adapter = MarketAdapter(
+                    viewModel.filterGainers(viewBinding.textOptionsDropDownMenu.text.toString()),
+                    this.requireContext(),
+                    viewModel
+                )
+
+            }
+        }
 
 
         viewModel.cryptoList.observe(viewLifecycleOwner) {
             recyclerView.adapter = MarketAdapter(it.data, this.requireContext(), viewModel)
 
         }
-
 
 
 
@@ -64,9 +78,17 @@ class MarketFragment : Fragment() {
         })
 
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val spinnerOptions = resources.getStringArray(R.array.options)
+        val arrayAdapter = ArrayAdapter(requireContext(), R.layout.drop_down_item, spinnerOptions)
+        viewBinding.textOptionsDropDownMenu.setAdapter(arrayAdapter)
 
 
 
 
     }
+
 }

@@ -19,7 +19,7 @@ import kotlin.coroutines.coroutineContext
 class MarketAdapter(
     private var dataListCrypto: List<CryptoCurrency>,
     val context: Context,
-    val viewModel: ViewModel
+    private val viewModel: ViewModel
 ) : RecyclerView.Adapter<MarketAdapter.MarketViewHolder>() {
 
 
@@ -41,8 +41,8 @@ class MarketAdapter(
 
         holder.binding.tvCoinName.text = coin.name
         holder.binding.tvCoinSymbol.text = coin.symbol
-        holder.binding.tvCurrentPriceMarket.text = String.format("%.2f", coin.quote.usdData.price)
-        "${String.format("%.2f", coin.quote.usdData.percentChange24h)}%".also { holder.binding.tvChangePercentageMarket.text = it }
+        holder.binding.tvCurrentPriceMarket.text = "$${String.format("%.02f", coin.quote.usdData.price)}"
+        "${String.format("%.02f", coin.quote.usdData.percentChange24h)}%".also { holder.binding.tvChangePercentageMarket.text = it }
         holder.binding.ivLogoMarketItem.load(viewModel.getCoinLogo(coin.id.toString()))
 
         when {

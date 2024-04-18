@@ -10,19 +10,21 @@
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchViewMarket"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="80dp"
-        app:queryBackground="@android:color/transparent"
-        app:defaultQueryHint="Search Here"
-        android:padding="7dp"
-        app:iconifiedByDefault="false"
+        android:layout_width="280dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="47dp"
         android:background="@drawable/round_transparent"
+        android:padding="7dp"
+        app:defaultQueryHint="Search Here"
+        app:iconifiedByDefault="false"
+        app:layout_constraintBottom_toTopOf="@+id/rvMarketList"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/spinner"
         app:layout_constraintTop_toTopOf="parent"
-         />
+        app:queryBackground="@android:color/transparent">
+
+
+    </androidx.appcompat.widget.SearchView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMarketList"
@@ -41,29 +43,39 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/market"
+        android:layout_marginStart="10dp"
         android:textColor="@color/white"
         android:textSize="35sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/searchViewMarket"
-        app:layout_constraintEnd_toEndOf="@+id/searchViewMarket"
-        app:layout_constraintHorizontal_bias="0.131"
-        app:layout_constraintStart_toStartOf="@+id/searchViewMarket"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.604" />
+        app:layout_constraintVertical_bias="0.666" />
 
-    <androidx.appcompat.widget.AppCompatSpinner
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/spinner"
-        android:layout_width="85dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="10dp"
-        android:popupBackground="@color/dark_grey_background"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:background="@drawable/round_transparent"
+        android:popupBackground="@color/turquoise_dark"
+        app:boxStrokeColor="@android:color/transparent"
+        app:hintEnabled="false"
         app:layout_constraintBottom_toBottomOf="@+id/searchViewMarket"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/searchViewMarket"
-        app:layout_constraintTop_toTopOf="@+id/searchViewMarket"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintEnd_toStartOf="@+id/searchViewMarket"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/searchViewMarket">
+
+        <AutoCompleteTextView
+            android:id="@+id/textOptionsDropDownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="none"
+            android:text="@string/all"
+            android:textAlignment="viewStart"
+            android:textSize="14sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
