@@ -89,7 +89,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun getChartEffect(coinId: String): String {
-        return "https://s3.coinmarketcap.com/generated/sparklines/web/7d/usd/$coinId.png"
+        return "https://s3.coinmarketcap.com/generated/sparklines/web/1d/usd/$coinId.png"
     }
 
 

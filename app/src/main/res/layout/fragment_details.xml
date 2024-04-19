@@ -51,22 +51,23 @@
     <WebView
         android:id="@+id/wvChartDetails"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="280dp"
         android:layout_margin="10dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginBottom="360dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnBuyDetails"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="9dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/tvCurrentPriceDetails"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivCoinLogoDetails"
-        app:layout_constraintVertical_bias="0.26" />
+        app:layout_constraintTop_toBottomOf="@+id/btn1h" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnBuyDetails"
         android:layout_width="180dp"
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         android:backgroundTint="@color/green"
         android:text="@string/buy"
         android:textColor="@color/white"
@@ -91,10 +92,10 @@
 
     <ImageButton
         android:id="@+id/btnBackDetails"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="55dp"
+        android:layout_height="48dp"
         android:layout_marginTop="16dp"
-        android:backgroundTint="@color/turquoise_light"
+        android:background="@drawable/round_transparent"
         android:contentDescription="@string/button_back"
         android:src="@drawable/arrow_back_icon"
         app:layout_constraintEnd_toStartOf="@+id/ivCoinLogoDetails"
@@ -153,11 +154,12 @@
         android:layout_marginStart="28dp"
         android:text="@string/current_price"
         android:textColor="@color/white"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/tvChangePercentageDetails"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tvChangePercentageDetails" />
+        app:layout_constraintTop_toTopOf="@+id/tvChangePercentageDetails"
+        app:layout_constraintVertical_bias="1.0" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cvDetails"
@@ -267,7 +269,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:text="1H:"
+                android:text="@string/_1ht"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvMarketCapDetailsCard"
@@ -278,7 +280,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="24H:"
+                android:text="@string/_24ht"
                 app:layout_constraintEnd_toEndOf="@+id/text1hCard"
                 app:layout_constraintStart_toStartOf="@+id/text1hCard"
                 app:layout_constraintTop_toBottomOf="@+id/text1hCard" />
@@ -288,7 +290,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="7D:"
+                android:text="@string/_7dt"
                 app:layout_constraintEnd_toEndOf="@+id/text24hCard"
                 app:layout_constraintStart_toStartOf="@+id/text24hCard"
                 app:layout_constraintTop_toBottomOf="@+id/text24hCard" />
@@ -299,7 +301,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="21dp"
                 android:layout_marginEnd="40dp"
-                android:text="Supply"
+                android:text="@string/supply"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -342,7 +344,8 @@
         android:layout_marginEnd="40dp"
         android:src="@drawable/favorite_icon_enabled"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
