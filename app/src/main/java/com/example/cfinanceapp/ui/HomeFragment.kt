@@ -1,22 +1,62 @@
 package com.example.cfinanceapp.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.cfinanceapp.R
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.navArgs
+import com.example.cfinanceapp.ViewModel
+import com.example.cfinanceapp.adapters.HotListAdapter
+import com.example.cfinanceapp.adapters.MarketAdapter
+import com.example.cfinanceapp.adapters.WatchListAdapter
+import com.example.cfinanceapp.databinding.FragmentHomeBinding
 
 
 class HomeFragment : Fragment() {
+    private lateinit var viewBinding: FragmentHomeBinding
+    private val viewModel: ViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+    ): View {
+        viewBinding = FragmentHomeBinding.inflate(inflater)
+        return viewBinding.root
+
+
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+
+
+
+
+
+        val recyclerViewHot = viewBinding.rvHotMarketList
+        viewModel.cryptoList.observe(viewLifecycleOwner) {
+            recyclerViewHot.adapter = HotListAdapter(viewModel.loadHotList(),viewModel)
+        }
+
+
+        val recyclerViewWatchList = viewBinding.rvWatchlist
+
+        viewModel.cryptoWatchList.observe(viewLifecycleOwner) { watchlist ->
+            recyclerViewWatchList.adapter = WatchListAdapter(watchlist,viewModel)
+        }
+
+
+    }
+
+
+
+
+
+
+
 
 
 }

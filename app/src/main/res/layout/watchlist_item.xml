@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/watchlistItemCard"
-    android:layout_width="200dp"
+    android:layout_width="220dp"
     android:layout_height="180dp"
     android:layout_margin="10dp"
     app:cardBackgroundColor="@android:color/transparent"
@@ -21,13 +22,13 @@
         android:layout_margin="5dp"
         android:background="@drawable/round_transparent">
 
+
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/ivCoinLogoWatchlist"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:layout_marginTop="12dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.117"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:shapeAppearanceOverlay="@style/Circular"
@@ -37,10 +38,11 @@
             android:id="@+id/tvCoinNameAndSymbol"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="11dp"
+            android:layout_marginTop="8dp"
             android:text="@string/coin_name"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="@+id/ivCoinLogoWatchlist"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/ivCoinLogoWatchlist"
             app:layout_constraintTop_toBottomOf="@+id/ivCoinLogoWatchlist" />
 
@@ -48,43 +50,35 @@
             android:id="@+id/tvCurrentPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="12dp"
-            android:text="@string/current_price"
+            android:layout_marginStart="32dp"
+            android:layout_marginBottom="20dp"
+            android:text="text"
             android:textColor="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvCoinNameAndSymbol" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/tv24hChangePrice"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="5dp"
-            android:text="@string/price_change_24h"
+            android:layout_height="19dp"
+            android:layout_marginEnd="44dp"
+            android:layout_marginBottom="20dp"
+            android:text="text"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvCurrentPrice"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
-        <TextView
-            android:id="@+id/tv24hChangePercentage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="123dp"
-            android:layout_marginTop="102dp"
+        <ImageView
+            android:id="@+id/ivChart"
+            android:layout_width="91dp"
+            android:layout_height="88dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="70dp"
-            android:text="@string/change"
-            android:textColor="@color/white"
+            android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintVertical_bias="0.418"
+            app:srcCompat="@drawable/ic_launcher_background"
+            tools:ignore="ContentDescription" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

@@ -51,6 +51,7 @@
     <string name="profile">Profile</string>
     <string name="filter">Filter</string>
     <string name="all">All</string>
+    <string name="volume24h">Volume24h</string>
     <string-array name="options">
         <item>All</item>
         <item>Gain</item>

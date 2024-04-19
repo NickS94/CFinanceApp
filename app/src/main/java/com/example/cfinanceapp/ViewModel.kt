@@ -20,18 +20,32 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
 
     private var _currentCrypto = MutableLiveData<CryptoCurrency>()
 
+    private val _cryptoWatchList = MutableLiveData<MutableList<CryptoCurrency>>()
+
 
 
     var cryptoList = repository.coinsList
 
-    val currentCrypto : LiveData<CryptoCurrency>
-        get() = _currentCrypto
+    val cryptoWatchList: LiveData<MutableList<CryptoCurrency>>
+        get() = _cryptoWatchList
 
-    fun loadCrypto() {
+
+    init {
+
+        loadCrypto()
+    }
+
+    private fun loadCrypto() {
         viewModelScope.launch {
             repository.loadCryptoCurrencyList()
 
         }
+
+    }
+
+    fun loadHotList(): List<CryptoCurrency> {
+        val sortedByVolume = cryptoList.value!!.data
+        return sortedByVolume.subList(0, 10).sortedByDescending { it.quote.usdData.volume24h }
 
     }
 
@@ -63,8 +77,19 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun addToWatchlist(coin: CryptoCurrency):MutableList<CryptoCurrency> {
+        val updatedList = (_cryptoWatchList.value ?: emptyList()).toMutableList()
+        updatedList.add(coin)
+        _cryptoWatchList.value = updatedList
+        return updatedList
+    }
+
     fun getCurrentCrypto(position: Int) {
         _currentCrypto.value = cryptoList.value!!.data[position]
+    }
+
+    fun getChartEffect(coinId: String): String {
+        return "https://s3.coinmarketcap.com/generated/sparklines/web/7d/usd/$coinId.png"
     }
 
 

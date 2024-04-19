@@ -24,7 +24,7 @@ class MarketFragment : Fragment() {
     private val viewModel: ViewModel by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         viewBinding = FragmentMarketBinding.inflate(inflater)
         return viewBinding.root
 
@@ -35,7 +35,7 @@ class MarketFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.loadCrypto()
+
 
         val recyclerView = viewBinding.rvMarketList
 

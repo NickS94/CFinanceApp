@@ -66,7 +66,7 @@
         android:layout_width="180dp"
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="16dp"
         android:backgroundTint="@color/green"
         android:text="@string/buy"
         android:textColor="@color/white"
@@ -75,6 +75,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSell"
         android:layout_width="180dp"
         android:layout_height="48dp"
         android:layout_marginStart="19dp"
@@ -108,7 +109,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:focusableInTouchMode="true"
-        android:background="@drawable/round_transparent"
+        android:background="@android:color/transparent"
         android:text="@string/_1h"
         android:textColor="@color/white"
         android:textStyle="bold"
@@ -121,7 +122,7 @@
         android:layout_width="88dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="56dp"
-        android:background="@drawable/round_transparent"
+        android:background="@android:color/transparent"
         android:text="@string/_24h"
         android:textColor="@color/white"
         android:textStyle="bold"
@@ -135,7 +136,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:background="@drawable/round_transparent"
+        android:background="@android:color/transparent"
         android:text="@string/weekly"
 
         android:textColor="@color/white"
@@ -149,14 +150,14 @@
         android:id="@+id/tvCurrentPriceDetails"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="17dp"
+        android:layout_marginStart="28dp"
         android:text="@string/current_price"
         android:textColor="@color/white"
         android:textSize="20dp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/tvChangePercentageDetails"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/wvChartDetails" />
+        app:layout_constraintTop_toTopOf="@+id/tvChangePercentageDetails" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cvDetails"
@@ -165,7 +166,7 @@
         android:layout_marginTop="8dp"
         android:background="@drawable/round_transparent"
         app:cardCornerRadius="30dp"
-        app:cardUseCompatPadding="true"
+        android:layout_margin="5dp"
         app:layout_constraintBottom_toTopOf="@+id/btnBuyDetails"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -232,7 +233,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="52dp"
-                android:layout_marginEnd="4dp"
+                android:layout_marginEnd="16dp"
                 android:text="@string/circulating_supply"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -243,7 +244,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="4dp"
+                android:layout_marginEnd="16dp"
                 android:text="@string/total_supply"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -254,7 +255,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="4dp"
+                android:layout_marginEnd="16dp"
                 android:text="@string/max_supply"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -312,21 +313,36 @@
         android:id="@+id/tvChangePercentageDetails"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="14dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
         android:text="@string/change"
+        android:textColor="@color/white"
+
         app:layout_constraintStart_toEndOf="@+id/tvCurrentPriceDetails"
         app:layout_constraintTop_toBottomOf="@+id/wvChartDetails" />
 
-    <ImageView
-        android:id="@+id/ivArrowDetails"
+    <TextView
+        android:id="@+id/tvVolume24h"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/price_up_arrow"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/volume24h"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/tvChangePercentageDetails"
-        app:layout_constraintStart_toEndOf="@+id/tvChangePercentageDetails"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tvChangePercentageDetails"
-        tools:ignore="ContentDescription" />
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/ivFavorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="40dp"
+        android:src="@drawable/favorite_icon_enabled"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
