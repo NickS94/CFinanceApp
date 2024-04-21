@@ -35,7 +35,7 @@ private val retrofit = Retrofit.Builder()
 
 interface CMCServiceAPI{
 
-    @GET("/v1/cryptocurrency/listings/latest?limit=50&convert=USD")
+    @GET("/v1/cryptocurrency/listings/latest?limit=100&convert=USD")
     suspend fun getCryptoList(@Header("Accept")accept : String = "application/json",
                               @Header("X-CMC_PRO_API_KEY")key:String):ResponseAPI
 

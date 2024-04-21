@@ -61,4 +61,6 @@
         <item>Gain</item>
         <item>Lose</item>
     </string-array>
+
+    <string name="here"><u>here</u></string>
 </resources>

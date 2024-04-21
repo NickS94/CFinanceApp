@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.devtools.ksp")
+    kotlin("plugin.serialization") version "1.9.23"
 
 
 }
@@ -81,6 +82,8 @@ val retrofitVersion = "2.9.0"
 
     // Logging Interceptor
     implementation(libs.logging.interceptor)
+
+    implementation (libs.kotlinx.serialization.json)
 
 
 

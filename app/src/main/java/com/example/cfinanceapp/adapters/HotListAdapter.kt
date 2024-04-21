@@ -1,14 +1,13 @@
 package com.example.cfinanceapp.adapters
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.example.cfinanceapp.ViewModel
+import com.example.cfinanceapp.tools.ViewModel
 import com.example.cfinanceapp.data.models.CryptoCurrency
 import com.example.cfinanceapp.databinding.MarketItemBinding
 import com.example.cfinanceapp.ui.HomeFragmentDirections

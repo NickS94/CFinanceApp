@@ -1,4 +1,4 @@
-package com.example.cfinanceapp
+package com.example.cfinanceapp.tools
 
 
 import android.app.Application
@@ -8,21 +8,23 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.cfinanceapp.data.API.CoinMarketCapAPI
 import com.example.cfinanceapp.data.Repository
+import com.example.cfinanceapp.data.local.DatabaseInstance
+import com.example.cfinanceapp.data.models.Account
 import com.example.cfinanceapp.data.models.CryptoCurrency
 import kotlinx.coroutines.launch
 
 class ViewModel(application: Application) : AndroidViewModel(application) {
 
+    private val repository = Repository(CoinMarketCapAPI,DatabaseInstance.getDatabase(application))
 
 
+    val accounts = repository.accounts
 
-    private val repository = Repository(CoinMarketCapAPI)
+
 
     private var _currentCrypto = MutableLiveData<CryptoCurrency>()
 
     private val _cryptoWatchList = MutableLiveData<MutableList<CryptoCurrency>>()
-
-
 
     var cryptoList = repository.coinsList
 
@@ -33,6 +35,13 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     init {
 
         loadCrypto()
+        loadLocalData()
+    }
+
+      private fun loadLocalData(){
+        viewModelScope.launch {
+            repository.getAllAccounts()
+        }
     }
 
     private fun loadCrypto() {
@@ -42,6 +51,27 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         }
 
     }
+
+    fun createNewAccount (account: Account){
+        viewModelScope.launch {
+            repository.insertAccount(account)
+        }
+    }
+
+    fun isAccountAlreadyRegistered(email: String):Boolean{
+        return accounts.value?.any { it.email == email } ?: false
+    }
+
+    fun findAccountByEmail(email:String){
+        viewModelScope.launch {
+            repository.getAccountByEmail(email)
+        }
+    }
+
+
+
+
+
 
     fun loadHotList(): List<CryptoCurrency> {
         val sortedByVolume = cryptoList.value!!.data

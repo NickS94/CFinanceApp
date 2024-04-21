@@ -12,7 +12,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.cfinanceapp.R
-import com.example.cfinanceapp.ViewModel
+import com.example.cfinanceapp.tools.ViewModel
 import com.example.cfinanceapp.adapters.MarketAdapter
 import com.example.cfinanceapp.databinding.FragmentMarketBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView

@@ -8,7 +8,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.cfinanceapp.R
-import com.example.cfinanceapp.ViewModel
+import com.example.cfinanceapp.tools.ViewModel
 import com.example.cfinanceapp.data.models.CryptoCurrency
 import com.example.cfinanceapp.databinding.WatchlistItemBinding
 import com.example.cfinanceapp.ui.HomeFragmentDirections
@@ -24,11 +24,7 @@ class WatchListAdapter(
         RecyclerView.ViewHolder(binding.root)
 
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun updateList(newList: List<CryptoCurrency>) {
-        dataSet = newList
-        notifyDataSetChanged()
-    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val binding =
             WatchlistItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)

@@ -6,10 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.navArgs
-import com.example.cfinanceapp.ViewModel
+import com.example.cfinanceapp.tools.ViewModel
 import com.example.cfinanceapp.adapters.HotListAdapter
-import com.example.cfinanceapp.adapters.MarketAdapter
 import com.example.cfinanceapp.adapters.WatchListAdapter
 import com.example.cfinanceapp.databinding.FragmentHomeBinding
 

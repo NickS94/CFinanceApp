@@ -13,7 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import coil.load
 import com.example.cfinanceapp.R
-import com.example.cfinanceapp.ViewModel
+import com.example.cfinanceapp.tools.ViewModel
 import com.example.cfinanceapp.data.models.CryptoCurrency
 import com.example.cfinanceapp.databinding.FragmentDetailsBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -21,7 +21,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class DetailsFragment : Fragment() {
 private lateinit var viewBinding:FragmentDetailsBinding
-private val viewModel:ViewModel by activityViewModels()
+private val viewModel: ViewModel by activityViewModels()
     private val data : DetailsFragmentArgs by navArgs()
 
     override fun onCreateView(
