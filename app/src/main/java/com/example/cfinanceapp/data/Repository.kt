@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import com.example.cfinanceapp.data.API.CoinMarketCapAPI
 import com.example.cfinanceapp.data.local.DatabaseInstance
 import com.example.cfinanceapp.data.models.Account
-import com.example.cfinanceapp.data.models.Asset
 import com.example.cfinanceapp.data.models.ResponseAPI
 import com.example.cfinanceapp.data.models.Transactions
 import com.example.cfinanceapp.data.models.Wallet

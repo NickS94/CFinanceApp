@@ -6,7 +6,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.cfinanceapp.data.models.Account
-import com.example.cfinanceapp.data.models.Asset
 import com.example.cfinanceapp.data.models.Transactions
 import com.example.cfinanceapp.data.models.Wallet
 

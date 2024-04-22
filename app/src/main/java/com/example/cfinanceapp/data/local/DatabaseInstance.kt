@@ -6,7 +6,6 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.cfinanceapp.data.models.Account
-import com.example.cfinanceapp.data.models.Asset
 import com.example.cfinanceapp.data.models.Transactions
 import com.example.cfinanceapp.data.models.Wallet
 import com.example.cfinanceapp.tools.CryptocurrencyConverter
@@ -14,7 +13,7 @@ import com.example.cfinanceapp.tools.QuoteConverter
 import com.example.cfinanceapp.tools.USDataConverter
 
 
-@Database(entities = [Account::class, Wallet::class,Asset::class,Transactions::class], version = 1)
+@Database(entities = [Account::class, Wallet::class,Transactions::class], version = 1)
 @TypeConverters(CryptocurrencyConverter::class, QuoteConverter::class, USDataConverter::class)
 abstract class DatabaseInstance : RoomDatabase() {
     abstract val dao: ProfileDao
