@@ -109,34 +109,7 @@ class Repository (private val api: CoinMarketCapAPI,private val databaseInstance
         return databaseInstance.dao.getWalletById(walletId)
     }
 
-    suspend fun insertAsset(asset: Asset) {
-        try{
-            databaseInstance.dao.insertAsset(asset)
 
-        }catch(e:Exception){
-            Log.d(TAG,"FAILED TO LOAD : ${e.message}")
-        }
-    }
-
-
-    fun getAllAssets(): LiveData<List<Asset>> {
-        try{
-            databaseInstance.dao.getAllAssets()
-        }catch(e:Exception){
-            Log.d(TAG,"FAILED TO LOAD : ${e.message}")
-        }
-        return databaseInstance.dao.getAllAssets()
-    }
-
-
-    fun getAssetsByWalletId(walletId: Long): LiveData<List<Asset>> {
-        try{
-            databaseInstance.dao.getAssetsByWalletId(walletId)
-        }catch(e:Exception){
-            Log.d(TAG,"FAILED TO LOAD : ${e.message}")
-        }
-        return databaseInstance.dao.getAssetsByWalletId(walletId)
-    }
 
 
     suspend fun insertTransaction(transaction: Transactions) {
