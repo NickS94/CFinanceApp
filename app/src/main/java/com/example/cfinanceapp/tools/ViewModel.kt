@@ -2,6 +2,7 @@ package com.example.cfinanceapp.tools
 
 
 import android.app.Application
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -62,24 +63,29 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         return accounts.value?.any { it.email == email } ?: false
     }
 
-    fun findAccountByEmail(email:String){
-        viewModelScope.launch {
-            repository.getAccountByEmail(email)
-        }
+    private fun findAccountByEmail(email: String): LiveData<Account?> {
+
+        return repository.getAccountByEmail(email)
     }
 
+    fun authenticateUser(email: String, password: String): LiveData<Boolean> {
+        val authenticationResult = MutableLiveData<Boolean>()
 
-
-
-
+        findAccountByEmail(email).observeForever { userAccount ->
+            if (userAccount != null) {
+                authenticationResult.value = userAccount.password == password
+            } else {
+                authenticationResult.value = false
+            }
+        }
+        return authenticationResult
+    }
 
     fun loadHotList(): List<CryptoCurrency> {
         val sortedByVolume = cryptoList.value!!.data
         return sortedByVolume.subList(0, 10).sortedByDescending { it.quote.usdData.volume24h }
 
     }
-
-
 
 
     fun getCoinLogo(id: String): String {

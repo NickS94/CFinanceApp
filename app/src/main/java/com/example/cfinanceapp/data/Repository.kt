@@ -47,7 +47,7 @@ class Repository (private val api: CoinMarketCapAPI,private val databaseInstance
     }
 
 
-    // Insert an account
+
     suspend fun insertAccount(account: Account) {
         try {
             databaseInstance.dao.insertAccount(account)
@@ -56,7 +56,7 @@ class Repository (private val api: CoinMarketCapAPI,private val databaseInstance
         }
     }
 
-    // Get all accounts
+
     fun getAllAccounts(): LiveData<List<Account>> {
         try {
              databaseInstance.dao.getAllAccounts()
@@ -66,7 +66,7 @@ class Repository (private val api: CoinMarketCapAPI,private val databaseInstance
         return databaseInstance.dao.getAllAccounts()
     }
 
-    // Get an account by email
+
     fun getAccountByEmail(email: String): LiveData<Account?> {
         try {
             databaseInstance.dao.getAccountByEmail(email)
@@ -76,7 +76,6 @@ class Repository (private val api: CoinMarketCapAPI,private val databaseInstance
         return databaseInstance.dao.getAccountByEmail(email)
     }
 
-    // Insert a wallet
     suspend fun insertWallet(wallet: Wallet) {
 
         try {
@@ -88,7 +87,7 @@ class Repository (private val api: CoinMarketCapAPI,private val databaseInstance
 
     }
 
-    // Get all wallets
+
     fun getAllWallets(): LiveData<List<Wallet>> {
         try {
             databaseInstance.dao.getAllWallets()
@@ -101,7 +100,7 @@ class Repository (private val api: CoinMarketCapAPI,private val databaseInstance
 
 
 
-    // Get a wallet by ID
+
     fun getWalletById(walletId: Long): LiveData<Wallet?> {
         try{
             databaseInstance.dao.getWalletById(walletId)
@@ -111,7 +110,6 @@ class Repository (private val api: CoinMarketCapAPI,private val databaseInstance
         return databaseInstance.dao.getWalletById(walletId)
     }
 
-    // Insert an asset
     suspend fun insertAsset(asset: Asset) {
         try{
             databaseInstance.dao.insertAsset(asset)
@@ -121,7 +119,7 @@ class Repository (private val api: CoinMarketCapAPI,private val databaseInstance
         }
     }
 
-    // Get all assets
+
     fun getAllAssets(): LiveData<List<Asset>> {
         try{
             databaseInstance.dao.getAllAssets()
@@ -131,7 +129,7 @@ class Repository (private val api: CoinMarketCapAPI,private val databaseInstance
         return databaseInstance.dao.getAllAssets()
     }
 
-    // Get assets by walletId
+
     fun getAssetsByWalletId(walletId: Long): LiveData<List<Asset>> {
         try{
             databaseInstance.dao.getAssetsByWalletId(walletId)
@@ -141,7 +139,7 @@ class Repository (private val api: CoinMarketCapAPI,private val databaseInstance
         return databaseInstance.dao.getAssetsByWalletId(walletId)
     }
 
-    // Insert a transaction
+
     suspend fun insertTransaction(transaction: Transactions) {
         try{
             databaseInstance.dao.insertTransaction(transaction)
@@ -151,7 +149,7 @@ class Repository (private val api: CoinMarketCapAPI,private val databaseInstance
 
     }
 
-    // Get all transactions
+
     fun getAllTransactions(): LiveData<List<Transactions>> {
         try{
             databaseInstance.dao.getAllTransactions()
@@ -161,7 +159,7 @@ class Repository (private val api: CoinMarketCapAPI,private val databaseInstance
         return databaseInstance.dao.getAllTransactions()
     }
 
-    // Get transactions by walletId
+
     fun getTransactionsByWalletId(walletId: Long): LiveData<List<Transactions>> {
         try{
             databaseInstance.dao.getTransactionsByWalletId(walletId)

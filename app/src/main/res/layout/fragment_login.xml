@@ -114,11 +114,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="64dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:text="Not Registered yet? Create account"
 
+        android:text="Not Registered yet? Create account"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/createAccountClickable"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -128,8 +130,8 @@
         android:layout_marginEnd="88dp"
         android:layout_marginBottom="16dp"
         android:text="@string/here"
-        android:textIsSelectable="true"
         android:textColor="@color/green"
+        android:textIsSelectable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
