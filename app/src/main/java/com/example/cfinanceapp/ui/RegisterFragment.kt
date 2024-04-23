@@ -39,7 +39,6 @@ class RegisterFragment : Fragment() {
                 val etEmail = viewBinding.etEmailRegister.text.toString()
                 val etPassword = viewBinding.etPasswordRegister.text.toString()
                 val etPasswordRepeat = viewBinding.etPasswordRegisterRepeat.text.toString()
-                val wallet = Wallet(transactionHash = viewModel.generateTransactionHash(), accountId = 0)
                 if (etEmail.isNotEmpty() && etPassword.isNotEmpty() && etPasswordRepeat.isNotEmpty()) {
                     val account = Account(
                         email = etEmail,
@@ -52,7 +51,7 @@ class RegisterFragment : Fragment() {
                         viewModel.isAccountAlreadyRegistered(etEmail) -> showToast("This ACCOUNT is ALREADY REGISTERED")
                         else -> {
                             viewModel.createNewAccount(account)
-                            findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToHomeFragment())
+                            findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment())
                         }
 
                     }

@@ -39,7 +39,7 @@ private val viewModel: ViewModel by activityViewModels()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var isFavorite = true
+
         var frameText = ""
         val coin = data.cryptoData
 

@@ -11,6 +11,7 @@ import com.example.cfinanceapp.data.Repository
 import com.example.cfinanceapp.data.local.DatabaseInstance
 import com.example.cfinanceapp.data.models.Account
 import com.example.cfinanceapp.data.models.CryptoCurrency
+import com.example.cfinanceapp.data.models.Wallet
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
@@ -19,9 +20,13 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = Repository(CoinMarketCapAPI,DatabaseInstance.getDatabase(application))
 
 
-    private val _accountsWithWalletsAndTransactions = MutableLiveData<List<AccountWithWallet>>()
-    val accountsWithWalletsAndTransactions: LiveData<List<AccountWithWallet>>
-        get() = _accountsWithWalletsAndTransactions
+    private var _currentAccount = MutableLiveData<Account>()
+    val currentAccount: LiveData<Account> = _currentAccount
+
+
+    private var _currentWallet = MutableLiveData<Wallet>()
+    val currentWallet: LiveData<Wallet> = _currentWallet
+
 
 
     val accounts = repository.accounts
@@ -40,16 +45,11 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
 
         loadCrypto()
         loadLocalData()
-        getAllAccountsWithWalletsAndTransactions()
+
     }
 
 
-    fun getAllAccountsWithWalletsAndTransactions() {
-        _accountsWithWalletsAndTransactions.postValue(repository.getAllAccountsWithWalletsAndTransactions().value)
-    }
-
-
-      private fun loadLocalData(){
+    private fun loadLocalData() {
         viewModelScope.launch {
             repository.getAllAccounts()
         }
@@ -73,15 +73,20 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         return accounts.value?.any { it.email == email } ?: false
     }
 
-    fun findAccountByEmail(email: String): LiveData<Account?> {
-
-        return repository.getAccountByEmail(email)
+    fun findWalletByUserId(accountId:Long){
+        _currentWallet.value = repository.getWalletById(accountId).value
     }
+
+    fun findAccountByEmail(email: String) {
+        _currentAccount.value = repository.getAccountByEmail(email).value
+    }
+
+
 
     fun authenticateUser(email: String, password: String): LiveData<Boolean> {
         val authenticationResult = MutableLiveData<Boolean>()
-
-        findAccountByEmail(email).observeForever { userAccount ->
+        findAccountByEmail(email)
+        _currentAccount.observeForever { userAccount ->
             if (userAccount != null) {
                 authenticationResult.value = userAccount.password == password
             } else {

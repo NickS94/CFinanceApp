@@ -8,8 +8,6 @@ import com.example.cfinanceapp.data.local.DatabaseInstance
 import com.example.cfinanceapp.data.models.Account
 import com.example.cfinanceapp.data.models.ResponseAPI
 import com.example.cfinanceapp.data.models.Wallet
-import com.example.cfinanceapp.tools.AccountWithWallet
-
 
 
 var TAG = "Repository"
@@ -20,18 +18,22 @@ class Repository (private val api: CoinMarketCapAPI,private val databaseInstance
 
     private val allAccounts = databaseInstance.dao.getAllAccounts()
 
+    private val allWallets = databaseInstance.dao.getAllWallets()
+
+
+   private val _wallets = allWallets
+    val wallets :LiveData<List<Wallet>> =_wallets
+
+
     private val _accounts = allAccounts
+    val accounts : LiveData<List<Account>> =_accounts
 
-
-
-    val accounts : LiveData<List<Account>>
-        get() = _accounts
 
 
     private val _coinsList = MutableLiveData<ResponseAPI>()
 
-    val coinsList : LiveData<ResponseAPI>
-        get() = _coinsList
+    val coinsList : LiveData<ResponseAPI> =_coinsList
+
 
 
 
@@ -57,9 +59,7 @@ class Repository (private val api: CoinMarketCapAPI,private val databaseInstance
     }
 
 
-    fun getAllAccountsWithWalletsAndTransactions(): LiveData<List<AccountWithWallet>> {
-        return databaseInstance.dao.getAccountsWithWalletsAndTransactions()
-    }
+
     fun getAllAccounts(): LiveData<List<Account>> {
         try {
              databaseInstance.dao.getAllAccounts()
@@ -70,13 +70,14 @@ class Repository (private val api: CoinMarketCapAPI,private val databaseInstance
     }
 
 
-    fun getAccountByEmail(email: String): LiveData<Account?> {
+    fun getAccountByEmail(email: String): LiveData<Account> {
         try {
-            databaseInstance.dao.getAccountByEmail(email)
+            return databaseInstance.dao.getAccountByEmail(email)
         }catch (e:Exception){
             Log.d(TAG,"FAILED TO LOAD : ${e.message}")
+            throw e
         }
-        return databaseInstance.dao.getAccountByEmail(email)
+
     }
 
     suspend fun insertWallet(wallet: Wallet) {
@@ -87,9 +88,7 @@ class Repository (private val api: CoinMarketCapAPI,private val databaseInstance
             Log.d(TAG,"FAILED TO LOAD : ${e.message}")
         }
 
-
     }
-
 
     fun getAllWallets(): LiveData<List<Wallet>> {
         try {
@@ -104,13 +103,14 @@ class Repository (private val api: CoinMarketCapAPI,private val databaseInstance
 
 
 
-    fun getWalletById(walletId: Long): LiveData<Wallet?> {
+    fun getWalletById(accountId: Long):LiveData<Wallet> {
         try{
-            databaseInstance.dao.getWalletById(walletId)
+          return  databaseInstance.dao.getWalletById(accountId)
         }catch(e:Exception){
             Log.d(TAG,"FAILED TO LOAD : ${e.message}")
+            throw e
         }
-        return databaseInstance.dao.getWalletById(walletId)
+
     }
 
 

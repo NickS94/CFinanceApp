@@ -8,17 +8,12 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.example.cfinanceapp.data.models.Account
 import com.example.cfinanceapp.data.models.Wallet
-import com.example.cfinanceapp.tools.AccountWithWallet
-
 
 
 @Dao
 interface ProfileDao {
 
 
-    @Transaction
-    @Query("SELECT * FROM accounts")
-    fun getAccountsWithWalletsAndTransactions(): LiveData<List<AccountWithWallet>>
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -30,7 +25,7 @@ interface ProfileDao {
 
 
     @Query("SELECT * FROM accounts WHERE email = :email")
-    fun getAccountByEmail(email: String): LiveData<Account?>
+    fun getAccountByEmail(email: String): LiveData<Account>
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -41,8 +36,8 @@ interface ProfileDao {
     fun getAllWallets(): LiveData<List<Wallet>>
 
 
-    @Query("SELECT * FROM Wallet WHERE id = :walletId")
-    fun getWalletById(walletId: Long): LiveData<Wallet?>
+    @Query("SELECT * FROM Wallet WHERE accountId=:accountId")
+    fun getWalletById(accountId: Long): LiveData<Wallet>
 
 
 
