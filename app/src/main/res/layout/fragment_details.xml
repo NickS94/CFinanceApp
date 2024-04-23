@@ -342,7 +342,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
         android:layout_marginEnd="40dp"
-        android:src="@drawable/favorite_icon_enabled"
+        android:src="@drawable/favorite_icon_disable"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription" />

@@ -17,6 +17,7 @@ import com.example.cfinanceapp.tools.ViewModel
 import com.example.cfinanceapp.data.models.CryptoCurrency
 import com.example.cfinanceapp.databinding.FragmentDetailsBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlin.properties.Delegates
 
 
 class DetailsFragment : Fragment() {
@@ -38,11 +39,9 @@ private val viewModel: ViewModel by activityViewModels()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        var isFavorite = true
         var frameText = ""
         val coin = data.cryptoData
-
-
-
 
         var selectedButton: Button? = null
 
@@ -187,11 +186,6 @@ private val viewModel: ViewModel by activityViewModels()
 
 
 
-        }
-
-        viewBinding.ivFavorite.setOnClickListener {
-
-            viewModel.addToWatchlist(coin)
         }
 
 

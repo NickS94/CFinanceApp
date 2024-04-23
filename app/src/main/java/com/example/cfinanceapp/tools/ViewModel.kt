@@ -2,7 +2,6 @@ package com.example.cfinanceapp.tools
 
 
 import android.app.Application
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,15 +12,19 @@ import com.example.cfinanceapp.data.local.DatabaseInstance
 import com.example.cfinanceapp.data.models.Account
 import com.example.cfinanceapp.data.models.CryptoCurrency
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 class ViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = Repository(CoinMarketCapAPI,DatabaseInstance.getDatabase(application))
 
 
+    private val _accountsWithWalletsAndTransactions = MutableLiveData<List<AccountWithWallet>>()
+    val accountsWithWalletsAndTransactions: LiveData<List<AccountWithWallet>>
+        get() = _accountsWithWalletsAndTransactions
+
+
     val accounts = repository.accounts
-
-
 
     private var _currentCrypto = MutableLiveData<CryptoCurrency>()
 
@@ -37,7 +40,14 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
 
         loadCrypto()
         loadLocalData()
+        getAllAccountsWithWalletsAndTransactions()
     }
+
+
+    fun getAllAccountsWithWalletsAndTransactions() {
+        _accountsWithWalletsAndTransactions.postValue(repository.getAllAccountsWithWalletsAndTransactions().value)
+    }
+
 
       private fun loadLocalData(){
         viewModelScope.launch {
@@ -63,7 +73,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         return accounts.value?.any { it.email == email } ?: false
     }
 
-    private fun findAccountByEmail(email: String): LiveData<Account?> {
+    fun findAccountByEmail(email: String): LiveData<Account?> {
 
         return repository.getAccountByEmail(email)
     }
@@ -128,5 +138,16 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         return "https://s3.coinmarketcap.com/generated/sparklines/web/1d/usd/$coinId.png"
     }
 
+    fun generateTransactionHash(): String {
+        val hexChars = "0123456789abcdef"
+        val sb = StringBuilder(32)
+
+        repeat(32) {
+            val randomIndex = Random.nextInt(0, hexChars.length)
+            sb.append(hexChars[randomIndex])
+        }
+
+        return sb.toString()
+    }
 
 }

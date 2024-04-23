@@ -19,7 +19,7 @@ private lateinit var viewBinding: FragmentLoginBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         viewBinding = FragmentLoginBinding.inflate(inflater)
         return viewBinding.root
     }

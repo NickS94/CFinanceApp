@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.cfinanceapp.data.models.Account
+import com.example.cfinanceapp.data.models.CryptoCurrency
+import com.example.cfinanceapp.data.models.Wallet
 import com.example.cfinanceapp.databinding.FragmentRegisterBinding
 import com.example.cfinanceapp.tools.ViewModel
 
@@ -37,10 +39,12 @@ class RegisterFragment : Fragment() {
                 val etEmail = viewBinding.etEmailRegister.text.toString()
                 val etPassword = viewBinding.etPasswordRegister.text.toString()
                 val etPasswordRepeat = viewBinding.etPasswordRegisterRepeat.text.toString()
+                val wallet = Wallet(transactionHash = viewModel.generateTransactionHash(), accountId = 0)
                 if (etEmail.isNotEmpty() && etPassword.isNotEmpty() && etPasswordRepeat.isNotEmpty()) {
                     val account = Account(
                         email = etEmail,
-                        password = etPassword
+                        password = etPassword,
+                        wallet = wallet
                     )
                     when {
                         etPassword != etPasswordRepeat -> showToast("Ensure that the PASSWORD is REPEATED CORRECTLY")

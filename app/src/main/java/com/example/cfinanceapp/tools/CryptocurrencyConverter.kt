@@ -12,8 +12,10 @@ class CryptocurrencyConverter {
     @TypeConverter
     fun jsonToCryptoCurrency(value: String): CryptoCurrency = Json.decodeFromString<CryptoCurrency>(value)
 
+    @TypeConverter
+    fun cryptoCurrencyList(cryptoList:List<CryptoCurrency>): String = Json.encodeToString(cryptoList)
 
-
-
+    @TypeConverter
+    fun jsonToCryptoList(value: String):List<CryptoCurrency> = Json.decodeFromString(value)
 
 }

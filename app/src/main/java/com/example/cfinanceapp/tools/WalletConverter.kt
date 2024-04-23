@@ -1,7 +1,6 @@
 package com.example.cfinanceapp.tools
 
 import androidx.room.TypeConverter
-import com.example.cfinanceapp.data.models.CryptoCurrency
 import com.example.cfinanceapp.data.models.Wallet
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
