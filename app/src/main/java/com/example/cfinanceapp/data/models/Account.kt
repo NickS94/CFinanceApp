@@ -14,12 +14,5 @@ data class Account(
     @ColumnInfo(name = "email")
     val email: String,
     @ColumnInfo(name = "password")
-    val password: String,
-    @ColumnInfo("wallet")
-    @TypeConverters(WalletConverter::class)
-    val wallet: Wallet
-
-
-
-
+    val password: String
 )

@@ -43,8 +43,7 @@ class RegisterFragment : Fragment() {
                 if (etEmail.isNotEmpty() && etPassword.isNotEmpty() && etPasswordRepeat.isNotEmpty()) {
                     val account = Account(
                         email = etEmail,
-                        password = etPassword,
-                        wallet = wallet
+                        password = etPassword
                     )
                     when {
                         etPassword != etPasswordRepeat -> showToast("Ensure that the PASSWORD is REPEATED CORRECTLY")

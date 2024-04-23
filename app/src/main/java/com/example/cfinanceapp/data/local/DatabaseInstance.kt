@@ -15,16 +15,16 @@ import com.example.cfinanceapp.tools.USDataConverter
 import com.example.cfinanceapp.tools.WalletConverter
 
 
-@Database(entities = [Account::class,Wallet::class], version = 10)
-@TypeConverters(CryptocurrencyConverter::class, QuoteConverter::class, USDataConverter::class,WalletConverter::class)
+@Database(entities = [Account::class,Wallet::class], version = 11)
+@TypeConverters(CryptocurrencyConverter::class, QuoteConverter::class, USDataConverter::class)
 abstract class DatabaseInstance : RoomDatabase() {
     abstract val dao: ProfileDao
 
 
     companion object {
-        val MIGRATION_3_4 = object : Migration(9, 10) {
+        val MIGRATION_3_4 = object : Migration(10, 11) {
             override fun migrate(database: SupportSQLiteDatabase) {
-
+                database.execSQL("ALTER TABLE accounts DROP COLUMN wallet")
             }
         }
 
