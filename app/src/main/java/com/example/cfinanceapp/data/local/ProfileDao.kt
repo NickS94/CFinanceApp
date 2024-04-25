@@ -25,7 +25,7 @@ interface ProfileDao {
 
 
     @Query("SELECT * FROM accounts WHERE email = :email")
-    fun getAccountByEmail(email: String): LiveData<Account>
+    suspend fun getAccountByEmail(email: String):Account
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -37,7 +37,7 @@ interface ProfileDao {
 
 
     @Query("SELECT * FROM Wallet WHERE accountId=:accountId")
-    fun getWalletById(accountId: Long): LiveData<Wallet>
+    suspend fun getWalletById(accountId: Long):Wallet
 
 
 

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/homeFragment">
 
     <fragment
         android:id="@+id/loginFragment"
@@ -59,12 +59,5 @@
         android:id="@+id/detailsFragment"
         android:name="com.example.cfinanceapp.ui.DetailsFragment"
         android:label="fragment_details"
-        tools:layout="@layout/fragment_details" >
-        <argument
-            android:name="position"
-            app:argType="integer" />
-        <argument
-            android:name="cryptoData"
-            app:argType="com.example.cfinanceapp.data.models.CryptoCurrency" />
-    </fragment>
+        tools:layout="@layout/fragment_details" />
 </navigation>

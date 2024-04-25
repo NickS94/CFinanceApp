@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.example.cfinanceapp.R
 import com.example.cfinanceapp.tools.ViewModel
 import com.example.cfinanceapp.data.models.CryptoCurrency
 import com.example.cfinanceapp.databinding.MarketItemBinding
@@ -54,8 +55,8 @@ class HotListAdapter(
         holder.binding.tvChangePercentageMarket.text = "Volume 24H: $formattedVolume"
 
         holder.itemView.setOnClickListener {
-            viewModel.getCurrentCrypto(position)
-            it.findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToDetailsFragment(position,coin))
+            viewModel.setCurrentCoin(coin)
+            it.findNavController().navigate(R.id.detailsFragment)
         }
 
 

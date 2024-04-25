@@ -34,33 +34,25 @@ class RegisterFragment : Fragment() {
 
         viewModel.accounts.observe(viewLifecycleOwner) {
 
-
+            val etEmail = viewBinding.etEmailRegister.text.toString()
+            val etPassword = viewBinding.etPasswordRegister.text.toString()
+            val etPasswordRepeat = viewBinding.etPasswordRegisterRepeat.text.toString()
+            val account = Account(email = etEmail)
             viewBinding.btnCompleteRegister.setOnClickListener {
-                val etEmail = viewBinding.etEmailRegister.text.toString()
-                val etPassword = viewBinding.etPasswordRegister.text.toString()
-                val etPasswordRepeat = viewBinding.etPasswordRegisterRepeat.text.toString()
-                if (etEmail.isNotEmpty() && etPassword.isNotEmpty() && etPasswordRepeat.isNotEmpty()) {
-                    val account = Account(
-                        email = etEmail,
-                        password = etPassword
-                    )
                     when {
                         etPassword != etPasswordRepeat -> showToast("Ensure that the PASSWORD is REPEATED CORRECTLY")
                         !isEmailValid(etEmail) -> showToast("Ensure that the EMAIL is VALID")
                         correctPasswordLength(etPassword) -> showToast("Ensure that your PASSWORD is at least 8 characters.")
                         viewModel.isAccountAlreadyRegistered(etEmail) -> showToast("This ACCOUNT is ALREADY REGISTERED")
                         else -> {
+                            showToast("Success")
                             viewModel.createNewAccount(account)
                             findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment())
                         }
-
                     }
-
                 }
             }
-
         }
-
     }
 
 
@@ -82,4 +74,4 @@ class RegisterFragment : Fragment() {
     }
 
 
-}
+

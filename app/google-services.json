@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "575595125020",
+    "project_id": "cfinanceapp",
+    "storage_bucket": "cfinanceapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:575595125020:android:f07864e91704553f70c2d9",
+        "android_client_info": {
+          "package_name": "com.example.cfinanceapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwdwl5UxPvINZSQZ4lt5U_JJ4rR55nY7Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

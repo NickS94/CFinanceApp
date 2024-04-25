@@ -8,6 +8,7 @@ plugins {
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.devtools.ksp")
     kotlin("plugin.serialization") version "1.9.23"
+    id("com.google.gms.google-services")
 
 
 }
@@ -68,7 +69,8 @@ android {
 
 dependencies {
 
-val retrofitVersion = "2.9.0"
+implementation(libs.firebase.auth)
+    val retrofitVersion = "2.9.0"
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

@@ -60,7 +60,8 @@ class WatchListAdapter(
 
 
         holder.itemView.setOnClickListener {
-            it.findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToDetailsFragment(position,coin))
+            viewModel.setCurrentCoin(coin)
+            it.findNavController().navigate(R.id.detailsFragment)
         }
 
 

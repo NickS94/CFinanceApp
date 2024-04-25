@@ -28,22 +28,6 @@ private lateinit var viewBinding: FragmentLoginBinding
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-
-        viewModel.accounts.observe(viewLifecycleOwner) {
-            viewBinding.btnLogin.setOnClickListener {
-                val etEmail = viewBinding.etLogInEmail.text.toString()
-                val etPassword = viewBinding.etPasswordLogin.text.toString()
-
-                viewModel.authenticateUser(etEmail, etPassword).observe(viewLifecycleOwner) { isAuthenticated ->
-                    if (isAuthenticated) {
-                        findNavController().navigate(R.id.homeFragment)
-                    } else {
-                        showToast("Ensure that your EMAIL information OR PASSWORD is correct")
-                    }
-                }
-            }
-        }
         viewBinding.createAccountClickable.setOnClickListener {
             findNavController().navigate(R.id.registerFragment)
         }
@@ -51,7 +35,7 @@ private lateinit var viewBinding: FragmentLoginBinding
 
     }
 
-    private fun showToast(message: String) {
+    fun showToast(message: String) {
         Toast.makeText(
             context,
             message,

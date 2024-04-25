@@ -54,8 +54,8 @@ class MarketAdapter(
         }
 
         holder.itemView.setOnClickListener {
-            viewModel.getCurrentCrypto(position)
-            it.findNavController().navigate(MarketFragmentDirections.actionMarketFragmentToDetailsFragment(position,coin))
+            viewModel.setCurrentCoin(coin)
+            it.findNavController().navigate(R.id.detailsFragment)
         }
     }
 

@@ -2,6 +2,7 @@ package com.example.cfinanceapp.tools
 
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,10 +13,15 @@ import com.example.cfinanceapp.data.local.DatabaseInstance
 import com.example.cfinanceapp.data.models.Account
 import com.example.cfinanceapp.data.models.CryptoCurrency
 import com.example.cfinanceapp.data.models.Wallet
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 class ViewModel(application: Application) : AndroidViewModel(application) {
+
+
+    private val firebaseAuthentication = Firebase.auth
 
     private val repository = Repository(CoinMarketCapAPI,DatabaseInstance.getDatabase(application))
 
@@ -27,11 +33,13 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     private var _currentWallet = MutableLiveData<Wallet>()
     val currentWallet: LiveData<Wallet> = _currentWallet
 
+    private var _currentCrypto = MutableLiveData<CryptoCurrency>()
+    val currentCrypto: LiveData<CryptoCurrency> = _currentCrypto
 
 
     val accounts = repository.accounts
 
-    private var _currentCrypto = MutableLiveData<CryptoCurrency>()
+
 
     private val _cryptoWatchList = MutableLiveData<MutableList<CryptoCurrency>>()
 
@@ -42,10 +50,8 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
 
 
     init {
-
         loadCrypto()
         loadLocalData()
-
     }
 
 
@@ -63,6 +69,10 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
 
     }
 
+    fun setCurrentCoin(coin: CryptoCurrency) {
+        _currentCrypto.value = coin
+    }
+
     fun createNewAccount (account: Account){
         viewModelScope.launch {
             repository.insertAccount(account)
@@ -74,26 +84,20 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun findWalletByUserId(accountId:Long){
-        _currentWallet.value = repository.getWalletById(accountId).value
+        viewModelScope.launch {
+            _currentWallet.value = repository.getWalletById(accountId)
+        }
     }
 
     fun findAccountByEmail(email: String) {
-        _currentAccount.value = repository.getAccountByEmail(email).value
+        viewModelScope.launch {
+            _currentAccount.value = repository.getAccountByEmail(email)
+        }
     }
 
 
+    fun authenticateUser(email: String, password: String) {
 
-    fun authenticateUser(email: String, password: String): LiveData<Boolean> {
-        val authenticationResult = MutableLiveData<Boolean>()
-        findAccountByEmail(email)
-        _currentAccount.observeForever { userAccount ->
-            if (userAccount != null) {
-                authenticationResult.value = userAccount.password == password
-            } else {
-                authenticationResult.value = false
-            }
-        }
-        return authenticationResult
     }
 
     fun loadHotList(): List<CryptoCurrency> {
@@ -135,9 +139,6 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         return updatedList
     }
 
-    fun getCurrentCrypto(position: Int) {
-        _currentCrypto.value = cryptoList.value!!.data[position]
-    }
 
     fun getChartEffect(coinId: String): String {
         return "https://s3.coinmarketcap.com/generated/sparklines/web/1d/usd/$coinId.png"
@@ -154,5 +155,42 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
 
         return sb.toString()
     }
+
+    fun registration(email: String, password: String, completion: () -> Unit) {
+        if (email.isNotEmpty() && password.isNotEmpty()) {
+            firebaseAuthentication.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        completion()
+                    } else {
+                        Log.e("FIREBASE", it.exception.toString())
+                        Log.e("FIREBASE", "email: $email")
+                        Log.e("FIREBASE", "password : $password")
+
+                    }
+                }
+        }
+    }
+
+
+    fun loginAuthentication(email: String, password: String, completion: () -> Unit) {
+        if (email.isNotEmpty() && password.isNotEmpty()) {
+            firebaseAuthentication.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        completion()
+                    } else {
+                        Log.e("FIREBASE", it.exception.toString())
+                        Log.e("FIREBASE", "email: $email")
+                        Log.e("FIREBASE", "password : $password")
+
+                    }
+
+                }
+        }
+    }
+
+
+
 
 }
