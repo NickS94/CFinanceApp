@@ -9,10 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.cfinanceapp.data.models.Account
-import com.example.cfinanceapp.data.models.CryptoCurrency
-import com.example.cfinanceapp.data.models.Wallet
 import com.example.cfinanceapp.databinding.FragmentRegisterBinding
 import com.example.cfinanceapp.tools.ViewModel
+
 
 
 class RegisterFragment : Fragment() {
@@ -53,7 +52,6 @@ class RegisterFragment : Fragment() {
                 }
             }
         }
-    }
 
 
     private fun isEmailValid(email: String): Boolean {
@@ -67,11 +65,9 @@ class RegisterFragment : Fragment() {
 
     private fun showToast(message: String) {
         Toast.makeText(
-            context,
-            message,
-            Toast.LENGTH_SHORT
+            context, message, Toast.LENGTH_SHORT
         ).show()
     }
 
-
+    }
 
