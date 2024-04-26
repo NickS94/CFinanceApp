@@ -47,7 +47,7 @@ class MarketFragment : Fragment() {
         viewBinding.textOptionsDropDownMenu.addTextChangedListener {
             viewModel.cryptoList.observe(viewLifecycleOwner) {
                 recyclerView.adapter = MarketAdapter(
-                    viewModel.filterGainers(viewBinding.textOptionsDropDownMenu.text.toString()),
+                    viewModel.filteredLists(viewBinding.textOptionsDropDownMenu.text.toString()),
                     this.requireContext(),
                     viewModel
                 )

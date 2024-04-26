@@ -96,10 +96,6 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
-    fun authenticateUser(email: String, password: String) {
-
-    }
-
     fun loadHotList(): List<CryptoCurrency> {
         val sortedByVolume = cryptoList.value!!.data
         return sortedByVolume.subList(0, 10).sortedByDescending { it.quote.usdData.volume24h }
@@ -120,7 +116,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         return searchList
     }
 
-    fun filterGainers(input: String): List<CryptoCurrency> {
+    fun filteredLists(input: String): List<CryptoCurrency> {
         val gainers = cryptoList.value!!.data.filter { it.quote.usdData.percentChange24h > 0 }
         val losers = cryptoList.value!!.data.filter { it.quote.usdData.percentChange24h < 0 }
 

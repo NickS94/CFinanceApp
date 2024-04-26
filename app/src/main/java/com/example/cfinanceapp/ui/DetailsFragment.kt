@@ -44,8 +44,8 @@ private val viewModel: ViewModel by activityViewModels()
 
         var selectedButton: Button? = null
 
-        viewModel.currentCrypto.observe(viewLifecycleOwner){
-            loadChart(it,frameText)
+        viewModel.currentCrypto.observe(viewLifecycleOwner){cryptoCurrency ->
+            loadChart(cryptoCurrency,frameText)
 
             viewBinding.btn1h.setOnClickListener {
 
@@ -54,7 +54,7 @@ private val viewModel: ViewModel by activityViewModels()
                 viewBinding.btn1h.setBackgroundResource(R.drawable.round_transparent)
 
                 frameText = "1H"
-                loadChart(viewModel.currentCrypto.value!!,frameText)
+                loadChart(cryptoCurrency,frameText)
 
             }
             viewBinding.btn24h.setOnClickListener {
@@ -64,7 +64,7 @@ private val viewModel: ViewModel by activityViewModels()
                 viewBinding.btn24h.setBackgroundResource(R.drawable.round_transparent)
 
                 frameText = "D"
-                loadChart(viewModel.currentCrypto.value!!,frameText)
+                loadChart(cryptoCurrency,frameText)
             }
             viewBinding.btnWeek.setOnClickListener {
 
@@ -73,39 +73,39 @@ private val viewModel: ViewModel by activityViewModels()
                 viewBinding.btnWeek.setBackgroundResource(R.drawable.round_transparent)
 
                 frameText = "W"
-                loadChart(viewModel.currentCrypto.value!!,frameText)
+                loadChart(cryptoCurrency,frameText)
             }
 
 
-            viewBinding.ivCoinLogoDetails.load(viewModel.getCoinLogo(it.id.toString()))
+            viewBinding.ivCoinLogoDetails.load(viewModel.getCoinLogo(cryptoCurrency.id.toString()))
 
-            viewBinding.tvCoinNameDetails.text = it.name
+            viewBinding.tvCoinNameDetails.text = cryptoCurrency.name
 
-            viewBinding.tvCoinSymbolDetails.text = it.symbol
+            viewBinding.tvCoinSymbolDetails.text = cryptoCurrency.symbol
 
             viewBinding.tvChangePercentageDetails.text =
-                "${String.format("%.02f", it.quote.usdData.percentChange24h)}%"
+                "${String.format("%.02f", cryptoCurrency.quote.usdData.percentChange24h)}%"
 
-            viewBinding.tvCurrentPriceDetails.text = "${String.format("%.02f",it.quote.usdData.price)}$"
+            viewBinding.tvCurrentPriceDetails.text = "${String.format("%.02f",cryptoCurrency.quote.usdData.price)}$"
 
             when{
-                it.quote.usdData.percentChange24h > 0 ->{
+                cryptoCurrency.quote.usdData.percentChange24h > 0 ->{
                     viewBinding.tvChangePercentageDetails.setBackgroundResource(R.drawable.rounded_percentage_up)
 
                 }
-                it.quote.usdData.percentChange24h < 0 -> {
+                cryptoCurrency.quote.usdData.percentChange24h < 0 -> {
                     viewBinding.tvChangePercentageDetails.setBackgroundResource(R.drawable.rounded_percentage_down)
 
                 }
             }
-            viewBinding.tv1hChangeDetail.text = "${String.format("%.02f",it.quote.usdData.percentChange1h)}%"
+            viewBinding.tv1hChangeDetail.text = "${String.format("%.02f",cryptoCurrency.quote.usdData.percentChange1h)}%"
 
             when{
-                it.quote.usdData.percentChange1h > 0 ->{
+                cryptoCurrency.quote.usdData.percentChange1h > 0 ->{
                     viewBinding.tv1hChangeDetail.setTextColor(requireContext().getColor(R.color.green))
 
                 }
-                it.quote.usdData.percentChange1h < 0 -> {
+                cryptoCurrency.quote.usdData.percentChange1h < 0 -> {
                     viewBinding.tv1hChangeDetail.setTextColor(requireContext().getColor(R.color.red))
 
                 }
@@ -113,28 +113,28 @@ private val viewModel: ViewModel by activityViewModels()
 
 
 
-            viewBinding.tv24hChangeDetail.text = "${String.format("%.02f",it.quote.usdData.percentChange24h)}%"
+            viewBinding.tv24hChangeDetail.text = "${String.format("%.02f",cryptoCurrency.quote.usdData.percentChange24h)}%"
             when{
-                it.quote.usdData.percentChange24h > 0 ->{
+                cryptoCurrency.quote.usdData.percentChange24h > 0 ->{
                     viewBinding.tv24hChangeDetail.setTextColor(requireContext().getColor(R.color.green))
                 }
-                it.quote.usdData.percentChange24h < 0 -> {
+                cryptoCurrency.quote.usdData.percentChange24h < 0 -> {
                     viewBinding.tv24hChangeDetail.setTextColor(requireContext().getColor(R.color.red))
                 }
             }
 
-            viewBinding.tv7dChangeDetail.text =  "${String.format("%.02f",it.quote.usdData.percentChange7d)}%"
+            viewBinding.tv7dChangeDetail.text =  "${String.format("%.02f",cryptoCurrency.quote.usdData.percentChange7d)}%"
             when{
-                it.quote.usdData.percentChange7d > 0 ->{
+                cryptoCurrency.quote.usdData.percentChange7d > 0 ->{
                     viewBinding.tv7dChangeDetail.setTextColor(requireContext().getColor(R.color.green))
                 }
-                it.quote.usdData.percentChange7d < 0 -> {
+                cryptoCurrency.quote.usdData.percentChange7d < 0 -> {
                     viewBinding.tv7dChangeDetail.setTextColor(requireContext().getColor(R.color.red))
                 }
             }
 
 
-            val volume24h = it.quote.usdData.volume24h
+            val volume24h = cryptoCurrency.quote.usdData.volume24h
             val formatedVolume = if (volume24h >= 1_000_000_000) {
                 String.format("%.2f Bil", volume24h / 1_000_000_000)
             } else {
@@ -143,7 +143,7 @@ private val viewModel: ViewModel by activityViewModels()
             viewBinding.tvVolume24h.text = "Volume 24H: $formatedVolume"
 
 
-            val circulatingSupply = it.circulatingSupply
+            val circulatingSupply = cryptoCurrency.circulatingSupply
             val formattedCirculatingSupply = if (circulatingSupply >= 1_000_000_000) {
                 String.format("%.2f Bil.", circulatingSupply / 1_000_000_000)
             } else {
@@ -152,7 +152,7 @@ private val viewModel: ViewModel by activityViewModels()
             viewBinding.tvCirculatingSupplyDetails.text = "Circulating: $formattedCirculatingSupply"
 
 
-            val totalSupply = it.totalSupply
+            val totalSupply = cryptoCurrency.totalSupply
             val formattedTotalSupply = if (totalSupply >= 1_000_000_000) {
                 String.format("%.2f Bil.", totalSupply / 1_000_000_000)
             } else {
@@ -162,10 +162,10 @@ private val viewModel: ViewModel by activityViewModels()
 
 
 
-            if (it.maxSupply == null) {
+            if (cryptoCurrency.maxSupply == null) {
                 viewBinding.tvMaxSupplyDetail.text = "Max: Unlimited"
             } else {
-                val maxSupply = it.maxSupply
+                val maxSupply = cryptoCurrency.maxSupply
                 val formattedMaxSupply = if (maxSupply >= 1_000_000_000) {
                     String.format("%.2f Bil.", maxSupply / 1_000_000_000)
                 } else {
@@ -175,7 +175,7 @@ private val viewModel: ViewModel by activityViewModels()
             }
 
 
-            val marketCap = it.quote.usdData.marketCap
+            val marketCap = cryptoCurrency.quote.usdData.marketCap
             val formattedMarketCap = if (marketCap >= 1_000_000_000) {
                 String.format("%.2f Bil.", marketCap / 1_000_000_000)
             } else {

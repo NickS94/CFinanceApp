@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.example.cfinanceapp.R
 import com.example.cfinanceapp.data.models.Account
 import com.example.cfinanceapp.databinding.FragmentRegisterBinding
 import com.example.cfinanceapp.tools.ViewModel
@@ -38,21 +39,15 @@ class RegisterFragment : Fragment() {
             val etPasswordRepeat = viewBinding.etPasswordRegisterRepeat.text.toString()
             val account = Account(email = etEmail)
             viewBinding.btnCompleteRegister.setOnClickListener {
-                    when {
-                        etPassword != etPasswordRepeat -> showToast("Ensure that the PASSWORD is REPEATED CORRECTLY")
-                        !isEmailValid(etEmail) -> showToast("Ensure that the EMAIL is VALID")
-                        correctPasswordLength(etPassword) -> showToast("Ensure that your PASSWORD is at least 8 characters.")
-                        viewModel.isAccountAlreadyRegistered(etEmail) -> showToast("This ACCOUNT is ALREADY REGISTERED")
-                        else -> {
-                            showToast("Success")
-                            viewModel.createNewAccount(account)
-                            findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment())
+                viewModel.registration(etEmail, etPassword) {
+                    showToast("Success")
+                    viewModel.createNewAccount(account)
+                    findNavController().navigate(R.id.loginFragment)
+                }
+
                         }
                     }
                 }
-            }
-        }
-
 
     private fun isEmailValid(email: String): Boolean {
 
@@ -69,5 +64,15 @@ class RegisterFragment : Fragment() {
         ).show()
     }
 
-    }
+}
+
+
+
+
+
+
+
+
+
+
 

@@ -27,6 +27,10 @@ private lateinit var viewBinding: FragmentLoginBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val etEmail = viewBinding.etLogInEmail.text.toString()
+        val etPassword = viewBinding.etPasswordLogin.text.toString()
+
+
 
         viewBinding.createAccountClickable.setOnClickListener {
             findNavController().navigate(R.id.registerFragment)
