@@ -50,9 +50,6 @@ class LoginFragment : Fragment() {
 
         }
 
-
-
-
         viewBinding.createAccountClickable.setOnClickListener {
             findNavController().navigate(R.id.registerFragment)
         }

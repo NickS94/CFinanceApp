@@ -2,7 +2,9 @@ package com.example.cfinanceapp.tools
 
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -15,6 +17,7 @@ import com.example.cfinanceapp.data.models.CryptoCurrency
 import com.example.cfinanceapp.data.models.Wallet
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
@@ -23,7 +26,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
 
     private val firebaseAuthentication = Firebase.auth
 
-    private val repository = Repository(CoinMarketCapAPI,DatabaseInstance.getDatabase(application))
+    private val repository = Repository(CoinMarketCapAPI, DatabaseInstance.getDatabase(application))
 
 
     private var _currentAccount = MutableLiveData<Account>()
@@ -40,7 +43,6 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     val accounts = repository.accounts
 
 
-
     private val _cryptoWatchList = MutableLiveData<MutableList<CryptoCurrency>>()
 
     var cryptoList = repository.coinsList
@@ -55,7 +57,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
-     private fun loadLocalData() {
+    private fun loadLocalData() {
         viewModelScope.launch {
             repository.getAllAccounts()
         }
@@ -73,21 +75,21 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         _currentCrypto.value = coin
     }
 
-    fun getCurrentAccount (account: Account){
+    fun getCurrentAccount(account: Account) {
         _currentAccount.value = account
     }
 
-    fun createNewAccount (account: Account){
+    fun createNewAccount(account: Account) {
         viewModelScope.launch {
             repository.insertAccount(account)
         }
     }
 
-    fun isAccountAlreadyRegistered(email: String):Boolean{
+    fun isAccountAlreadyRegistered(email: String): Boolean {
         return accounts.value?.any { it.email == email } ?: false
     }
 
-    fun findWalletByUserId(accountId:Long){
+    fun findWalletByUserId(accountId: Long) {
         viewModelScope.launch {
             _currentWallet.value = repository.getWalletById(accountId)
         }
@@ -132,7 +134,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun addToWatchlist(coin: CryptoCurrency):MutableList<CryptoCurrency> {
+    fun addToWatchlist(coin: CryptoCurrency): MutableList<CryptoCurrency> {
         val updatedList = (_cryptoWatchList.value ?: emptyList()).toMutableList()
         updatedList.add(coin)
         _cryptoWatchList.value = updatedList
@@ -157,22 +159,20 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun registration(email: String, password: String, completion: () -> Unit) {
-        val account = Account(email=email)
+        val account = Account(email = email)
         if (email.isNotEmpty() && password.isNotEmpty()) {
-            firebaseAuthentication.createUserWithEmailAndPassword(email, password).addOnCompleteListener{
-                if (it.isSuccessful) {
-                    isAccountAlreadyRegistered(email)
-                    createNewAccount(account)
-                    completion()
+            firebaseAuthentication.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        createNewAccount(account)
+                        completion()
+                    } else {
+                        Log.e("FIREBASE", it.exception.toString())
+                        Log.e("FIREBASE", "email: $email")
+                        Log.e("FIREBASE", "password : $password")
 
-                } else {
-                    Log.e("FIREBASE", it.exception.toString())
-                    Log.e("FIREBASE", "email: $email")
-                    Log.e("FIREBASE", "password : $password")
-
+                    }
                 }
-            }
-
         }
     }
 
@@ -189,12 +189,9 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
                         Log.e("FIREBASE", "password : $password")
 
                     }
-
                 }
         }
     }
-
-
 
 
 }
