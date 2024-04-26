@@ -23,6 +23,7 @@ retrofit = "2.9.0"
 roomRuntime = "2.6.1"
 googleServices = "4.4.1"
 firebaseAuth = "22.3.1"
+firebaseCommonKtx = "21.0.0"
 
 
 [libraries]
@@ -51,6 +52,7 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 squareup-moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshiKotlinVersion" }
 google-services = { group = "com.google.gms", name = "google-services", version.ref = "googleServices" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
+firebase-common-ktx = { group = "com.google.firebase", name = "firebase-common-ktx", version.ref = "firebaseCommonKtx" }
 
 
 [plugins]

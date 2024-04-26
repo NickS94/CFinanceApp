@@ -11,7 +11,6 @@ import com.example.cfinanceapp.tools.ViewModel
 import com.example.cfinanceapp.data.models.CryptoCurrency
 
 import com.example.cfinanceapp.databinding.MarketItemBinding
-import com.example.cfinanceapp.ui.MarketFragmentDirections
 
 class MarketAdapter(
     private var dataListCrypto: List<CryptoCurrency>,
@@ -54,7 +53,7 @@ class MarketAdapter(
         }
 
         holder.itemView.setOnClickListener {
-            viewModel.setCurrentCoin(coin)
+            viewModel.getCurrentCoin(coin)
             it.findNavController().navigate(R.id.detailsFragment)
         }
     }

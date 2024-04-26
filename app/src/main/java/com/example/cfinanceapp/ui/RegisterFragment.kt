@@ -14,7 +14,6 @@ import com.example.cfinanceapp.databinding.FragmentRegisterBinding
 import com.example.cfinanceapp.tools.ViewModel
 
 
-
 class RegisterFragment : Fragment() {
 
     private lateinit var viewBinding: FragmentRegisterBinding
@@ -31,38 +30,52 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.accounts.observe(viewLifecycleOwner){
 
-        viewModel.accounts.observe(viewLifecycleOwner) {
-
-            val etEmail = viewBinding.etEmailRegister.text.toString()
-            val etPassword = viewBinding.etPasswordRegister.text.toString()
-            val etPasswordRepeat = viewBinding.etPasswordRegisterRepeat.text.toString()
-            val account = Account(email = etEmail)
             viewBinding.btnCompleteRegister.setOnClickListener {
-                viewModel.registration(etEmail, etPassword) {
-                    showToast("Success")
-                    viewModel.createNewAccount(account)
-                    findNavController().navigate(R.id.loginFragment)
-                }
 
+                val etEmail = viewBinding.etEmailRegister.text.toString()
+                val etPassword = viewBinding.etPasswordRegister.text.toString()
+                val etPasswordRepeat = viewBinding.etPasswordRegisterRepeat.text.toString()
+
+                when {
+
+                    etEmail.isEmpty() -> showToast("Please insert an EMAIL")
+                    !isEmailValid(etEmail) -> showToast("Please insert an valid EMAIL")
+                    viewModel.isAccountAlreadyRegistered(etEmail) -> showToast("This account is ALREADY registered")
+                    etPassword.isEmpty() -> showToast("Please insert an PASSWORD")
+                    correctPasswordLength(etPassword) -> showToast("The PASSWORD must be AT LEAST 8 numbers,letters etc.")
+                    etPasswordRepeat.isEmpty() || etPasswordRepeat != etPassword -> showToast("Please ensure that the REPEATED password is CORRECT")
+                    else -> {
+
+                        viewModel.registration(etEmail, etPassword) {
+                            showToast("Success")
+                            findNavController().navigate(R.id.loginFragment)
                         }
                     }
                 }
+            }
+        }
+    }
+
+
 
     private fun isEmailValid(email: String): Boolean {
-
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
+
 
     private fun correctPasswordLength(password: String): Boolean {
         return password.length < 8
     }
+
 
     private fun showToast(message: String) {
         Toast.makeText(
             context, message, Toast.LENGTH_SHORT
         ).show()
     }
+
 
 }
 

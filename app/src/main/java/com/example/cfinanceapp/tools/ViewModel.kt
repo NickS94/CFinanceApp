@@ -55,7 +55,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
-    private fun loadLocalData() {
+     private fun loadLocalData() {
         viewModelScope.launch {
             repository.getAllAccounts()
         }
@@ -69,8 +69,12 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
 
     }
 
-    fun setCurrentCoin(coin: CryptoCurrency) {
+    fun getCurrentCoin(coin: CryptoCurrency) {
         _currentCrypto.value = coin
+    }
+
+    fun getCurrentAccount (account: Account){
+        _currentAccount.value = account
     }
 
     fun createNewAccount (account: Account){
@@ -153,18 +157,22 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun registration(email: String, password: String, completion: () -> Unit) {
+        val account = Account(email=email)
         if (email.isNotEmpty() && password.isNotEmpty()) {
-            firebaseAuthentication.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        completion()
-                    } else {
-                        Log.e("FIREBASE", it.exception.toString())
-                        Log.e("FIREBASE", "email: $email")
-                        Log.e("FIREBASE", "password : $password")
+            firebaseAuthentication.createUserWithEmailAndPassword(email, password).addOnCompleteListener{
+                if (it.isSuccessful) {
+                    isAccountAlreadyRegistered(email)
+                    createNewAccount(account)
+                    completion()
 
-                    }
+                } else {
+                    Log.e("FIREBASE", it.exception.toString())
+                    Log.e("FIREBASE", "email: $email")
+                    Log.e("FIREBASE", "password : $password")
+
                 }
+            }
+
         }
     }
 

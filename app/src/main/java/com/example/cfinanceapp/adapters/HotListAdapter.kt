@@ -11,7 +11,6 @@ import com.example.cfinanceapp.R
 import com.example.cfinanceapp.tools.ViewModel
 import com.example.cfinanceapp.data.models.CryptoCurrency
 import com.example.cfinanceapp.databinding.MarketItemBinding
-import com.example.cfinanceapp.ui.HomeFragmentDirections
 
 class HotListAdapter(
     private val dataList:List<CryptoCurrency>,
@@ -55,7 +54,7 @@ class HotListAdapter(
         holder.binding.tvChangePercentageMarket.text = "Volume 24H: $formattedVolume"
 
         holder.itemView.setOnClickListener {
-            viewModel.setCurrentCoin(coin)
+            viewModel.getCurrentCoin(coin)
             it.findNavController().navigate(R.id.detailsFragment)
         }
 

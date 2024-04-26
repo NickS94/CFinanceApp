@@ -1,6 +1,4 @@
-import org.jetbrains.kotlin.fir.expressions.FirEmptyArgumentList.arguments
-import org.jetbrains.kotlin.fir.resolve.calls.ResolvedCallArgument.DefaultArgument.arguments
-import org.jetbrains.kotlin.resolve.calls.model.ResolvedCallArgument.DefaultArgument.arguments
+
 
 plugins {
     alias(libs.plugins.androidApplication)
@@ -13,8 +11,9 @@ plugins {
 
 }
 
-val apiKey:String = com.android.build.gradle.internal.cxx.configure.gradleLocalProperties(rootDir,providers)
-    .getProperty("apiKey")
+val apiKey: String =
+    com.android.build.gradle.internal.cxx.configure.gradleLocalProperties(rootDir, providers)
+        .getProperty("apiKey")
 
 android {
     namespace = "com.example.cfinanceapp"
@@ -29,12 +28,11 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        ksp{
+        ksp {
 
             arg("room.schemaLocation", "$projectDir/schemas")
 
         }
-
 
 
     }
@@ -69,7 +67,8 @@ android {
 
 dependencies {
 
-implementation(libs.firebase.auth)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.common.ktx)
     val retrofitVersion = "2.9.0"
 
     implementation(libs.androidx.core.ktx)
@@ -99,20 +98,7 @@ implementation(libs.firebase.auth)
     // Logging Interceptor
     implementation(libs.logging.interceptor)
 
-    implementation (libs.kotlinx.serialization.json)
-
-
-
-
-
-
-
-
-
-
-
-
-
+    implementation(libs.kotlinx.serialization.json)
 
 
 }

@@ -11,7 +11,6 @@ import com.example.cfinanceapp.R
 import com.example.cfinanceapp.tools.ViewModel
 import com.example.cfinanceapp.data.models.CryptoCurrency
 import com.example.cfinanceapp.databinding.WatchlistItemBinding
-import com.example.cfinanceapp.ui.HomeFragmentDirections
 
 class WatchListAdapter(
     private var dataSet: List<CryptoCurrency> = emptyList(),
@@ -60,7 +59,7 @@ class WatchListAdapter(
 
 
         holder.itemView.setOnClickListener {
-            viewModel.setCurrentCoin(coin)
+            viewModel.getCurrentCoin(coin)
             it.findNavController().navigate(R.id.detailsFragment)
         }
 

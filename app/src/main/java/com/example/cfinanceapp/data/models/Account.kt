@@ -12,6 +12,8 @@ data class Account(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     @ColumnInfo(name = "email")
-    val email: String
+    val email: String,
+    @ColumnInfo(name = "name")
+    val name :String = "Nick"
 
 )
