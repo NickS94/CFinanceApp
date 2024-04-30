@@ -40,7 +40,7 @@ class LoginFragment : Fragment() {
                     etPassword.isEmpty() -> showToast("Please give your password.")
                     !viewModel.isAccountAlreadyRegistered(etEmail) -> showToast("You are not Registered , Please REGISTER an ACCOUNT.")
                     else -> viewModel.loginAuthentication(etEmail, etPassword) {
-                        viewModel.getCurrentAccount(account)
+                        viewModel.findAccountByEmail(etEmail)
                         showToast("Welcome ${account.name}!")
                         findNavController().navigate(R.id.homeFragment)
                     }
@@ -57,7 +57,7 @@ class LoginFragment : Fragment() {
 
     }
 
-    fun showToast(message: String) {
+    private fun showToast(message: String) {
         Toast.makeText(
             context,
             message,

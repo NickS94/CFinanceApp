@@ -6,6 +6,8 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
+import androidx.room.Upsert
 import com.example.cfinanceapp.data.models.Account
 import com.example.cfinanceapp.data.models.Wallet
 
@@ -40,6 +42,7 @@ interface ProfileDao {
     suspend fun getWalletById(accountId: Long):Wallet
 
 
-
+    @Update
+    suspend fun updateWalletAssets(wallet: Wallet)
 
 }

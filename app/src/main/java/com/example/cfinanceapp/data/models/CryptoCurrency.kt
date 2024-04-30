@@ -3,8 +3,9 @@ package com.example.cfinanceapp.data.models
 import androidx.room.TypeConverters
 import com.example.cfinanceapp.tools.QuoteConverter
 import com.squareup.moshi.Json
-import java.io.Serializable
-@TypeConverters(QuoteConverter::class)
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class CryptoCurrency(
     val name: String,
     val id: Int,
@@ -17,8 +18,6 @@ data class CryptoCurrency(
     @Json(name = "max_supply")
     val maxSupply: Double?,
     val symbol: String,
-
+    @TypeConverters(QuoteConverter::class)
     val quote: Quote
-
-
-):Serializable
+)

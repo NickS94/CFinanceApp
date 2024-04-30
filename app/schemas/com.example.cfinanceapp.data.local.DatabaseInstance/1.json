@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "57f9c5e36a9454225a6822129d24e05a",
+    "identityHash": "c3a5df5dbb636f0857d10414982f5900",
     "entities": [
       {
         "tableName": "accounts",
@@ -38,7 +38,7 @@
       },
       {
         "tableName": "Wallet",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `assets` TEXT NOT NULL, `transactions` TEXT NOT NULL, `accountId` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `assets` TEXT NOT NULL, `transactions` TEXT NOT NULL, `accountId` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -66,7 +66,7 @@
           }
         ],
         "primaryKey": {
-          "autoGenerate": true,
+          "autoGenerate": false,
           "columnNames": [
             "id"
           ]
@@ -78,7 +78,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '57f9c5e36a9454225a6822129d24e05a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c3a5df5dbb636f0857d10414982f5900')"
     ]
   }
 }

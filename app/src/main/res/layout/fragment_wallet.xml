@@ -116,22 +116,23 @@
         android:id="@+id/btnDeposit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="70dp"
         android:backgroundTint="@color/turquoise_50"
+        app:fabCustomSize="40dp"
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/deposit_icon"
-        app:fabCustomSize="40dp"
         app:layout_constraintBottom_toTopOf="@+id/materialCardView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.336"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/walletCard"
-        app:layout_constraintVertical_bias="0.112" />
+        app:layout_constraintVertical_bias="0.114"
+        tools:ignore="ContentDescription" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnSend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="70dp"
         android:backgroundTint="@color/turquoise_50"
         android:clickable="true"
         android:focusable="true"
@@ -139,10 +140,9 @@
         app:fabCustomSize="40dp"
         app:layout_constraintBottom_toTopOf="@+id/materialCardView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.277"
-        app:layout_constraintStart_toEndOf="@+id/btnDeposit"
         app:layout_constraintTop_toBottomOf="@+id/walletCard"
-        app:layout_constraintVertical_bias="0.111" />
+        app:layout_constraintVertical_bias="0.114"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/tvDeposit"
@@ -167,4 +167,36 @@
         app:layout_constraintEnd_toEndOf="@+id/btnSend"
         app:layout_constraintStart_toStartOf="@+id/btnSend"
         app:layout_constraintTop_toBottomOf="@+id/btnSend" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnCreateNewWallet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:backgroundTint="@color/turquoise_50"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@android:drawable/ic_input_add"
+        app:fabCustomSize="40dp"
+        app:layout_constraintBottom_toTopOf="@+id/materialCardView"
+        app:layout_constraintEnd_toStartOf="@+id/btnSend"
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toEndOf="@+id/btnDeposit"
+        app:layout_constraintTop_toBottomOf="@+id/walletCard"
+        app:layout_constraintVertical_bias="0.009"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/tvCreateNewWallet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/new_wallet"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/tvSend"
+        app:layout_constraintHorizontal_bias="0.459"
+        app:layout_constraintStart_toEndOf="@+id/tvDeposit"
+        app:layout_constraintTop_toBottomOf="@+id/btnCreateNewWallet" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

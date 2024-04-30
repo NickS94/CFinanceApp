@@ -9,13 +9,12 @@ import com.example.cfinanceapp.tools.QuoteConverter
 @Entity(tableName = "Wallet")
 
 data class Wallet(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     val id : Long = 0,
     @ColumnInfo("assets")
     @TypeConverters(CryptoCurrency::class)
-    val assets : List<CryptoCurrency> = emptyList(),
+    var assets : MutableList<CryptoCurrency> = mutableListOf(),
     @ColumnInfo("transactions")
-    val transactionHash : String ,
-
+    val transactionHash : String,
     val accountId : Long
 )

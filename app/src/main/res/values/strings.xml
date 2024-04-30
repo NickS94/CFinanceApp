@@ -63,4 +63,7 @@
     </string-array>
 
     <string name="here"><u>here</u></string>
+    <string name="d">D</string>
+    <string name="w">W</string>
+    <string name="new_wallet">New Wallet</string>
 </resources>

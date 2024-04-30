@@ -9,6 +9,7 @@ import com.example.cfinanceapp.data.local.DatabaseInstance
 import com.example.cfinanceapp.data.models.Account
 import com.example.cfinanceapp.data.models.ResponseAPI
 import com.example.cfinanceapp.data.models.Wallet
+import java.security.spec.ECField
 
 
 var TAG = "Repository"
@@ -105,6 +106,14 @@ class Repository(
             throw e
         }
 
+    }
+
+    suspend fun updateWallet(wallet: Wallet){
+        try {
+            databaseInstance.dao.updateWalletAssets(wallet)
+        }catch (e:Exception){
+            Log.d(TAG,"FAILED TO LOAD : ${e.message}")
+        }
     }
 
 

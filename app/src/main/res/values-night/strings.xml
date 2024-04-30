@@ -53,4 +53,7 @@
     <string name="_1ht">1H:</string>
     <string name="_24ht">24H:</string>
     <string name="supply">Supply</string>
+    <string name="d">D</string>
+    <string name="w">W</string>
+    <string name="new_wallet">New Wallet</string>
 </resources>

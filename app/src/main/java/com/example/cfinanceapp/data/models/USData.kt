@@ -1,11 +1,13 @@
 package com.example.cfinanceapp.data.models
 
-import androidx.room.TypeConverters
-import com.example.cfinanceapp.tools.USDataConverter
+
+
 import com.squareup.moshi.Json
+import kotlinx.serialization.Serializable
+
+@Serializable
 
 data class USData(
-
     @Json(name = "volume_24h")
     val volume24h : Double,
     val price : Double,

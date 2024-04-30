@@ -2,9 +2,7 @@ package com.example.cfinanceapp.tools
 
 
 import android.app.Application
-import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -17,7 +15,6 @@ import com.example.cfinanceapp.data.models.CryptoCurrency
 import com.example.cfinanceapp.data.models.Wallet
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
-import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
@@ -41,6 +38,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
 
 
     val accounts = repository.accounts
+    val wallets = repository.wallets
 
 
     private val _cryptoWatchList = MutableLiveData<MutableList<CryptoCurrency>>()
@@ -75,13 +73,23 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         _currentCrypto.value = coin
     }
 
-    fun getCurrentAccount(account: Account) {
-        _currentAccount.value = account
-    }
 
-    fun createNewAccount(account: Account) {
+    private fun createNewAccount(account: Account) {
         viewModelScope.launch {
             repository.insertAccount(account)
+        }
+    }
+
+    fun createNewWallet(){
+        val wallet = Wallet(transactionHash = "", accountId = _currentAccount.value!!.id)
+        viewModelScope.launch {
+            repository.insertWallet(wallet)
+        }
+    }
+
+    fun updateWallet(wallet: Wallet){
+        viewModelScope.launch {
+            repository.updateWallet(wallet)
         }
     }
 
@@ -193,5 +201,10 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+
+
+    fun logout (){
+        firebaseAuthentication.signOut()
+    }
 
 }

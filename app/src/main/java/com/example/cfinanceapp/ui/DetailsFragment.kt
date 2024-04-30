@@ -6,23 +6,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import androidx.core.view.isGone
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import coil.load
 import com.example.cfinanceapp.R
 import com.example.cfinanceapp.tools.ViewModel
 import com.example.cfinanceapp.data.models.CryptoCurrency
+import com.example.cfinanceapp.data.models.Wallet
 import com.example.cfinanceapp.databinding.FragmentDetailsBinding
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlin.properties.Delegates
 
 
 class DetailsFragment : Fragment() {
-private lateinit var viewBinding:FragmentDetailsBinding
-private val viewModel: ViewModel by activityViewModels()
+    private lateinit var viewBinding: FragmentDetailsBinding
+    private val viewModel: ViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,19 +31,19 @@ private val viewModel: ViewModel by activityViewModels()
     }
 
 
-
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
 
-        var frameText = ""
-
 
         var selectedButton: Button? = null
 
-        viewModel.currentCrypto.observe(viewLifecycleOwner){cryptoCurrency ->
-            loadChart(cryptoCurrency,frameText)
+        viewModel.currentCrypto.observe(viewLifecycleOwner) { cryptoCurrency ->
+
+            viewModel.findWalletByUserId(viewModel.currentAccount.value!!.id)
+
+            loadChart(cryptoCurrency, "30")
 
             viewBinding.btn1h.setOnClickListener {
 
@@ -53,8 +51,8 @@ private val viewModel: ViewModel by activityViewModels()
                 selectedButton = viewBinding.btn1h
                 viewBinding.btn1h.setBackgroundResource(R.drawable.round_transparent)
 
-                frameText = "1H"
-                loadChart(cryptoCurrency,frameText)
+
+                loadChart(cryptoCurrency, viewBinding.btn1h.text.toString())
 
             }
             viewBinding.btn24h.setOnClickListener {
@@ -63,8 +61,8 @@ private val viewModel: ViewModel by activityViewModels()
                 selectedButton = viewBinding.btn24h
                 viewBinding.btn24h.setBackgroundResource(R.drawable.round_transparent)
 
-                frameText = "D"
-                loadChart(cryptoCurrency,frameText)
+
+                loadChart(cryptoCurrency, viewBinding.btn24h.text.toString())
             }
             viewBinding.btnWeek.setOnClickListener {
 
@@ -72,8 +70,7 @@ private val viewModel: ViewModel by activityViewModels()
                 selectedButton = viewBinding.btnWeek
                 viewBinding.btnWeek.setBackgroundResource(R.drawable.round_transparent)
 
-                frameText = "W"
-                loadChart(cryptoCurrency,frameText)
+                loadChart(cryptoCurrency, viewBinding.btnWeek.text.toString())
             }
 
 
@@ -86,25 +83,29 @@ private val viewModel: ViewModel by activityViewModels()
             viewBinding.tvChangePercentageDetails.text =
                 "${String.format("%.02f", cryptoCurrency.quote.usdData.percentChange24h)}%"
 
-            viewBinding.tvCurrentPriceDetails.text = "${String.format("%.02f",cryptoCurrency.quote.usdData.price)}$"
+            viewBinding.tvCurrentPriceDetails.text =
+                "${String.format("%.02f", cryptoCurrency.quote.usdData.price)}$"
 
-            when{
-                cryptoCurrency.quote.usdData.percentChange24h > 0 ->{
+            when {
+                cryptoCurrency.quote.usdData.percentChange24h > 0 -> {
                     viewBinding.tvChangePercentageDetails.setBackgroundResource(R.drawable.rounded_percentage_up)
 
                 }
+
                 cryptoCurrency.quote.usdData.percentChange24h < 0 -> {
                     viewBinding.tvChangePercentageDetails.setBackgroundResource(R.drawable.rounded_percentage_down)
 
                 }
             }
-            viewBinding.tv1hChangeDetail.text = "${String.format("%.02f",cryptoCurrency.quote.usdData.percentChange1h)}%"
+            viewBinding.tv1hChangeDetail.text =
+                "${String.format("%.02f", cryptoCurrency.quote.usdData.percentChange1h)}%"
 
-            when{
-                cryptoCurrency.quote.usdData.percentChange1h > 0 ->{
+            when {
+                cryptoCurrency.quote.usdData.percentChange1h > 0 -> {
                     viewBinding.tv1hChangeDetail.setTextColor(requireContext().getColor(R.color.green))
 
                 }
+
                 cryptoCurrency.quote.usdData.percentChange1h < 0 -> {
                     viewBinding.tv1hChangeDetail.setTextColor(requireContext().getColor(R.color.red))
 
@@ -113,21 +114,25 @@ private val viewModel: ViewModel by activityViewModels()
 
 
 
-            viewBinding.tv24hChangeDetail.text = "${String.format("%.02f",cryptoCurrency.quote.usdData.percentChange24h)}%"
-            when{
-                cryptoCurrency.quote.usdData.percentChange24h > 0 ->{
+            viewBinding.tv24hChangeDetail.text =
+                "${String.format("%.02f", cryptoCurrency.quote.usdData.percentChange24h)}%"
+            when {
+                cryptoCurrency.quote.usdData.percentChange24h > 0 -> {
                     viewBinding.tv24hChangeDetail.setTextColor(requireContext().getColor(R.color.green))
                 }
+
                 cryptoCurrency.quote.usdData.percentChange24h < 0 -> {
                     viewBinding.tv24hChangeDetail.setTextColor(requireContext().getColor(R.color.red))
                 }
             }
 
-            viewBinding.tv7dChangeDetail.text =  "${String.format("%.02f",cryptoCurrency.quote.usdData.percentChange7d)}%"
-            when{
-                cryptoCurrency.quote.usdData.percentChange7d > 0 ->{
+            viewBinding.tv7dChangeDetail.text =
+                "${String.format("%.02f", cryptoCurrency.quote.usdData.percentChange7d)}%"
+            when {
+                cryptoCurrency.quote.usdData.percentChange7d > 0 -> {
                     viewBinding.tv7dChangeDetail.setTextColor(requireContext().getColor(R.color.green))
                 }
+
                 cryptoCurrency.quote.usdData.percentChange7d < 0 -> {
                     viewBinding.tv7dChangeDetail.setTextColor(requireContext().getColor(R.color.red))
                 }
@@ -183,40 +188,44 @@ private val viewModel: ViewModel by activityViewModels()
             }
             viewBinding.tvMarketCapDetailsCard.text = "Market Cap \n $formattedMarketCap $"
 
+            viewBinding.btnBuyDetails.setOnClickListener {
+                viewModel.currentWallet.value!!.assets.add(cryptoCurrency)
+                viewModel.updateWallet(viewModel.currentWallet.value!!)
+            }
 
-
+            viewBinding.btnSell.setOnClickListener {
+                if (viewModel.currentWallet.value!!.assets.contains(cryptoCurrency)){
+                    viewModel.currentWallet.value!!.assets.remove(cryptoCurrency)
+                    viewModel.updateWallet(viewModel.currentWallet.value!!)
+                }
+            }
         }
-
-
-
 
         viewBinding.btnBackDetails.setOnClickListener {
             findNavController().navigateUp()
         }
 
 
-
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    private fun loadChart(coin: CryptoCurrency, timeframe:String ){
+    private fun loadChart(coin: CryptoCurrency, timeframe: String) {
 
 
         viewBinding.wvChartDetails.settings.javaScriptEnabled = true
         viewBinding.wvChartDetails.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
         viewBinding.wvChartDetails.loadUrl(
-            "https://s.tradingview.com/widgetembed/?frameElementId=tradingview_76d87&symbol="+coin.symbol+"usd&interval="+timeframe+"&hidesidetoolbar=1&hidetoptoolbar=1&symboledit=1&saveimage=1&toolbarbg=F1F3F6&studies=[]&hideideas=1&theme=Dark&style=1&timezone=Etc%2FUTC&studies_overrides={}&overrides={}&enabled_features=[]&disabled_features=[]&locale=en&utm_source=coinmarketcap.com&utm_medium=widget&utm_campaign=chart&utm_term"
+            "https://s.tradingview.com/widgetembed/?frameElementId=tradingview_76d87&symbol=" + coin.symbol + "usd&interval=" + timeframe +
+                    "&hidesidetoolbar=1&hidetoptoolbar=1&symboledit=1&saveimage=1&toolbarbg=F1F3F6&studies=[]" +
+                    "&hideideas=1&theme=Dark&style=1&timezone=Etc%2FUTC&studies_overrides={}&overrides={}" +
+                    "&enabled_features=[]&disabled_features=[]&locale=en&utm_source=coinmarketcap.com&utm_medium=widget&utm_campaign=chart&utm_term"
 
         )
     }
 
-    override fun onResume() {
-        super.onResume()
-        val bottomNavigationView =
-            requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-
-        bottomNavigationView.isGone = true
+    private fun showToast(message: String) {
+        Toast.makeText(
+            context, message, Toast.LENGTH_SHORT
+        ).show()
     }
-
-
 }
