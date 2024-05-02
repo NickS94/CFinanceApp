@@ -1,6 +1,7 @@
 package com.example.cfinanceapp.tools
 
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
@@ -11,19 +12,31 @@ import com.example.cfinanceapp.data.API.CoinMarketCapAPI
 import com.example.cfinanceapp.data.Repository
 import com.example.cfinanceapp.data.local.DatabaseInstance
 import com.example.cfinanceapp.data.models.Account
+import com.example.cfinanceapp.data.models.Asset
 import com.example.cfinanceapp.data.models.CryptoCurrency
 import com.example.cfinanceapp.data.models.Wallet
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import kotlin.random.Random
 
 class ViewModel(application: Application) : AndroidViewModel(application) {
 
+    private val repository = Repository(CoinMarketCapAPI, DatabaseInstance.getDatabase(application))
+
 
     private val firebaseAuthentication = Firebase.auth
 
-    private val repository = Repository(CoinMarketCapAPI, DatabaseInstance.getDatabase(application))
+
+    var cryptoList = repository.coinsList
+    val accounts = repository.accounts
+    val wallets = repository.wallets
+    val assets = repository.assets
+
+
+    private var _currentAsset = MutableLiveData<Asset>()
+    val currentAsset: LiveData<Asset> = _currentAsset
 
 
     private var _currentAccount = MutableLiveData<Account>()
@@ -33,29 +46,35 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     private var _currentWallet = MutableLiveData<Wallet>()
     val currentWallet: LiveData<Wallet> = _currentWallet
 
+
     private var _currentCrypto = MutableLiveData<CryptoCurrency>()
     val currentCrypto: LiveData<CryptoCurrency> = _currentCrypto
 
 
-    val accounts = repository.accounts
-    val wallets = repository.wallets
-
-
     private val _cryptoWatchList = MutableLiveData<MutableList<CryptoCurrency>>()
-
-    var cryptoList = repository.coinsList
-
-    val cryptoWatchList: LiveData<MutableList<CryptoCurrency>>
-        get() = _cryptoWatchList
+    val cryptoWatchList: LiveData<MutableList<CryptoCurrency>> = _cryptoWatchList
 
 
     init {
         loadCrypto()
-        loadLocalData()
+        loadAllAccounts()
+        loadAllWallets()
+        loadAllAssets()
     }
 
+    private fun loadAllAssets() {
+        viewModelScope.launch {
+            repository.getAllAssets()
+        }
+    }
 
-    private fun loadLocalData() {
+    private fun loadAllWallets() {
+        viewModelScope.launch {
+            repository.getAllWallets()
+        }
+    }
+
+    private fun loadAllAccounts() {
         viewModelScope.launch {
             repository.getAllAccounts()
         }
@@ -66,6 +85,11 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
             repository.loadCryptoCurrencyList()
 
         }
+    }
+
+    fun loadHotList(): List<CryptoCurrency> {
+        val sortedByVolume = cryptoList.value!!.data
+        return sortedByVolume.subList(0, 10).sortedByDescending { it.quote.usdData.volume24h }
 
     }
 
@@ -80,21 +104,18 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun createNewWallet(){
-        val wallet = Wallet(transactionHash = "", accountId = _currentAccount.value!!.id)
+    fun createNewWallet() {
+        val wallet = Wallet(accountId = _currentAccount.value!!.id)
         viewModelScope.launch {
             repository.insertWallet(wallet)
+            _currentWallet.value = wallet
         }
     }
 
-    fun updateWallet(wallet: Wallet){
+    fun updateOrInsertAssets(asset: Asset) {
         viewModelScope.launch {
-            repository.updateWallet(wallet)
+            repository.insertAssets(asset)
         }
-    }
-
-    fun isAccountAlreadyRegistered(email: String): Boolean {
-        return accounts.value?.any { it.email == email } ?: false
     }
 
     fun findWalletByUserId(accountId: Long) {
@@ -103,6 +124,49 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun findAssetByWalletId(walletId: Long) {
+        viewModelScope.launch {
+            _currentAsset.value = repository.getAssetByWalletId(walletId)
+        }
+    }
+
+    fun findAssetsById(walletId: Long){
+        viewModelScope.launch {
+            repository.getAssetsByWalletId(walletId)
+        }
+    }
+
+    @SuppressLint("NewApi")
+    fun updateAssetsAmounts(amount: Double, coin: CryptoCurrency) {
+        val currentDate = LocalDateTime.now()
+        val newAsset = Asset(
+            fiat = null,
+            cryptoCurrency = coin,
+            amount = amount,
+            transactionHash = generateTransactionHash(),
+            transactionDate = currentDate.toString(),
+            walletId = _currentWallet.value!!.id
+        )
+        viewModelScope.launch {
+            findAssetsById(_currentWallet.value!!.id)
+            val existingAsset = assets.value?.find { it.cryptoCurrency.symbol == coin.symbol }
+            if (existingAsset?.cryptoCurrency?.symbol == coin.symbol){
+                val updatedAmount = existingAsset.amount + amount
+                val updatedAsset = existingAsset.copy(amount = updatedAmount)
+                updateOrInsertAssets(updatedAsset)
+            }else{
+                updateOrInsertAssets(newAsset)
+            }
+
+        }
+    }
+
+
+    fun isAccountAlreadyRegistered(email: String): Boolean {
+        return accounts.value?.any { it.email == email } ?: false
+    }
+
+
     fun findAccountByEmail(email: String) {
         viewModelScope.launch {
             _currentAccount.value = repository.getAccountByEmail(email)
@@ -110,16 +174,10 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
-    fun loadHotList(): List<CryptoCurrency> {
-        val sortedByVolume = cryptoList.value!!.data
-        return sortedByVolume.subList(0, 10).sortedByDescending { it.quote.usdData.volume24h }
-
-    }
-
-
     fun getCoinLogo(id: String): String {
         return "https://s2.coinmarketcap.com/static/img/coins/64x64/$id.png"
     }
+
 
     fun search(query: String): MutableList<CryptoCurrency> {
         val searchList = mutableListOf<CryptoCurrency>()
@@ -162,9 +220,9 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
             val randomIndex = Random.nextInt(0, hexChars.length)
             sb.append(hexChars[randomIndex])
         }
-
         return sb.toString()
     }
+
 
     fun registration(email: String, password: String, completion: () -> Unit) {
         val account = Account(email = email)
@@ -202,8 +260,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
-
-    fun logout (){
+    fun logout() {
         firebaseAuthentication.signOut()
     }
 

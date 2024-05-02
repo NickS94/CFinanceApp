@@ -35,8 +35,6 @@ class DetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-
         var selectedButton: Button? = null
 
         viewModel.currentCrypto.observe(viewLifecycleOwner) { cryptoCurrency ->
@@ -189,16 +187,9 @@ class DetailsFragment : Fragment() {
             viewBinding.tvMarketCapDetailsCard.text = "Market Cap \n $formattedMarketCap $"
 
             viewBinding.btnBuyDetails.setOnClickListener {
-                viewModel.currentWallet.value!!.assets.add(cryptoCurrency)
-                viewModel.updateWallet(viewModel.currentWallet.value!!)
+                viewModel.updateAssetsAmounts(1.0,cryptoCurrency)
             }
 
-            viewBinding.btnSell.setOnClickListener {
-                if (viewModel.currentWallet.value!!.assets.contains(cryptoCurrency)){
-                    viewModel.currentWallet.value!!.assets.remove(cryptoCurrency)
-                    viewModel.updateWallet(viewModel.currentWallet.value!!)
-                }
-            }
         }
 
         viewBinding.btnBackDetails.setOnClickListener {

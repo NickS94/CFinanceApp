@@ -30,7 +30,7 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.accounts.observe(viewLifecycleOwner){
+        viewModel.accounts.observe(viewLifecycleOwner) {
 
             viewBinding.btnCompleteRegister.setOnClickListener {
 
@@ -57,7 +57,6 @@ class RegisterFragment : Fragment() {
             }
         }
     }
-
 
 
     private fun isEmailValid(email: String): Boolean {

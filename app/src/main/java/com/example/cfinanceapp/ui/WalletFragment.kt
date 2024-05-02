@@ -7,15 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import com.example.cfinanceapp.R
-import com.example.cfinanceapp.data.models.Wallet
+import com.example.cfinanceapp.adapters.AssetsAdapter
 import com.example.cfinanceapp.databinding.FragmentWalletBinding
 import com.example.cfinanceapp.tools.ViewModel
 
 class WalletFragment : Fragment() {
 
     private lateinit var viewBinding: FragmentWalletBinding
-    private val viewModel : ViewModel by activityViewModels()
+    private val viewModel: ViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,11 +28,26 @@ class WalletFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         viewBinding.btnCreateNewWallet.setOnClickListener {
-            viewModel.createNewWallet()
+            if (viewModel.currentWallet.value == null)
+            {
+                viewModel.createNewWallet()
+                showToast("Your WALLET have been CREATED SUCCESSFULLY ")
+            }else{
+                showToast("You Already have a wallet created")
+            }
         }
 
-        viewModel.wallets.observe(viewLifecycleOwner){
+        val adapter = AssetsAdapter(viewModel = viewModel)
+        viewBinding.rvAssetsWallet.adapter = adapter
+
+       viewModel.currentAccount.observe(viewLifecycleOwner){
+           viewModel.findWalletByUserId(it.id)
+       }
+
+        viewModel.currentWallet.observe(viewLifecycleOwner){
+
 
 
         }
