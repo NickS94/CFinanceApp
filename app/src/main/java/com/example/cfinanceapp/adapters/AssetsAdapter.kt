@@ -40,12 +40,12 @@ class AssetsAdapter(
     override fun onBindViewHolder(holder: AssetsViewHolder, position: Int) {
         val asset = assetsData[position]
 
-        holder.binding.ivLogoMarketItem.load(viewModel.getCoinLogo(asset.cryptoCurrency.id.toString()))
+        holder.binding.ivLogoMarketItem.load(viewModel.getCoinLogo(asset.cryptoCurrency!!.id.toString()))
 
         holder.binding.tvCoinName.text = asset.cryptoCurrency.name
 
         holder.binding.tvCurrentPriceMarket.text =
-            "$${String.format("%.2f", asset.cryptoCurrency.quote.usdData.price)}"
+            "$${String.format("%.2f", asset.cryptoCurrency.quote.usdData.price * asset.amount)}"
 
         holder.binding.tvCoinSymbol.text = asset.cryptoCurrency.symbol
 

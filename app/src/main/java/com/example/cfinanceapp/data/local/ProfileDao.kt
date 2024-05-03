@@ -5,6 +5,8 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
+import androidx.room.Upsert
 import com.example.cfinanceapp.data.models.Account
 import com.example.cfinanceapp.data.models.Asset
 import com.example.cfinanceapp.data.models.Wallet
@@ -41,8 +43,11 @@ interface ProfileDao {
     fun getAllAssets():LiveData<MutableList<Asset>>
 
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertOrUpdateAssets(asset: Asset)
+    @Insert
+    suspend fun insertAsset(asset: Asset)
+
+    @Update
+    suspend fun updateAsset(asset: Asset)
 
 
     @Query("SELECT * FROM assets WHERE walletId = :walletId")

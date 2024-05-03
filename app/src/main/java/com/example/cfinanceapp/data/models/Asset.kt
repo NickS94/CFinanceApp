@@ -13,12 +13,11 @@ data class Asset(
     @ColumnInfo(name = "Fiat")
     val fiat :Double?,
     @ColumnInfo(name = "CryptoCurrency")
-    @TypeConverters(CryptocurrencyConverter::class)
-    val cryptoCurrency: CryptoCurrency,
+    val cryptoCurrency: CryptoCurrency?,
     @ColumnInfo(name = "Amount")
-    val amount :Double,
+    var amount :Double,
     @ColumnInfo(name = "TransactionHash")
-    val transactionHash :String,
+    val transactionHash :String?,
     @ColumnInfo(name = "Date")
     val transactionDate :String,
 

@@ -46,8 +46,8 @@ class WalletFragment : Fragment() {
            viewModel.findWalletByUserId(it.id)
        }
 
-        viewModel.currentWallet.observe(viewLifecycleOwner){
-
+        viewModel.assets.observe(viewLifecycleOwner){
+            adapter.submitList(it)
 
 
         }

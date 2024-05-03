@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "efead3545769753af513703b22e9f4bb",
+    "identityHash": "fd71dd47fdf508b7c36b7371e3852b39",
     "entities": [
       {
         "tableName": "accounts",
@@ -64,7 +64,7 @@
       },
       {
         "tableName": "Assets",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `Fiat` REAL, `CryptoCurrency` TEXT NOT NULL, `Amount` REAL NOT NULL, `TransactionHash` TEXT NOT NULL, `Date` TEXT NOT NULL, `walletId` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `Fiat` REAL, `CryptoCurrency` TEXT, `Amount` REAL NOT NULL, `TransactionHash` TEXT, `Date` TEXT NOT NULL, `walletId` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -82,7 +82,7 @@
             "fieldPath": "cryptoCurrency",
             "columnName": "CryptoCurrency",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "amount",
@@ -94,7 +94,7 @@
             "fieldPath": "transactionHash",
             "columnName": "TransactionHash",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "transactionDate",
@@ -122,7 +122,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'efead3545769753af513703b22e9f4bb')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fd71dd47fdf508b7c36b7371e3852b39')"
     ]
   }
 }

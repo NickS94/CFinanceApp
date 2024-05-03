@@ -36,7 +36,6 @@ class MarketFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-
         val recyclerView = viewBinding.rvMarketList
 
 
@@ -55,22 +54,10 @@ class MarketFragment : Fragment() {
             }
         }
 
-
         viewModel.cryptoList.observe(viewLifecycleOwner) {
             recyclerView.adapter = MarketAdapter(it.data, this.requireContext(), viewModel)
 
         }
-
-        val bottomNavigationView =
-            requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-
-       viewBinding.searchViewMarket.setOnQueryTextFocusChangeListener { _, hasFocus ->
-           when(hasFocus){
-               true -> bottomNavigationView.isGone=true
-               false ->bottomNavigationView.isGone=false
-           }
-
-       }
 
 
         viewBinding.searchViewMarket.setOnQueryTextListener(object : OnQueryTextListener {
@@ -97,8 +84,6 @@ class MarketFragment : Fragment() {
         val spinnerOptions = resources.getStringArray(R.array.options)
         val arrayAdapter = ArrayAdapter(requireContext(), R.layout.drop_down_item, spinnerOptions)
         viewBinding.textOptionsDropDownMenu.setAdapter(arrayAdapter)
-
-
 
 
     }

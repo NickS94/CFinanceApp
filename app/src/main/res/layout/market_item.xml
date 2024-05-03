@@ -20,14 +20,13 @@
             android:id="@+id/ivLogoMarketItem"
             android:layout_width="64dp"
             android:layout_height="64dp"
+            android:layout_marginStart="8dp"
             android:padding="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.077"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/finance_logo"
-            app:shapeAppearanceOverlay="@style/Circular" />
+            app:shapeAppearanceOverlay="@style/Circular"
+            app:srcCompat="@drawable/finance_logo" />
 
         <TextView
             android:id="@+id/tvCoinName"

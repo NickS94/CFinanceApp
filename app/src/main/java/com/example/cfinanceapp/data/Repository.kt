@@ -98,9 +98,17 @@ class Repository(
 
     }
 
-    suspend fun insertAssets(asset: Asset){
+    suspend fun insertAssets(asset:Asset){
         try {
-            databaseInstance.dao.insertOrUpdateAssets(asset)
+            databaseInstance.dao.insertAsset(asset)
+        }catch (e: Exception) {
+            Log.d(TAG, "FAILED TO LOAD : ${e.message}")
+        }
+    }
+
+    suspend fun updateAssets(asset:Asset){
+        try {
+            databaseInstance.dao.updateAsset(asset)
         }catch (e: Exception) {
             Log.d(TAG, "FAILED TO LOAD : ${e.message}")
         }

@@ -26,6 +26,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = Repository(CoinMarketCapAPI, DatabaseInstance.getDatabase(application))
 
 
+
     private val firebaseAuthentication = Firebase.auth
 
 
@@ -34,6 +35,9 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     val wallets = repository.wallets
     val assets = repository.assets
 
+
+    private var _currentAssets = MutableLiveData<MutableList<Asset>>()
+    val currentAssets: LiveData<MutableList<Asset>> = _currentAssets
 
     private var _currentAsset = MutableLiveData<Asset>()
     val currentAsset: LiveData<Asset> = _currentAsset
@@ -112,9 +116,15 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun updateOrInsertAssets(asset: Asset) {
+    fun insertAsset(asset: Asset) {
         viewModelScope.launch {
             repository.insertAssets(asset)
+        }
+    }
+
+    fun updateAsset(asset: Asset){
+        viewModelScope.launch {
+            repository.updateAssets(asset)
         }
     }
 
@@ -130,35 +140,35 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun findAssetsById(walletId: Long){
+    private fun findAssetsById(walletId: Long) {
         viewModelScope.launch {
-            repository.getAssetsByWalletId(walletId)
+            _currentAssets.value = repository.getAssetsByWalletId(walletId)
         }
     }
 
     @SuppressLint("NewApi")
     fun updateAssetsAmounts(amount: Double, coin: CryptoCurrency) {
         val currentDate = LocalDateTime.now()
-        val newAsset = Asset(
-            fiat = null,
-            cryptoCurrency = coin,
-            amount = amount,
-            transactionHash = generateTransactionHash(),
-            transactionDate = currentDate.toString(),
-            walletId = _currentWallet.value!!.id
-        )
         viewModelScope.launch {
-            findAssetsById(_currentWallet.value!!.id)
-            val existingAsset = assets.value?.find { it.cryptoCurrency.symbol == coin.symbol }
-            if (existingAsset?.cryptoCurrency?.symbol == coin.symbol){
-                val updatedAmount = existingAsset.amount + amount
-                val updatedAsset = existingAsset.copy(amount = updatedAmount)
-                updateOrInsertAssets(updatedAsset)
-            }else{
-                updateOrInsertAssets(newAsset)
+            val assets = repository.getAssetsByWalletId(_currentWallet.value!!.id)
+            val existedAsset = assets.find { it.cryptoCurrency?.id == coin.id }
+            if (existedAsset != null) {
+                val updatedAmount = existedAsset.amount.plus(amount)
+                existedAsset.amount = updatedAmount
+                updateAsset(existedAsset)
+            } else {
+                val newAsset = Asset(
+                    fiat = null,
+                    cryptoCurrency = coin,
+                    amount = amount,
+                    transactionHash = generateTransactionHash(),
+                    transactionDate = currentDate.toString(),
+                    walletId = _currentWallet.value!!.id
+                )
+                insertAsset(newAsset)
             }
-
         }
+
     }
 
 
