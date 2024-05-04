@@ -56,8 +56,6 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="2dp"
         android:layout_marginEnd="9dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/tvCurrentPriceDetails"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn1h" />
@@ -67,7 +65,7 @@
         android:layout_width="180dp"
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
         android:backgroundTint="@color/green"
         android:text="@string/buy"
         android:textColor="@color/white"
@@ -151,28 +149,28 @@
         android:id="@+id/tvCurrentPriceDetails"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="14dp"
         android:text="@string/current_price"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/tvChangePercentageDetails"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tvChangePercentageDetails"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/wvChartDetails" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cvDetails"
-        android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginBottom="187dp"
+
         android:background="@drawable/round_transparent"
         app:cardCornerRadius="30dp"
-        android:layout_margin="5dp"
         app:layout_constraintBottom_toTopOf="@+id/btnBuyDetails"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvCurrentPriceDetails">
 
@@ -186,7 +184,7 @@
                 android:id="@+id/tvMarketCapDetailsCard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="24dp"
                 android:text="@string/MarketCap"
                 android:textColor="@color/white"
@@ -234,7 +232,7 @@
                 android:id="@+id/tvCirculatingSupplyDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="52dp"
+                android:layout_marginTop="80dp"
                 android:layout_marginEnd="16dp"
                 android:text="@string/circulating_supply"
                 android:textColor="@color/white"
@@ -267,13 +265,13 @@
                 android:id="@+id/text1hCard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/_1ht"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvMarketCapDetailsCard"
-                app:layout_constraintVertical_bias="0.011" />
+                app:layout_constraintVertical_bias="0.339" />
 
             <TextView
                 android:id="@+id/text24hCard"
@@ -299,14 +297,28 @@
                 android:id="@+id/textSupplyDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="21dp"
-                android:layout_marginEnd="40dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="32dp"
                 android:text="@string/supply"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/change"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/tvMarketCapDetailsCard"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvMarketCapDetailsCard" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
@@ -315,26 +327,27 @@
         android:id="@+id/tvChangePercentageDetails"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginStart="21dp"
         android:text="@string/change"
-        android:textColor="@color/white"
 
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/tvCurrentPriceDetails"
         app:layout_constraintStart_toEndOf="@+id/tvCurrentPriceDetails"
-        app:layout_constraintTop_toBottomOf="@+id/wvChartDetails" />
+        app:layout_constraintTop_toTopOf="@+id/tvCurrentPriceDetails" />
 
     <TextView
         android:id="@+id/tvVolume24h"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="88dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginBottom="16dp"
         android:text="@string/volume24h"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/tvChangePercentageDetails"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tvChangePercentageDetails"
         app:layout_constraintTop_toTopOf="@+id/tvChangePercentageDetails"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <ImageView
         android:id="@+id/ivFavorite"

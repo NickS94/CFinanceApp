@@ -39,10 +39,6 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     private var _currentAssets = MutableLiveData<MutableList<Asset>>()
     val currentAssets: LiveData<MutableList<Asset>> = _currentAssets
 
-    private var _currentAsset = MutableLiveData<Asset>()
-    val currentAsset: LiveData<Asset> = _currentAsset
-
-
     private var _currentAccount = MutableLiveData<Account>()
     val currentAccount: LiveData<Account> = _currentAccount
 
@@ -116,13 +112,13 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun insertAsset(asset: Asset) {
+    private fun insertAsset(asset: Asset) {
         viewModelScope.launch {
             repository.insertAssets(asset)
         }
     }
 
-    fun updateAsset(asset: Asset){
+    private fun updateAsset(asset: Asset){
         viewModelScope.launch {
             repository.updateAssets(asset)
         }
@@ -134,20 +130,14 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun findAssetByWalletId(walletId: Long) {
-        viewModelScope.launch {
-            _currentAsset.value = repository.getAssetByWalletId(walletId)
-        }
-    }
-
-    private fun findAssetsById(walletId: Long) {
+    fun findAssetsById(walletId: Long) {
         viewModelScope.launch {
             _currentAssets.value = repository.getAssetsByWalletId(walletId)
         }
     }
 
     @SuppressLint("NewApi")
-    fun updateAssetsAmounts(amount: Double, coin: CryptoCurrency) {
+    fun updateOrInsertCryptoCurrencyAmounts(amount: Double, coin: CryptoCurrency) {
         val currentDate = LocalDateTime.now()
         viewModelScope.launch {
             val assets = repository.getAssetsByWalletId(_currentWallet.value!!.id)
@@ -158,7 +148,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
                 updateAsset(existedAsset)
             } else {
                 val newAsset = Asset(
-                    fiat = null,
+                    fiat = coin.quote.usdData.price * amount,
                     cryptoCurrency = coin,
                     amount = amount,
                     transactionHash = generateTransactionHash(),
@@ -222,7 +212,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         return "https://s3.coinmarketcap.com/generated/sparklines/web/1d/usd/$coinId.png"
     }
 
-    fun generateTransactionHash(): String {
+    private fun generateTransactionHash(): String {
         val hexChars = "0123456789abcdef"
         val sb = StringBuilder(32)
 

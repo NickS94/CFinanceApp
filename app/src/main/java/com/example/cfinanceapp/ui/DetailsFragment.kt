@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -14,8 +15,9 @@ import coil.load
 import com.example.cfinanceapp.R
 import com.example.cfinanceapp.tools.ViewModel
 import com.example.cfinanceapp.data.models.CryptoCurrency
-import com.example.cfinanceapp.data.models.Wallet
 import com.example.cfinanceapp.databinding.FragmentDetailsBinding
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.textfield.TextInputEditText
 
 
 class DetailsFragment : Fragment() {
@@ -31,7 +33,7 @@ class DetailsFragment : Fragment() {
     }
 
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "InflateParams")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -161,7 +163,7 @@ class DetailsFragment : Fragment() {
             } else {
                 String.format("%.2f Mil.", totalSupply / 1_000_000)
             }
-            viewBinding.tvTotalSupplyDetail.text = "Circulating: $formattedTotalSupply"
+            viewBinding.tvTotalSupplyDetail.text = "Total: $formattedTotalSupply"
 
 
 
@@ -187,7 +189,29 @@ class DetailsFragment : Fragment() {
             viewBinding.tvMarketCapDetailsCard.text = "Market Cap \n $formattedMarketCap $"
 
             viewBinding.btnBuyDetails.setOnClickListener {
-                viewModel.updateAssetsAmounts(1.0,cryptoCurrency)
+                val dialog = BottomSheetDialog(requireContext())
+                val viewLayout = layoutInflater.inflate(R.layout.bottom_sheet_dialog_layout,null)
+                val btnConfirm = viewLayout.findViewById<AppCompatButton>(R.id.btnConfirm)
+                val btnCancel = viewLayout.findViewById<AppCompatButton>(R.id.btnCancel)
+                val etAmount = viewLayout.findViewById<TextInputEditText>(R.id.etAmount)
+
+                btnConfirm.setOnClickListener {
+                    val amountText = etAmount.text
+                    if (amountText!!.isNotEmpty()) {
+                        val amount = amountText.toString().toDouble()
+                        viewModel.updateOrInsertCryptoCurrencyAmounts(amount, cryptoCurrency)
+                        showToast("Bought $amount ${cryptoCurrency.name}")
+                        dialog.dismiss()
+                    } else {
+                        showToast("Please enter a valid amount")
+                    }
+                }
+                btnCancel.setOnClickListener {
+                    dialog.dismiss()
+                }
+                dialog.setContentView(viewLayout)
+                dialog.show()
+
             }
 
         }
@@ -218,5 +242,7 @@ class DetailsFragment : Fragment() {
         Toast.makeText(
             context, message, Toast.LENGTH_SHORT
         ).show()
+
     }
+
 }

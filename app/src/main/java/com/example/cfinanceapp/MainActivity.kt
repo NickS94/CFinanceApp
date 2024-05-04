@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
 
         navHost.navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
+                com.google.android.material.R.id.design_bottom_sheet -> viewBinding.bottomNavigationView.visibility = View.GONE
                 R.id.detailsFragment -> viewBinding.bottomNavigationView.visibility = View.GONE
                 R.id.registerFragment -> viewBinding.bottomNavigationView.visibility = View.GONE
                 R.id.loginFragment -> viewBinding.bottomNavigationView.visibility = View.GONE

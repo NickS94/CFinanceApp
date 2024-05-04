@@ -3,10 +3,11 @@ package com.example.cfinanceapp.adapters
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.example.cfinanceapp.R
 import com.example.cfinanceapp.data.models.Asset
-
 import com.example.cfinanceapp.databinding.MarketItemBinding
 import com.example.cfinanceapp.tools.ViewModel
 
@@ -44,12 +45,17 @@ class AssetsAdapter(
 
         holder.binding.tvCoinName.text = asset.cryptoCurrency.name
 
-        holder.binding.tvCurrentPriceMarket.text =
-            "$${String.format("%.2f", asset.cryptoCurrency.quote.usdData.price * asset.amount)}"
+        holder.binding.tvCurrentPriceMarket.text = asset.amount.toString()
+
 
         holder.binding.tvCoinSymbol.text = asset.cryptoCurrency.symbol
 
-        holder.binding.tvChangePercentageMarket.text = asset.amount.toString()
+        holder.binding.tvChangePercentageMarket.text = "$${String.format("%.2f", asset.cryptoCurrency.quote.usdData.price * asset.amount)}"
+
+        holder.itemView.setOnClickListener {
+            viewModel.getCurrentCoin(asset.cryptoCurrency)
+            it.findNavController().navigate(R.id.detailsFragment)
+        }
 
 
     }

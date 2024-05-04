@@ -29,8 +29,8 @@ class Repository(
     private val allWallets = databaseInstance.dao.getAllWallets()
 
 
-    private  val _assets = allAssets
-    val assets :LiveData<MutableList<Asset>> = _assets
+    private val _assets = allAssets
+    val assets: LiveData<MutableList<Asset>> = _assets
 
     private val _wallets = allWallets
     val wallets: LiveData<List<Wallet>> = _wallets
@@ -72,10 +72,10 @@ class Repository(
     }
 
 
-    fun getAllAssets(){
+    fun getAllAssets() {
         try {
             databaseInstance.dao.getAllAssets()
-        }catch (e: Exception) {
+        } catch (e: Exception) {
             Log.d(TAG, "FAILED TO LOAD :${e.message}")
         }
     }
@@ -98,18 +98,18 @@ class Repository(
 
     }
 
-    suspend fun insertAssets(asset:Asset){
+    suspend fun insertAssets(asset: Asset) {
         try {
             databaseInstance.dao.insertAsset(asset)
-        }catch (e: Exception) {
+        } catch (e: Exception) {
             Log.d(TAG, "FAILED TO LOAD : ${e.message}")
         }
     }
 
-    suspend fun updateAssets(asset:Asset){
+    suspend fun updateAssets(asset: Asset) {
         try {
             databaseInstance.dao.updateAsset(asset)
-        }catch (e: Exception) {
+        } catch (e: Exception) {
             Log.d(TAG, "FAILED TO LOAD : ${e.message}")
         }
     }
@@ -135,19 +135,19 @@ class Repository(
 
     }
 
-    suspend fun getAssetByWalletId(walletId:Long):Asset{
+    suspend fun getAssetByWalletId(walletId: Long): Asset {
         try {
             return databaseInstance.dao.getAssetById(walletId)
-        }catch (e: Exception) {
+        } catch (e: Exception) {
             Log.d(TAG, "FAILED TO LOAD : ${e.message}")
             throw e
         }
     }
 
-    suspend fun getAssetsByWalletId(walletId:Long):MutableList<Asset>{
+    suspend fun getAssetsByWalletId(walletId: Long): MutableList<Asset> {
         try {
             return databaseInstance.dao.getAssetsById(walletId)
-        }catch (e: Exception) {
+        } catch (e: Exception) {
             Log.d(TAG, "FAILED TO LOAD : ${e.message}")
             throw e
         }

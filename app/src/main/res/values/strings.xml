@@ -66,4 +66,8 @@
     <string name="d">D</string>
     <string name="w">W</string>
     <string name="new_wallet">New Wallet</string>
+    <string name="amount">Amount</string>
+    <string name="not_registered_yet_create_account">Not Registered yet? Create account</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
 </resources>

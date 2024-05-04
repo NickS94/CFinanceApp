@@ -75,7 +75,7 @@
         android:layout_marginBottom="8dp"
         android:text="@string/assets"
         android:textColor="@color/white"
-        android:textSize="32sp"
+        android:textSize="28sp"
         app:layout_constraintBottom_toTopOf="@+id/materialCardView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/walletCard"
@@ -116,16 +116,16 @@
         android:id="@+id/btnDeposit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="70dp"
+        android:layout_marginStart="68dp"
         android:backgroundTint="@color/turquoise_50"
-        app:fabCustomSize="40dp"
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/deposit_icon"
+        app:fabCustomSize="40dp"
         app:layout_constraintBottom_toTopOf="@+id/materialCardView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/walletCard"
-        app:layout_constraintVertical_bias="0.114"
+        app:layout_constraintVertical_bias="0.105"
         tools:ignore="ContentDescription" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -138,9 +138,9 @@
         android:focusable="true"
         android:src="@drawable/send_icon"
         app:fabCustomSize="40dp"
-        app:layout_constraintBottom_toTopOf="@+id/materialCardView"
+        app:layout_constraintBottom_toBottomOf="@+id/btnCreateNewWallet"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/walletCard"
+        app:layout_constraintTop_toTopOf="@+id/btnCreateNewWallet"
         app:layout_constraintVertical_bias="0.114"
         tools:ignore="ContentDescription" />
 
@@ -178,12 +178,11 @@
         android:focusable="true"
         android:src="@android:drawable/ic_input_add"
         app:fabCustomSize="40dp"
-        app:layout_constraintBottom_toTopOf="@+id/materialCardView"
+        app:layout_constraintBottom_toBottomOf="@+id/btnDeposit"
         app:layout_constraintEnd_toStartOf="@+id/btnSend"
-        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toEndOf="@+id/btnDeposit"
-        app:layout_constraintTop_toBottomOf="@+id/walletCard"
-        app:layout_constraintVertical_bias="0.009"
+        app:layout_constraintTop_toTopOf="@+id/btnDeposit"
+        app:layout_constraintVertical_bias="1.0"
         tools:ignore="ContentDescription" />
 
     <TextView

@@ -28,31 +28,29 @@ class WalletFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        viewBinding.btnCreateNewWallet.setOnClickListener {
-            if (viewModel.currentWallet.value == null)
-            {
-                viewModel.createNewWallet()
-                showToast("Your WALLET have been CREATED SUCCESSFULLY ")
-            }else{
-                showToast("You Already have a wallet created")
-            }
-        }
-
         val adapter = AssetsAdapter(viewModel = viewModel)
         viewBinding.rvAssetsWallet.adapter = adapter
 
-       viewModel.currentAccount.observe(viewLifecycleOwner){
-           viewModel.findWalletByUserId(it.id)
+       viewModel.currentAccount.observe(viewLifecycleOwner){account->
+           viewModel.findWalletByUserId(account.id)
+           viewModel.findAccountByEmail(account.email)
+           viewBinding.btnCreateNewWallet.setOnClickListener {
+               if (viewModel.currentWallet.value?.accountId != account.id)
+               {
+                   viewModel.createNewWallet()
+                   showToast("Your WALLET have been CREATED SUCCESSFULLY ")
+               }else{
+                   showToast("You Already have a wallet created")
+               }
+           }
+
        }
-
         viewModel.assets.observe(viewLifecycleOwner){
-            adapter.submitList(it)
-
-
+            viewModel.findAssetsById(viewModel.currentWallet.value!!.id)
         }
-
-
+        viewModel.currentAssets.observe(viewLifecycleOwner){
+            adapter.submitList(it)
+        }
 
     }
 
