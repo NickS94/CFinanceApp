@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.example.cfinanceapp.adapters.AssetsAdapter
@@ -47,9 +48,12 @@ class WalletFragment : Fragment() {
        }
         viewModel.assets.observe(viewLifecycleOwner){
             viewModel.findAssetsById(viewModel.currentWallet.value!!.id)
+
+
         }
-        viewModel.currentAssets.observe(viewLifecycleOwner){
-            adapter.submitList(it)
+        viewModel.currentAssets.observe(viewLifecycleOwner){assets ->
+            adapter.submitList(assets)
+            viewBinding.currentBalanceText.stringFormat(viewModel.currentBalance())
         }
 
     }
@@ -60,6 +64,11 @@ class WalletFragment : Fragment() {
             message,
             Toast.LENGTH_SHORT
         ).show()
+    }
+
+    private fun TextView.stringFormat (balance:Double){
+        val formattedText = String.format("%.2f $",balance)
+        text = formattedText
     }
 
 

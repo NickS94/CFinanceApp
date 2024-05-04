@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -33,17 +35,19 @@ class DetailsFragment : Fragment() {
     }
 
 
-    @SuppressLint("SetTextI18n", "InflateParams")
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         var selectedButton: Button? = null
+
 
         viewModel.currentCrypto.observe(viewLifecycleOwner) { cryptoCurrency ->
 
             viewModel.findWalletByUserId(viewModel.currentAccount.value!!.id)
 
-            loadChart(cryptoCurrency, "30")
+            loadChart(cryptoCurrency, "D")
 
             viewBinding.btn1h.setOnClickListener {
 
@@ -74,6 +78,8 @@ class DetailsFragment : Fragment() {
             }
 
 
+
+
             viewBinding.ivCoinLogoDetails.load(viewModel.getCoinLogo(cryptoCurrency.id.toString()))
 
             viewBinding.tvCoinNameDetails.text = cryptoCurrency.name
@@ -97,121 +103,42 @@ class DetailsFragment : Fragment() {
 
                 }
             }
-            viewBinding.tv1hChangeDetail.text =
-                "${String.format("%.02f", cryptoCurrency.quote.usdData.percentChange1h)}%"
+            viewBinding.tv1hChangeDetail.setChangeText(cryptoCurrency.quote.usdData.percentChange1h)
 
-            when {
-                cryptoCurrency.quote.usdData.percentChange1h > 0 -> {
-                    viewBinding.tv1hChangeDetail.setTextColor(requireContext().getColor(R.color.green))
+            viewBinding.tv24hChangeDetail.setChangeText(cryptoCurrency.quote.usdData.percentChange24h)
 
-                }
-
-                cryptoCurrency.quote.usdData.percentChange1h < 0 -> {
-                    viewBinding.tv1hChangeDetail.setTextColor(requireContext().getColor(R.color.red))
-
-                }
-            }
-
-
-
-            viewBinding.tv24hChangeDetail.text =
-                "${String.format("%.02f", cryptoCurrency.quote.usdData.percentChange24h)}%"
-            when {
-                cryptoCurrency.quote.usdData.percentChange24h > 0 -> {
-                    viewBinding.tv24hChangeDetail.setTextColor(requireContext().getColor(R.color.green))
-                }
-
-                cryptoCurrency.quote.usdData.percentChange24h < 0 -> {
-                    viewBinding.tv24hChangeDetail.setTextColor(requireContext().getColor(R.color.red))
-                }
-            }
-
-            viewBinding.tv7dChangeDetail.text =
-                "${String.format("%.02f", cryptoCurrency.quote.usdData.percentChange7d)}%"
-            when {
-                cryptoCurrency.quote.usdData.percentChange7d > 0 -> {
-                    viewBinding.tv7dChangeDetail.setTextColor(requireContext().getColor(R.color.green))
-                }
-
-                cryptoCurrency.quote.usdData.percentChange7d < 0 -> {
-                    viewBinding.tv7dChangeDetail.setTextColor(requireContext().getColor(R.color.red))
-                }
-            }
-
+            viewBinding.tv7dChangeDetail.setChangeText(cryptoCurrency.quote.usdData.percentChange7d)
 
             val volume24h = cryptoCurrency.quote.usdData.volume24h
-            val formatedVolume = if (volume24h >= 1_000_000_000) {
-                String.format("%.2f Bil", volume24h / 1_000_000_000)
-            } else {
-                String.format("%.2f Mil.", volume24h / 1_000_000)
-            }
-            viewBinding.tvVolume24h.text = "Volume 24H: $formatedVolume"
+            val formattedVolume = volume24h.formatVolume()
+            viewBinding.tvVolume24h.text = "Volume 24H: $formattedVolume"
 
 
             val circulatingSupply = cryptoCurrency.circulatingSupply
-            val formattedCirculatingSupply = if (circulatingSupply >= 1_000_000_000) {
-                String.format("%.2f Bil.", circulatingSupply / 1_000_000_000)
-            } else {
-                String.format("%.2f Mil.", circulatingSupply / 1_000_000)
-            }
+            val formattedCirculatingSupply = circulatingSupply.formatVolume()
             viewBinding.tvCirculatingSupplyDetails.text = "Circulating: $formattedCirculatingSupply"
 
 
             val totalSupply = cryptoCurrency.totalSupply
-            val formattedTotalSupply = if (totalSupply >= 1_000_000_000) {
-                String.format("%.2f Bil.", totalSupply / 1_000_000_000)
-            } else {
-                String.format("%.2f Mil.", totalSupply / 1_000_000)
-            }
+            val formattedTotalSupply = totalSupply.formatVolume()
             viewBinding.tvTotalSupplyDetail.text = "Total: $formattedTotalSupply"
 
+
+            val marketCap = cryptoCurrency.quote.usdData.marketCap
+            val formattedMarketCap = marketCap.formatVolume()
+            viewBinding.tvMarketCapDetailsCard.text = "Market Cap \n $formattedMarketCap $"
 
 
             if (cryptoCurrency.maxSupply == null) {
                 viewBinding.tvMaxSupplyDetail.text = "Max: Unlimited"
             } else {
                 val maxSupply = cryptoCurrency.maxSupply
-                val formattedMaxSupply = if (maxSupply >= 1_000_000_000) {
-                    String.format("%.2f Bil.", maxSupply / 1_000_000_000)
-                } else {
-                    String.format("%.2f Mil.", maxSupply / 1_000_000)
-                }
+                val formattedMaxSupply = maxSupply.formatVolume()
                 viewBinding.tvMaxSupplyDetail.text = "Max: $formattedMaxSupply"
             }
 
-
-            val marketCap = cryptoCurrency.quote.usdData.marketCap
-            val formattedMarketCap = if (marketCap >= 1_000_000_000) {
-                String.format("%.2f Bil.", marketCap / 1_000_000_000)
-            } else {
-                String.format("%.2f Mil.", marketCap / 1_000_000)
-            }
-            viewBinding.tvMarketCapDetailsCard.text = "Market Cap \n $formattedMarketCap $"
-
             viewBinding.btnBuyDetails.setOnClickListener {
-                val dialog = BottomSheetDialog(requireContext())
-                val viewLayout = layoutInflater.inflate(R.layout.bottom_sheet_dialog_layout,null)
-                val btnConfirm = viewLayout.findViewById<AppCompatButton>(R.id.btnConfirm)
-                val btnCancel = viewLayout.findViewById<AppCompatButton>(R.id.btnCancel)
-                val etAmount = viewLayout.findViewById<TextInputEditText>(R.id.etAmount)
-
-                btnConfirm.setOnClickListener {
-                    val amountText = etAmount.text
-                    if (amountText!!.isNotEmpty()) {
-                        val amount = amountText.toString().toDouble()
-                        viewModel.updateOrInsertCryptoCurrencyAmounts(amount, cryptoCurrency)
-                        showToast("Bought $amount ${cryptoCurrency.name}")
-                        dialog.dismiss()
-                    } else {
-                        showToast("Please enter a valid amount")
-                    }
-                }
-                btnCancel.setOnClickListener {
-                    dialog.dismiss()
-                }
-                dialog.setContentView(viewLayout)
-                dialog.show()
-
+                showBuyCryptoDialog(cryptoCurrency, viewModel)
             }
 
         }
@@ -244,5 +171,53 @@ class DetailsFragment : Fragment() {
         ).show()
 
     }
+
+    private fun Double.formatVolume(): String {
+        return if (this >= 1_000_000_000) {
+            String.format("%.2f Bil", this / 1_000_000_000)
+        } else {
+            String.format("%.2f Mil.", this / 1_000_000)
+        }
+    }
+
+    private fun TextView.setChangeText(change: Double) {
+        val formattedChange = String.format("%.2f", change)
+        text = formattedChange
+
+        val colorResId = when {
+            change > 0 -> R.color.green
+            change < 0 -> R.color.red
+            else -> android.R.color.white
+        }
+
+        setTextColor(ContextCompat.getColor(context, colorResId))
+    }
+
+    @SuppressLint("InflateParams")
+    private fun showBuyCryptoDialog(cryptoCurrency: CryptoCurrency, viewModel: ViewModel) {
+        val dialog = BottomSheetDialog(requireContext())
+        val viewLayout = layoutInflater.inflate(R.layout.bottom_sheet_dialog_layout, null)
+        val btnConfirm = viewLayout.findViewById<AppCompatButton>(R.id.btnConfirm)
+        val btnCancel = viewLayout.findViewById<AppCompatButton>(R.id.btnCancel)
+        val etAmount = viewLayout.findViewById<TextInputEditText>(R.id.etAmount)
+
+        btnConfirm.setOnClickListener {
+            val amountText = etAmount.text
+            if (amountText!!.isNotEmpty()) {
+                val amount = amountText.toString().toDouble()
+                viewModel.updateOrInsertCryptoCurrencyAmounts(amount, cryptoCurrency)
+                showToast("Bought $amount ${cryptoCurrency.name}")
+                dialog.dismiss()
+            } else {
+                showToast("Please enter a valid amount")
+            }
+        }
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.setContentView(viewLayout)
+        dialog.show()
+    }
+
 
 }

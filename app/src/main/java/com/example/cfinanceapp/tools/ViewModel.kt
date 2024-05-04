@@ -264,4 +264,12 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         firebaseAuthentication.signOut()
     }
 
+    fun currentBalance ():Double{
+        var balance = 0.0
+        for (assets in _currentAssets.value!!){
+            balance += assets.cryptoCurrency!!.quote.usdData.price * assets.amount
+      }
+        return balance
+    }
+
 }
