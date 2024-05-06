@@ -26,7 +26,6 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = Repository(CoinMarketCapAPI, DatabaseInstance.getDatabase(application))
 
 
-
     private val firebaseAuthentication = Firebase.auth
 
 
@@ -118,7 +117,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    private fun updateAsset(asset: Asset){
+    private fun updateAsset(asset: Asset) {
         viewModelScope.launch {
             repository.updateAssets(asset)
         }
@@ -224,8 +223,8 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
-    fun registration(email: String, password: String, completion: () -> Unit) {
-        val account = Account(email = email)
+    fun registration(email: String, password: String, name:String, completion: () -> Unit) {
+        val account = Account(email = email, name = name )
         if (email.isNotEmpty() && password.isNotEmpty()) {
             firebaseAuthentication.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener {
@@ -264,11 +263,19 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         firebaseAuthentication.signOut()
     }
 
-    fun currentBalance ():Double{
+    fun currentBalance(): Double {
         var balance = 0.0
-        for (assets in _currentAssets.value!!){
-            balance += assets.cryptoCurrency!!.quote.usdData.price * assets.amount
-      }
+        try {
+            if (_currentAssets.value != null && _currentWallet.value != null) {
+                for (assets in _currentAssets.value!!) {
+                    balance += assets.cryptoCurrency!!.quote.usdData.price * assets.amount
+                }
+            } else {
+                balance = 0.0
+            }
+        } catch (e: Exception) {
+            throw e
+        }
         return balance
     }
 

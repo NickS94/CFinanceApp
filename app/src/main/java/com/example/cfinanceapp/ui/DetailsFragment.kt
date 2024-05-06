@@ -138,7 +138,11 @@ class DetailsFragment : Fragment() {
             }
 
             viewBinding.btnBuyDetails.setOnClickListener {
-                showBuyCryptoDialog(cryptoCurrency, viewModel)
+                if (viewModel.currentWallet.value != null) {
+                    showBuyCryptoDialog(cryptoCurrency, viewModel)
+                }else{
+                    showToast("Please CREATE a WALLET for transactions")
+                }
             }
 
         }

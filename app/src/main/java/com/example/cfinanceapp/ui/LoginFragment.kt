@@ -34,20 +34,21 @@ class LoginFragment : Fragment() {
             viewBinding.btnLogin.setOnClickListener {
                 val etEmail = viewBinding.etLogInEmail.text.toString()
                 val etPassword = viewBinding.etPasswordLogin.text.toString()
-                val account = Account(email = etEmail)
                 when {
                     etEmail.isEmpty() -> showToast("Please give your EMAIL.")
                     etPassword.isEmpty() -> showToast("Please give your password.")
                     !viewModel.isAccountAlreadyRegistered(etEmail) -> showToast("You are not Registered , Please REGISTER an ACCOUNT.")
                     else -> viewModel.loginAuthentication(etEmail, etPassword) {
                         viewModel.findAccountByEmail(etEmail)
-                        showToast("Welcome ${account.name}!")
+                        if (viewModel.currentAccount.value != null) {
+                            showToast("Welcome ${viewModel.currentAccount.value!!.name}!")
+                        } else {
+                            showToast("Welcome STRANGER")
+                        }
                         findNavController().navigate(R.id.homeFragment)
                     }
-
                 }
             }
-
         }
 
         viewBinding.createAccountClickable.setOnClickListener {

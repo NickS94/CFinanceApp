@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import com.example.cfinanceapp.R
 import com.example.cfinanceapp.databinding.FragmentProfileBinding
 import com.example.cfinanceapp.tools.ViewModel
 
@@ -19,7 +18,7 @@ class ProfileFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         viewBinding = FragmentProfileBinding.inflate(inflater)
         return viewBinding.root
     }
@@ -29,8 +28,13 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.currentAccount.observe(viewLifecycleOwner){
-            viewBinding.tvName.text = it.name
-            viewBinding.tvEmailProfile.text = it.email
+
+            if (it != null ){
+                viewBinding.tvName.text = it.name
+                viewBinding.tvEmailProfile.text = it.email
+            }
+
+
 
 
         }

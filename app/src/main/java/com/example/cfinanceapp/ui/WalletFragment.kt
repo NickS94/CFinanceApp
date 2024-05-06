@@ -32,29 +32,36 @@ class WalletFragment : Fragment() {
         val adapter = AssetsAdapter(viewModel = viewModel)
         viewBinding.rvAssetsWallet.adapter = adapter
 
-       viewModel.currentAccount.observe(viewLifecycleOwner){account->
-           viewModel.findWalletByUserId(account.id)
-           viewModel.findAccountByEmail(account.email)
-           viewBinding.btnCreateNewWallet.setOnClickListener {
-               if (viewModel.currentWallet.value?.accountId != account.id)
-               {
-                   viewModel.createNewWallet()
-                   showToast("Your WALLET have been CREATED SUCCESSFULLY ")
-               }else{
-                   showToast("You Already have a wallet created")
-               }
-           }
+        viewModel.currentAccount.observe(viewLifecycleOwner) { account ->
+            viewModel.findWalletByUserId(account.id)
+            viewModel.findAccountByEmail(account.email)
+            viewBinding.btnCreateNewWallet.setOnClickListener {
+                if (viewModel.currentWallet.value?.accountId != account.id) {
+                    viewModel.createNewWallet()
+                    showToast("Your WALLET have been CREATED SUCCESSFULLY ")
+                } else {
+                    showToast("You Already have a wallet created")
+                }
+            }
+        }
 
-       }
-        viewModel.assets.observe(viewLifecycleOwner){
-            viewModel.findAssetsById(viewModel.currentWallet.value!!.id)
+
+        viewModel.assets.observe(viewLifecycleOwner) {
+            if (viewModel.currentWallet.value != null) {
+
+                viewModel.findAccountByEmail(viewModel.currentAccount.value!!.email)
+                viewModel.findWalletByUserId(viewModel.currentAccount.value!!.id)
+                viewModel.findAssetsById(viewModel.currentWallet.value!!.id)
+
+                viewModel.currentAssets.observe(viewLifecycleOwner) { assets ->
+                    adapter.submitList(assets)
+                    viewBinding.currentBalanceText.stringFormat(viewModel.currentBalance())
+                }
+            }
 
 
         }
-        viewModel.currentAssets.observe(viewLifecycleOwner){assets ->
-            adapter.submitList(assets)
-            viewBinding.currentBalanceText.stringFormat(viewModel.currentBalance())
-        }
+
 
     }
 
@@ -66,8 +73,8 @@ class WalletFragment : Fragment() {
         ).show()
     }
 
-    private fun TextView.stringFormat (balance:Double){
-        val formattedText = String.format("%.2f $",balance)
+    private fun TextView.stringFormat(balance: Double) {
+        val formattedText = String.format("%.2f $", balance)
         text = formattedText
     }
 

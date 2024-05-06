@@ -13,6 +13,6 @@ data class Account(
     @ColumnInfo(name = "email")
     val email: String,
     @ColumnInfo(name = "name")
-    val name :String = "Nick"
+    val name :String?
 
 )

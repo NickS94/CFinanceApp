@@ -37,6 +37,7 @@ class RegisterFragment : Fragment() {
                 val etEmail = viewBinding.etEmailRegister.text.toString()
                 val etPassword = viewBinding.etPasswordRegister.text.toString()
                 val etPasswordRepeat = viewBinding.etPasswordRegisterRepeat.text.toString()
+                val etName = viewBinding.etName.text.toString()
 
                 when {
 
@@ -48,7 +49,7 @@ class RegisterFragment : Fragment() {
                     etPasswordRepeat.isEmpty() || etPasswordRepeat != etPassword -> showToast("Please ensure that the REPEATED password is CORRECT")
                     else -> {
 
-                        viewModel.registration(etEmail, etPassword) {
+                        viewModel.registration(etEmail, etPassword,etName) {
                             showToast("Success")
                             findNavController().navigate(R.id.loginFragment)
                         }
