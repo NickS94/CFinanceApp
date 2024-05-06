@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
+import com.example.cfinanceapp.R
 import com.example.cfinanceapp.databinding.FragmentProfileBinding
 import com.example.cfinanceapp.tools.ViewModel
 
@@ -33,10 +35,10 @@ class ProfileFragment : Fragment() {
                 viewBinding.tvName.text = it.name
                 viewBinding.tvEmailProfile.text = it.email
             }
-
-
-
-
+            viewBinding.tvLogout.setOnClickListener {
+                viewModel.logout()
+                findNavController().navigate(R.id.loginFragment)
+            }
         }
 
 

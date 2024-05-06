@@ -9,7 +9,7 @@
 
 
     <TextView
-        android:id="@+id/textView8"
+        android:id="@+id/tvLogout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/logout"
@@ -139,9 +139,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/logout_icon"
-        app:layout_constraintBottom_toBottomOf="@+id/textView8"
-        app:layout_constraintStart_toEndOf="@+id/textView8"
-        app:layout_constraintTop_toTopOf="@+id/textView8"
+        app:layout_constraintBottom_toBottomOf="@+id/tvLogout"
+        app:layout_constraintStart_toEndOf="@+id/tvLogout"
+        app:layout_constraintTop_toTopOf="@+id/tvLogout"
         android:contentDescription="@string/logouticon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

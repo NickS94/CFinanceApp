@@ -29,8 +29,8 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.accounts.observe(viewLifecycleOwner) {
 
+        viewModel.accounts.observe(viewLifecycleOwner) {
             viewBinding.btnLogin.setOnClickListener {
                 val etEmail = viewBinding.etLogInEmail.text.toString()
                 val etPassword = viewBinding.etPasswordLogin.text.toString()
@@ -40,22 +40,15 @@ class LoginFragment : Fragment() {
                     !viewModel.isAccountAlreadyRegistered(etEmail) -> showToast("You are not Registered , Please REGISTER an ACCOUNT.")
                     else -> viewModel.loginAuthentication(etEmail, etPassword) {
                         viewModel.findAccountByEmail(etEmail)
-                        if (viewModel.currentAccount.value != null) {
-                            showToast("Welcome ${viewModel.currentAccount.value!!.name}!")
-                        } else {
-                            showToast("Welcome STRANGER")
-                        }
+                        showToast("Welcome!")
                         findNavController().navigate(R.id.homeFragment)
                     }
                 }
             }
         }
-
         viewBinding.createAccountClickable.setOnClickListener {
             findNavController().navigate(R.id.registerFragment)
         }
-
-
     }
 
     private fun showToast(message: String) {

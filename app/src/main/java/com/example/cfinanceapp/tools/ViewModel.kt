@@ -221,8 +221,6 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         }
         return sb.toString()
     }
-
-
     fun registration(email: String, password: String, name:String, completion: () -> Unit) {
         val account = Account(email = email, name = name )
         if (email.isNotEmpty() && password.isNotEmpty()) {
@@ -240,7 +238,6 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
                 }
         }
     }
-
 
     fun loginAuthentication(email: String, password: String, completion: () -> Unit) {
         if (email.isNotEmpty() && password.isNotEmpty()) {
