@@ -41,7 +41,6 @@ class AssetsAdapter(
         val asset = assetsData[position]
 
         if (asset.cryptoCurrency != null) {
-
             holder.binding.ivLogoMarketItem.load(viewModel.getCoinLogo(asset.cryptoCurrency.id.toString()))
             holder.binding.tvCoinName.text = asset.cryptoCurrency.name
             holder.binding.tvCurrentPriceMarket.text = asset.amount.toString()
@@ -55,16 +54,12 @@ class AssetsAdapter(
             }
         } else {
             holder.binding.tvCoinName.text = "USD"
-            holder.binding.tvChangePercentageMarket.text = "${asset.amount}$"
+            holder.binding.tvChangePercentageMarket.text =
+                "${String.format("%.2f", asset.amount)}$"
             holder.binding.tvCurrentPriceMarket.text = "Amount"
             holder.binding.tvCoinSymbol.text = "Fiat Currency"
             holder.binding.ivLogoMarketItem.setImageResource(R.drawable.dollar_usd_64)
-
-
         }
 
-
     }
-
-
 }

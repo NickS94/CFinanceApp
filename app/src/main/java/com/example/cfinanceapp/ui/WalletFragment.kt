@@ -12,7 +12,6 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.activityViewModels
 import com.example.cfinanceapp.R
 import com.example.cfinanceapp.adapters.AssetsAdapter
-import com.example.cfinanceapp.data.models.CryptoCurrency
 import com.example.cfinanceapp.databinding.FragmentWalletBinding
 import com.example.cfinanceapp.tools.ViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -60,7 +59,12 @@ class WalletFragment : Fragment() {
                 viewModel.findAssetsByWalletId(viewModel.currentWallet.value!!.id)
 
                 viewBinding.btnDeposit.setOnClickListener {
-                    showBuyCryptoDialog(viewModel)
+                    if (viewModel.currentWallet.value != null) {
+                        showBuyCryptoDialog(viewModel)
+
+                    }else{
+                        showToast("You need to CREATE WALLET first")
+                    }
                 }
                 viewModel.currentAssets.observe(viewLifecycleOwner) { assets ->
                     adapter.submitList(assets)
@@ -68,7 +72,6 @@ class WalletFragment : Fragment() {
                 }
 
             }
-
 
 
         }

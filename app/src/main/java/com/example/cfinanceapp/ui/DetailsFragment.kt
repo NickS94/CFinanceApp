@@ -140,7 +140,7 @@ class DetailsFragment : Fragment() {
             viewBinding.btnBuyDetails.setOnClickListener {
                 if (viewModel.currentWallet.value != null) {
                     showBuyCryptoDialog(cryptoCurrency, viewModel)
-                }else{
+                } else {
                     showToast("Please CREATE a WALLET for transactions")
                 }
             }
@@ -207,14 +207,24 @@ class DetailsFragment : Fragment() {
 
         btnConfirm.setOnClickListener {
             val amountText = etAmount.text
-            if (amountText!!.isNotEmpty()) {
-                val amount = amountText.toString().toDouble()
-                viewModel.updateOrInsertCryptoCurrencyAmounts(amount, cryptoCurrency)
-                showToast("Bought $amount ${cryptoCurrency.name}")
-                dialog.dismiss()
-            } else {
-                showToast("Please enter a valid amount")
+            viewModel.findAssetsByWalletId(viewModel.currentWallet.value!!.id)
+            when {
+                amountText!!.isNotEmpty() && viewModel.isEnoughFiat(
+                    amountText.toString().toDouble()
+                ) -> {
+                    val amount = amountText.toString().toDouble()
+                    viewModel.updateOrInsertCryptoCurrencyAmounts(amount, cryptoCurrency)
+                    showToast("Bought $amount ${cryptoCurrency.name}")
+                    dialog.dismiss()
+                }
+
+                amountText.isEmpty() -> showToast("Please enter a valid amount")
+
+                !viewModel.isEnoughFiat(
+                    amountText.toString().toDouble()
+                ) -> showToast("Insufficient funds ")
             }
+
         }
         btnCancel.setOnClickListener {
             dialog.dismiss()

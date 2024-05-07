@@ -168,21 +168,28 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
             isBought = true,
             walletId = _currentWallet.value!!.id
         )
+        val fiatAsset = _currentAssets.value?.find { it.fiat != null }
         viewModelScope.launch {
             val assets = repository.getAssetsByWalletId(_currentWallet.value!!.id)
             val existedAsset = assets.find { it.cryptoCurrency?.id == coin.id }
             if (existedAsset != null) {
+                val updatedFiatAmount = fiatAsset?.amount!! - (coin.quote.usdData.price * amount)
+                fiatAsset.amount = updatedFiatAmount
                 val updatedAmount = existedAsset.amount.plus(amount)
                 existedAsset.amount = updatedAmount
+                updateAsset(fiatAsset)
                 updateAsset(existedAsset)
                 insertTransaction(transaction)
             } else {
+                val updatedFiatAmount = fiatAsset?.amount!! - (coin.quote.usdData.price * amount)
+                fiatAsset.amount = updatedFiatAmount
                 val newAsset = Asset(
                     fiat = (coin.quote.usdData.price * amount).toString(),
                     cryptoCurrency = coin,
                     amount = amount,
                     walletId = _currentWallet.value!!.id
                 )
+                updateAsset(fiatAsset)
                 insertAsset(newAsset)
                 insertTransaction(transaction)
             }
@@ -274,7 +281,6 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     private fun generateTransactionHash(): String {
         val hexChars = "0123456789abcdef"
         val sb = StringBuilder(32)
-
         repeat(32) {
             val randomIndex = Random.nextInt(0, hexChars.length)
             sb.append(hexChars[randomIndex])
@@ -325,16 +331,20 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         var balance = 0.0
 
         try {
+            findAssetsByWalletId(_currentWallet.value!!.id)
             if (_currentAssets.value != null) {
-                for (asset in _currentAssets.value!!) {
-                    val cryptoValue = asset.cryptoCurrency?.quote?.usdData?.price ?: 0.0
-                    val fiatValue = _currentAssets.value?.find { it.fiat != null }
-                    val cryptoAssetAmount = _currentAssets.value?.find { it.cryptoCurrency != null }
-                    balance = if (cryptoAssetAmount == null) {
-                        fiatValue!!.amount
-                    } else {
-                        (cryptoValue * cryptoAssetAmount.amount) + fiatValue!!.amount
+                val fiatValue = _currentAssets.value?.find { it.fiat != null }?.amount
+                val cryptoAssetAmount =
+                    _currentAssets.value?.find { it.cryptoCurrency != null }
+                if (cryptoAssetAmount == null && fiatValue != null) {
+                    balance = fiatValue
+                } else {
+                    for (asset in _currentAssets.value!!) {
+                        val cryptoValue = asset.cryptoCurrency?.quote?.usdData?.price ?: 0.0
+                        balance += cryptoValue * asset.amount
                     }
+
+                    balance += fiatValue ?: 0.0
                 }
             } else {
                 balance = 0.0
@@ -343,6 +353,12 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
             throw e
         }
         return balance
+    }
+
+    fun isEnoughFiat(amount: Double): Boolean {
+        val fiatBalance = _currentAssets.value?.find { it.fiat != null }
+        val wishAmount = _currentCrypto.value?.quote?.usdData!!.price * amount
+        return fiatBalance?.fiat != null && fiatBalance.amount >= wishAmount
     }
 
 }
