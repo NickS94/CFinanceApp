@@ -11,15 +11,11 @@ data class Asset(
     @PrimaryKey(autoGenerate = true)
     val id : Long = 0,
     @ColumnInfo(name = "Fiat")
-    val fiat :Double?,
+    val fiat :String?,
     @ColumnInfo(name = "CryptoCurrency")
     val cryptoCurrency: CryptoCurrency?,
     @ColumnInfo(name = "Amount")
     var amount :Double,
-    @ColumnInfo(name = "TransactionHash")
-    val transactionHash :String?,
-    @ColumnInfo(name = "Date")
-    val transactionDate :String,
 
     val walletId:Long
 

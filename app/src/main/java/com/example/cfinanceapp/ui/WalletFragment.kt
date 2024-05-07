@@ -1,5 +1,6 @@
 package com.example.cfinanceapp.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -7,10 +8,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.activityViewModels
+import com.example.cfinanceapp.R
 import com.example.cfinanceapp.adapters.AssetsAdapter
+import com.example.cfinanceapp.data.models.CryptoCurrency
 import com.example.cfinanceapp.databinding.FragmentWalletBinding
 import com.example.cfinanceapp.tools.ViewModel
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.textfield.TextInputEditText
 
 class WalletFragment : Fragment() {
 
@@ -51,13 +57,18 @@ class WalletFragment : Fragment() {
 
                 viewModel.findAccountByEmail(viewModel.currentAccount.value!!.email)
                 viewModel.findWalletByUserId(viewModel.currentAccount.value!!.id)
-                viewModel.findAssetsById(viewModel.currentWallet.value!!.id)
+                viewModel.findAssetsByWalletId(viewModel.currentWallet.value!!.id)
 
+                viewBinding.btnDeposit.setOnClickListener {
+                    showBuyCryptoDialog(viewModel)
+                }
                 viewModel.currentAssets.observe(viewLifecycleOwner) { assets ->
                     adapter.submitList(assets)
                     viewBinding.currentBalanceText.stringFormat(viewModel.currentBalance())
                 }
+
             }
+
 
 
         }
@@ -78,5 +89,31 @@ class WalletFragment : Fragment() {
         text = formattedText
     }
 
+
+    @SuppressLint("InflateParams")
+    private fun showBuyCryptoDialog(viewModel: ViewModel) {
+        val dialog = BottomSheetDialog(requireContext())
+        val viewLayout = layoutInflater.inflate(R.layout.bottom_sheet_dialog_layout, null)
+        val btnConfirm = viewLayout.findViewById<AppCompatButton>(R.id.btnConfirm)
+        val btnCancel = viewLayout.findViewById<AppCompatButton>(R.id.btnCancel)
+        val etAmount = viewLayout.findViewById<TextInputEditText>(R.id.etAmount)
+
+        btnConfirm.setOnClickListener {
+            val amountText = etAmount.text
+            if (amountText!!.isNotEmpty()) {
+                val amount = amountText.toString().toDouble()
+                viewModel.updateOrInsertFiatCurrencyAmounts(amount)
+                showToast("Deposit $amount$ COMPLETED ")
+                dialog.dismiss()
+            } else {
+                showToast("Please enter a valid amount")
+            }
+        }
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.setContentView(viewLayout)
+        dialog.show()
+    }
 
 }

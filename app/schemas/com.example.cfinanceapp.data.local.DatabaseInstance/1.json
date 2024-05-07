@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "525a0118548c0e5502ed371049f3731a",
+    "identityHash": "a69dff2c958bd5c8b1af8aca2bbcbfd5",
     "entities": [
       {
-        "tableName": "accounts",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `email` TEXT NOT NULL, `name` TEXT)",
+        "tableName": "Accounts",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `Email` TEXT NOT NULL, `Name` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -16,13 +16,13 @@
           },
           {
             "fieldPath": "email",
-            "columnName": "email",
+            "columnName": "Email",
             "affinity": "TEXT",
             "notNull": true
           },
           {
             "fieldPath": "name",
-            "columnName": "name",
+            "columnName": "Name",
             "affinity": "TEXT",
             "notNull": false
           }
@@ -64,7 +64,7 @@
       },
       {
         "tableName": "Assets",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `Fiat` REAL, `CryptoCurrency` TEXT, `Amount` REAL NOT NULL, `TransactionHash` TEXT, `Date` TEXT NOT NULL, `walletId` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `Fiat` TEXT, `CryptoCurrency` TEXT, `Amount` REAL NOT NULL, `walletId` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -75,7 +75,7 @@
           {
             "fieldPath": "fiat",
             "columnName": "Fiat",
-            "affinity": "REAL",
+            "affinity": "TEXT",
             "notNull": false
           },
           {
@@ -91,16 +91,66 @@
             "notNull": true
           },
           {
-            "fieldPath": "transactionHash",
-            "columnName": "TransactionHash",
+            "fieldPath": "walletId",
+            "columnName": "walletId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Transactions",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `Symbol` TEXT NOT NULL, `Amount` REAL NOT NULL, `Price` REAL, `Date` TEXT NOT NULL, `Transaction_Hash` TEXT NOT NULL, `Status` INTEGER, `walletId` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "symbol",
+            "columnName": "Symbol",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "amount",
+            "columnName": "Amount",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "price",
+            "columnName": "Price",
+            "affinity": "REAL",
             "notNull": false
           },
           {
-            "fieldPath": "transactionDate",
+            "fieldPath": "date",
             "columnName": "Date",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "transactionHash",
+            "columnName": "Transaction_Hash",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isBought",
+            "columnName": "Status",
+            "affinity": "INTEGER",
+            "notNull": false
           },
           {
             "fieldPath": "walletId",
@@ -122,7 +172,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '525a0118548c0e5502ed371049f3731a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a69dff2c958bd5c8b1af8aca2bbcbfd5')"
     ]
   }
 }

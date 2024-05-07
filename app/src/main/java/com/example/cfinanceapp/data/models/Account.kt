@@ -5,14 +5,14 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 
-@Entity(tableName = "accounts")
+@Entity(tableName = "Accounts")
 
 data class Account(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-    @ColumnInfo(name = "email")
+    @ColumnInfo(name = "Email")
     val email: String,
-    @ColumnInfo(name = "name")
+    @ColumnInfo(name = "Name")
     val name :String?
 
 )

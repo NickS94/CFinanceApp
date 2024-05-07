@@ -9,6 +9,7 @@ import com.example.cfinanceapp.data.local.DatabaseInstance
 import com.example.cfinanceapp.data.models.Account
 import com.example.cfinanceapp.data.models.Asset
 import com.example.cfinanceapp.data.models.ResponseAPI
+import com.example.cfinanceapp.data.models.Transaction
 import com.example.cfinanceapp.data.models.Wallet
 
 
@@ -28,6 +29,12 @@ class Repository(
 
     private val allWallets = databaseInstance.dao.getAllWallets()
 
+    private val allTransactions = databaseInstance.dao.getAllTransactions()
+
+
+
+    private val _transactions = allTransactions
+    val transactions:LiveData<List<Transaction>> = _transactions
 
     private val _assets = allAssets
     val assets: LiveData<MutableList<Asset>> = _assets
@@ -80,6 +87,15 @@ class Repository(
         }
     }
 
+    fun getAllTransactions(){
+        try {
+            databaseInstance.dao.getAllTransactions()
+        }catch (e:Exception){
+            Log.d(TAG,"FAILED TO LOAD :${e.message}")
+        }
+    }
+
+
     suspend fun insertAccount(account: Account) {
         try {
             databaseInstance.dao.insertAccount(account)
@@ -102,6 +118,14 @@ class Repository(
         try {
             databaseInstance.dao.insertAsset(asset)
         } catch (e: Exception) {
+            Log.d(TAG, "FAILED TO LOAD : ${e.message}")
+        }
+    }
+
+    suspend fun insertTransactions(transaction: Transaction){
+        try {
+            databaseInstance.dao.insertTransaction(transaction)
+        }  catch (e: Exception) {
             Log.d(TAG, "FAILED TO LOAD : ${e.message}")
         }
     }
@@ -135,18 +159,19 @@ class Repository(
 
     }
 
-    suspend fun getAssetByWalletId(walletId: Long): Asset {
+
+    suspend fun getAssetsByWalletId(walletId: Long): MutableList<Asset> {
         try {
-            return databaseInstance.dao.getAssetById(walletId)
+            return databaseInstance.dao.getAssetsById(walletId)
         } catch (e: Exception) {
             Log.d(TAG, "FAILED TO LOAD : ${e.message}")
             throw e
         }
     }
 
-    suspend fun getAssetsByWalletId(walletId: Long): MutableList<Asset> {
+    suspend fun getTransactionsByWalletId(walletId : Long):List<Transaction>{
         try {
-            return databaseInstance.dao.getAssetsById(walletId)
+            return databaseInstance.dao.getTransactionsByWalletId(walletId)
         } catch (e: Exception) {
             Log.d(TAG, "FAILED TO LOAD : ${e.message}")
             throw e

@@ -14,6 +14,7 @@ import com.example.cfinanceapp.data.local.DatabaseInstance
 import com.example.cfinanceapp.data.models.Account
 import com.example.cfinanceapp.data.models.Asset
 import com.example.cfinanceapp.data.models.CryptoCurrency
+import com.example.cfinanceapp.data.models.Transaction
 import com.example.cfinanceapp.data.models.Wallet
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
@@ -33,7 +34,11 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     val accounts = repository.accounts
     val wallets = repository.wallets
     val assets = repository.assets
+    val transactions = repository.transactions
 
+
+    private var _currentTransactions = MutableLiveData<List<Transaction>>()
+    val currentTransactions: LiveData<List<Transaction>> = _currentTransactions
 
     private var _currentAssets = MutableLiveData<MutableList<Asset>>()
     val currentAssets: LiveData<MutableList<Asset>> = _currentAssets
@@ -41,14 +46,11 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     private var _currentAccount = MutableLiveData<Account>()
     val currentAccount: LiveData<Account> = _currentAccount
 
-
     private var _currentWallet = MutableLiveData<Wallet>()
     val currentWallet: LiveData<Wallet> = _currentWallet
 
-
     private var _currentCrypto = MutableLiveData<CryptoCurrency>()
     val currentCrypto: LiveData<CryptoCurrency> = _currentCrypto
-
 
     private val _cryptoWatchList = MutableLiveData<MutableList<CryptoCurrency>>()
     val cryptoWatchList: LiveData<MutableList<CryptoCurrency>> = _cryptoWatchList
@@ -59,6 +61,13 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         loadAllAccounts()
         loadAllWallets()
         loadAllAssets()
+        loadAllTransactions()
+    }
+
+    private fun loadAllTransactions() {
+        viewModelScope.launch {
+            repository.getAllTransactions()
+        }
     }
 
     private fun loadAllAssets() {
@@ -123,21 +132,42 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    private fun insertTransaction(transaction: Transaction) {
+        viewModelScope.launch {
+            repository.insertTransactions(transaction)
+        }
+    }
+
     fun findWalletByUserId(accountId: Long) {
         viewModelScope.launch {
             _currentWallet.value = repository.getWalletById(accountId)
         }
     }
 
-    fun findAssetsById(walletId: Long) {
+    fun findAssetsByWalletId(walletId: Long) {
         viewModelScope.launch {
             _currentAssets.value = repository.getAssetsByWalletId(walletId)
+        }
+    }
+
+    fun findTransactionsByWalletId(walletId: Long) {
+        viewModelScope.launch {
+            _currentTransactions.value = repository.getTransactionsByWalletId(walletId)
         }
     }
 
     @SuppressLint("NewApi")
     fun updateOrInsertCryptoCurrencyAmounts(amount: Double, coin: CryptoCurrency) {
         val currentDate = LocalDateTime.now()
+        val transaction = Transaction(
+            symbol = coin.symbol,
+            amount = amount,
+            price = coin.quote.usdData.price,
+            date = currentDate.toString(),
+            transactionHash = generateTransactionHash(),
+            isBought = true,
+            walletId = _currentWallet.value!!.id
+        )
         viewModelScope.launch {
             val assets = repository.getAssetsByWalletId(_currentWallet.value!!.id)
             val existedAsset = assets.find { it.cryptoCurrency?.id == coin.id }
@@ -145,19 +175,49 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
                 val updatedAmount = existedAsset.amount.plus(amount)
                 existedAsset.amount = updatedAmount
                 updateAsset(existedAsset)
+                insertTransaction(transaction)
             } else {
                 val newAsset = Asset(
-                    fiat = coin.quote.usdData.price * amount,
+                    fiat = (coin.quote.usdData.price * amount).toString(),
                     cryptoCurrency = coin,
                     amount = amount,
-                    transactionHash = generateTransactionHash(),
-                    transactionDate = currentDate.toString(),
                     walletId = _currentWallet.value!!.id
                 )
                 insertAsset(newAsset)
+                insertTransaction(transaction)
             }
         }
 
+    }
+
+    @SuppressLint("NewApi")
+    fun updateOrInsertFiatCurrencyAmounts(amount: Double) {
+        val currentDate = LocalDateTime.now()
+        val transaction = Transaction(
+            symbol = "USD",
+            amount = amount,
+            price = null,
+            date = currentDate.toString(),
+            transactionHash = "Fiat Deposit",
+            isBought = null,
+            walletId = _currentWallet.value!!.id
+        )
+        val existedFiatAsset = _currentAssets.value?.find { it.fiat != null }
+        if (_currentAssets.value!!.contains(existedFiatAsset)) {
+            val updatedAmount = existedFiatAsset?.amount?.plus(amount)
+            existedFiatAsset?.amount = updatedAmount!!
+            updateAsset(existedFiatAsset)
+            insertTransaction(transaction)
+        } else {
+            val newFiatAsset = Asset(
+                fiat = "USD",
+                cryptoCurrency = null,
+                amount = amount,
+                walletId = _currentWallet.value!!.id
+            )
+            insertAsset(newFiatAsset)
+            insertTransaction(transaction)
+        }
     }
 
 
@@ -221,8 +281,9 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         }
         return sb.toString()
     }
-    fun registration(email: String, password: String, name:String, completion: () -> Unit) {
-        val account = Account(email = email, name = name )
+
+    fun registration(email: String, password: String, name: String, completion: () -> Unit) {
+        val account = Account(email = email, name = name)
         if (email.isNotEmpty() && password.isNotEmpty()) {
             firebaseAuthentication.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener {
@@ -262,10 +323,18 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
 
     fun currentBalance(): Double {
         var balance = 0.0
+
         try {
-            if (_currentAssets.value != null && _currentWallet.value != null) {
-                for (assets in _currentAssets.value!!) {
-                    balance += assets.cryptoCurrency!!.quote.usdData.price * assets.amount
+            if (_currentAssets.value != null) {
+                for (asset in _currentAssets.value!!) {
+                    val cryptoValue = asset.cryptoCurrency?.quote?.usdData?.price ?: 0.0
+                    val fiatValue = _currentAssets.value?.find { it.fiat != null }
+                    val cryptoAssetAmount = _currentAssets.value?.find { it.cryptoCurrency != null }
+                    balance = if (cryptoAssetAmount == null) {
+                        fiatValue!!.amount
+                    } else {
+                        (cryptoValue * cryptoAssetAmount.amount) + fiatValue!!.amount
+                    }
                 }
             } else {
                 balance = 0.0

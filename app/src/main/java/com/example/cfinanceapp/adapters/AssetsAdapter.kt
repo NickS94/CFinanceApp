@@ -17,7 +17,6 @@ class AssetsAdapter(
 ) : RecyclerView.Adapter<AssetsAdapter.AssetsViewHolder>() {
 
 
-
     @SuppressLint("NotifyDataSetChanged")
     fun submitList(list: MutableList<Asset>) {
         assetsData = list
@@ -41,20 +40,27 @@ class AssetsAdapter(
     override fun onBindViewHolder(holder: AssetsViewHolder, position: Int) {
         val asset = assetsData[position]
 
-        holder.binding.ivLogoMarketItem.load(viewModel.getCoinLogo(asset.cryptoCurrency!!.id.toString()))
+        if (asset.cryptoCurrency != null) {
 
-        holder.binding.tvCoinName.text = asset.cryptoCurrency.name
+            holder.binding.ivLogoMarketItem.load(viewModel.getCoinLogo(asset.cryptoCurrency.id.toString()))
+            holder.binding.tvCoinName.text = asset.cryptoCurrency.name
+            holder.binding.tvCurrentPriceMarket.text = asset.amount.toString()
+            holder.binding.tvCoinSymbol.text = asset.cryptoCurrency.symbol
+            holder.binding.tvChangePercentageMarket.text =
+                "$${String.format("%.2f", asset.cryptoCurrency.quote.usdData.price * asset.amount)}"
 
-        holder.binding.tvCurrentPriceMarket.text = asset.amount.toString()
+            holder.itemView.setOnClickListener {
+                viewModel.getCurrentCoin(asset.cryptoCurrency)
+                it.findNavController().navigate(R.id.detailsFragment)
+            }
+        } else {
+            holder.binding.tvCoinName.text = "USD"
+            holder.binding.tvChangePercentageMarket.text = "${asset.amount}$"
+            holder.binding.tvCurrentPriceMarket.text = "Amount"
+            holder.binding.tvCoinSymbol.text = "Fiat Currency"
+            holder.binding.ivLogoMarketItem.setImageResource(R.drawable.dollar_usd_64)
 
 
-        holder.binding.tvCoinSymbol.text = asset.cryptoCurrency.symbol
-
-        holder.binding.tvChangePercentageMarket.text = "$${String.format("%.2f", asset.cryptoCurrency.quote.usdData.price * asset.amount)}"
-
-        holder.itemView.setOnClickListener {
-            viewModel.getCurrentCoin(asset.cryptoCurrency)
-            it.findNavController().navigate(R.id.detailsFragment)
         }
 
 
