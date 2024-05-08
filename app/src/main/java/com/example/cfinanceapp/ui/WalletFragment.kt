@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.example.cfinanceapp.R
 import com.example.cfinanceapp.adapters.AssetsAdapter
 import com.example.cfinanceapp.databinding.FragmentWalletBinding
@@ -38,6 +39,9 @@ class WalletFragment : Fragment() {
         viewBinding.rvAssetsWallet.adapter = adapter
 
         viewModel.currentAccount.observe(viewLifecycleOwner) { account ->
+            if (viewModel.wallets.value != null) {
+
+            }
             viewModel.findWalletByUserId(account.id)
             viewModel.findAccountByEmail(account.email)
             viewBinding.btnCreateNewWallet.setOnClickListener {
@@ -50,32 +54,55 @@ class WalletFragment : Fragment() {
             }
         }
 
+        viewModel.wallets.observe(viewLifecycleOwner) {
+            if (viewModel.currentAccount.value != null) {
+                viewModel.findWalletByUserId(viewModel.currentAccount.value!!.id)
+            }
+        }
 
         viewModel.assets.observe(viewLifecycleOwner) {
-            if (viewModel.currentWallet.value != null) {
-
-                viewModel.findAccountByEmail(viewModel.currentAccount.value!!.email)
-                viewModel.findWalletByUserId(viewModel.currentAccount.value!!.id)
+            if (viewModel.currentWallet.value != null ) {
                 viewModel.findAssetsByWalletId(viewModel.currentWallet.value!!.id)
+            }
 
-                viewBinding.btnDeposit.setOnClickListener {
-                    if (viewModel.currentWallet.value != null) {
-                        showBuyCryptoDialog(viewModel)
+        }
 
-                    }else{
-                        showToast("You need to CREATE WALLET first")
-                    }
+
+        viewModel.currentAssets.observe(viewLifecycleOwner) {
+            if (viewModel.currentWallet.value != null){
+                adapter.submitList(viewModel.currentAssets.value!!)
+                viewBinding.currentBalanceText.stringFormat(viewModel.currentBalance())
+            }
+
+        }
+
+
+
+        viewBinding.btnDeposit.setOnClickListener {
+
+            if (viewModel.currentWallet.value != null) {
+                showBuyCryptoDialog(viewModel)
+
+            } else {
+                showToast("You need to CREATE WALLET first")
+            }
+        }
+
+
+
+        viewBinding.btnHistory.setOnClickListener {
+            when {
+                viewModel.currentWallet.value != null -> {
+                    viewModel.findTransactionsByWalletId(viewModel.currentWallet.value!!.id)
+                    findNavController().navigate(R.id.transactionsFragment)
                 }
-                viewModel.currentAssets.observe(viewLifecycleOwner) { assets ->
-                    adapter.submitList(assets)
-                    viewBinding.currentBalanceText.stringFormat(viewModel.currentBalance())
-                }
+
+                else -> showToast("You have to CREATE a WALLET first")
 
             }
 
 
         }
-
 
     }
 

@@ -69,6 +69,7 @@ dependencies {
 
     implementation(libs.firebase.auth)
     implementation(libs.firebase.common.ktx)
+    implementation(libs.androidx.core.i18n)
     val retrofitVersion = "2.9.0"
 
     implementation(libs.androidx.core.ktx)

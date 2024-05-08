@@ -24,6 +24,7 @@ roomRuntime = "2.6.1"
 googleServices = "4.4.1"
 firebaseAuth = "22.3.1"
 firebaseCommonKtx = "21.0.0"
+coreI18n = "1.0.0-alpha01"
 
 
 [libraries]
@@ -53,6 +54,7 @@ squareup-moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.re
 google-services = { group = "com.google.gms", name = "google-services", version.ref = "googleServices" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
 firebase-common-ktx = { group = "com.google.firebase", name = "firebase-common-ktx", version.ref = "firebaseCommonKtx" }
+androidx-core-i18n = { group = "androidx.core", name = "core-i18n", version.ref = "coreI18n" }
 
 
 [plugins]

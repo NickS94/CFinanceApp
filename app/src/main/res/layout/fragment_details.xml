@@ -21,7 +21,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/Circular"
-        app:strokeColor="@color/turquoise_dark"
+        app:strokeColor="@android:color/transparent"
         app:strokeWidth="3dp" />
 
     <TextView
@@ -93,9 +93,8 @@
         android:layout_width="55dp"
         android:layout_height="48dp"
         android:layout_marginTop="16dp"
-        android:background="@drawable/round_transparent"
+        android:background="@drawable/navigate_before_48dp_icon"
         android:contentDescription="@string/button_back"
-        android:src="@drawable/arrow_back_icon"
         app:layout_constraintEnd_toStartOf="@+id/ivCoinLogoDetails"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

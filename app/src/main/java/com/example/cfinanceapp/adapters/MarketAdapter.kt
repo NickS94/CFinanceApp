@@ -1,5 +1,6 @@
 package com.example.cfinanceapp.adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -31,6 +32,7 @@ class MarketAdapter(
         return dataListCrypto.size
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: MarketViewHolder, position: Int) {
         val coin = dataListCrypto[position]
 

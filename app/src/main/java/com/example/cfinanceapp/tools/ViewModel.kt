@@ -20,6 +20,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
+import java.util.Date
 import kotlin.random.Random
 
 class ViewModel(application: Application) : AndroidViewModel(application) {
@@ -46,8 +47,8 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     private var _currentAccount = MutableLiveData<Account>()
     val currentAccount: LiveData<Account> = _currentAccount
 
-    private var _currentWallet = MutableLiveData<Wallet>()
-    val currentWallet: LiveData<Wallet> = _currentWallet
+    private var _currentWallet = MutableLiveData<Wallet?>()
+    val currentWallet: LiveData<Wallet?> = _currentWallet
 
     private var _currentCrypto = MutableLiveData<CryptoCurrency>()
     val currentCrypto: LiveData<CryptoCurrency> = _currentCrypto
@@ -144,6 +145,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+
     fun findAssetsByWalletId(walletId: Long) {
         viewModelScope.launch {
             _currentAssets.value = repository.getAssetsByWalletId(walletId)
@@ -158,7 +160,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
 
     @SuppressLint("NewApi")
     fun updateOrInsertCryptoCurrencyAmounts(amount: Double, coin: CryptoCurrency) {
-        val currentDate = LocalDateTime.now()
+        val currentDate = Date()
         val transaction = Transaction(
             symbol = coin.symbol,
             amount = amount,
@@ -199,7 +201,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
 
     @SuppressLint("NewApi")
     fun updateOrInsertFiatCurrencyAmounts(amount: Double) {
-        val currentDate = LocalDateTime.now()
+        val currentDate = Date()
         val transaction = Transaction(
             symbol = "USD",
             amount = amount,
@@ -210,9 +212,9 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
             walletId = _currentWallet.value!!.id
         )
         val existedFiatAsset = _currentAssets.value?.find { it.fiat != null }
-        if (_currentAssets.value!!.contains(existedFiatAsset)) {
-            val updatedAmount = existedFiatAsset?.amount?.plus(amount)
-            existedFiatAsset?.amount = updatedAmount!!
+        if (existedFiatAsset != null && _currentAssets.value != null) {
+            val updatedAmount = existedFiatAsset.amount.plus(amount)
+            existedFiatAsset.amount = updatedAmount
             updateAsset(existedFiatAsset)
             insertTransaction(transaction)
         } else {
@@ -225,6 +227,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
             insertAsset(newFiatAsset)
             insertTransaction(transaction)
         }
+
     }
 
 
@@ -331,7 +334,6 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         var balance = 0.0
 
         try {
-            findAssetsByWalletId(_currentWallet.value!!.id)
             if (_currentAssets.value != null) {
                 val fiatValue = _currentAssets.value?.find { it.fiat != null }?.amount
                 val cryptoAssetAmount =
@@ -340,6 +342,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
                     balance = fiatValue
                 } else {
                     for (asset in _currentAssets.value!!) {
+
                         val cryptoValue = asset.cryptoCurrency?.quote?.usdData?.price ?: 0.0
                         balance += cryptoValue * asset.amount
                     }

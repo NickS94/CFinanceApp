@@ -29,23 +29,25 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.accounts.observe(viewLifecycleOwner){
 
-        viewModel.accounts.observe(viewLifecycleOwner) {
-            viewBinding.btnLogin.setOnClickListener {
-                val etEmail = viewBinding.etLogInEmail.text.toString()
-                val etPassword = viewBinding.etPasswordLogin.text.toString()
-                when {
-                    etEmail.isEmpty() -> showToast("Please give your EMAIL.")
-                    etPassword.isEmpty() -> showToast("Please give your password.")
-                    !viewModel.isAccountAlreadyRegistered(etEmail) -> showToast("You are not Registered , Please REGISTER an ACCOUNT.")
-                    else -> viewModel.loginAuthentication(etEmail, etPassword) {
-                        viewModel.findAccountByEmail(etEmail)
-                        showToast("Welcome!")
-                        findNavController().navigate(R.id.homeFragment)
-                    }
+        }
+
+        viewBinding.btnLogin.setOnClickListener {
+            val etEmail = viewBinding.etLogInEmail.text.toString()
+            val etPassword = viewBinding.etPasswordLogin.text.toString()
+            when {
+                etEmail.isEmpty() -> showToast("Please give your EMAIL.")
+                etPassword.isEmpty() -> showToast("Please give your password.")
+                !viewModel.isAccountAlreadyRegistered(etEmail) -> showToast("You are not Registered , Please REGISTER an ACCOUNT.")
+                else -> viewModel.loginAuthentication(etEmail, etPassword) {
+                    viewModel.findAccountByEmail(etEmail)
+                    showToast("Welcome!")
+                    findNavController().navigate(R.id.homeFragment)
                 }
             }
         }
+
         viewBinding.createAccountClickable.setOnClickListener {
             findNavController().navigate(R.id.registerFragment)
         }

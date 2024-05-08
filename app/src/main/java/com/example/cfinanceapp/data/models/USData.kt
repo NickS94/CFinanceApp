@@ -6,7 +6,6 @@ import com.squareup.moshi.Json
 import kotlinx.serialization.Serializable
 
 @Serializable
-
 data class USData(
     @Json(name = "volume_24h")
     val volume24h : Double,

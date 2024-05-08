@@ -47,7 +47,6 @@ class AssetsAdapter(
             holder.binding.tvCoinSymbol.text = asset.cryptoCurrency.symbol
             holder.binding.tvChangePercentageMarket.text =
                 "$${String.format("%.2f", asset.cryptoCurrency.quote.usdData.price * asset.amount)}"
-
             holder.itemView.setOnClickListener {
                 viewModel.getCurrentCoin(asset.cryptoCurrency)
                 it.findNavController().navigate(R.id.detailsFragment)
@@ -60,6 +59,5 @@ class AssetsAdapter(
             holder.binding.tvCoinSymbol.text = "Fiat Currency"
             holder.binding.ivLogoMarketItem.setImageResource(R.drawable.dollar_usd_64)
         }
-
     }
 }

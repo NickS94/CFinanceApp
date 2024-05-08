@@ -27,29 +27,17 @@
         android:id="@+id/homeFragment"
         android:name="com.example.cfinanceapp.ui.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
-        <action
-            android:id="@+id/action_homeFragment_to_detailsFragment"
-            app:destination="@id/detailsFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/marketFragment"
         android:name="com.example.cfinanceapp.ui.MarketFragment"
         android:label="fragment_market"
-        tools:layout="@layout/fragment_market" >
-        <action
-            android:id="@+id/action_marketFragment_to_detailsFragment"
-            app:destination="@id/detailsFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_market" />
     <fragment
         android:id="@+id/walletFragment"
         android:name="com.example.cfinanceapp.ui.WalletFragment"
         android:label="fragment_wallet"
-        tools:layout="@layout/fragment_wallet" >
-        <action
-            android:id="@+id/action_walletFragment_to_detailsFragment"
-            app:destination="@id/detailsFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_wallet" />
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.cfinanceapp.ui.ProfileFragment"
@@ -60,4 +48,9 @@
         android:name="com.example.cfinanceapp.ui.DetailsFragment"
         android:label="fragment_details"
         tools:layout="@layout/fragment_details" />
+    <fragment
+        android:id="@+id/transactionsFragment"
+        android:name="com.example.cfinanceapp.ui.TransactionsFragment"
+        android:label="fragment_transactions"
+        tools:layout="@layout/fragment_transactions" />
 </navigation>
