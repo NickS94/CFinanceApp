@@ -27,7 +27,7 @@ class TransactionsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = TransactionsAdapter(context = this.requireContext())
+        val adapter = TransactionsAdapter(context = this.requireContext(), viewModel = viewModel)
 
         viewBinding.rvTransactions.adapter = adapter
 

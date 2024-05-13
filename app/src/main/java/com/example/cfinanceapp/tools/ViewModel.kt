@@ -20,7 +20,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
-import java.util.Date
+import java.time.format.DateTimeFormatter
 import kotlin.random.Random
 
 class ViewModel(application: Application) : AndroidViewModel(application) {
@@ -40,6 +40,9 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
 
     private var _currentTransactions = MutableLiveData<List<Transaction>>()
     val currentTransactions: LiveData<List<Transaction>> = _currentTransactions
+
+    private var _currentTransaction = MutableLiveData<Transaction>()
+    val currentTransaction: LiveData<Transaction> = _currentTransaction
 
     private var _currentAssets = MutableLiveData<MutableList<Asset>>()
     val currentAssets: LiveData<MutableList<Asset>> = _currentAssets
@@ -89,7 +92,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    private fun loadCrypto() {
+    fun loadCrypto() {
         viewModelScope.launch {
             repository.loadCryptoCurrencyList()
 
@@ -107,6 +110,12 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
             _currentCrypto.value = coin
         }
 
+    }
+
+    fun getCurrentTransaction(transaction: Transaction) {
+        viewModelScope.launch {
+            _currentTransaction.value = transaction
+        }
     }
 
 
@@ -163,12 +172,14 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
 
     @SuppressLint("NewApi")
     fun updateOrInsertCryptoCurrencyAmounts(amount: Double, coin: CryptoCurrency) {
-        val currentDate = Date()
+        val currentDateTime = LocalDateTime.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        val formattedDateTime = currentDateTime.format(formatter)
         val transaction = Transaction(
             symbol = coin.symbol,
             amount = amount,
             price = coin.quote.usdData.price,
-            date = currentDate.toString(),
+            date = formattedDateTime,
             transactionHash = generateTransactionHash(),
             isBought = true,
             walletId = _currentWallet.value!!.id
@@ -204,12 +215,14 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
 
     @SuppressLint("NewApi")
     fun updateOrInsertFiatCurrencyAmounts(amount: Double) {
-        val currentDate = Date()
+        val currentDateTime = LocalDateTime.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        val formattedDateTime = currentDateTime.format(formatter)
         val transaction = Transaction(
             symbol = "USD",
             amount = amount,
             price = null,
-            date = currentDate.toString(),
+            date = formattedDateTime,
             transactionHash = "Fiat Deposit",
             isBought = null,
             walletId = _currentWallet.value!!.id

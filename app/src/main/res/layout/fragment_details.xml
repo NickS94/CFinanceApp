@@ -164,9 +164,6 @@
         android:layout_margin="5dp"
         android:layout_marginTop="35dp"
         android:layout_marginBottom="187dp"
-
-        android:background="@drawable/round_transparent"
-        app:cardCornerRadius="30dp"
         app:layout_constraintBottom_toTopOf="@+id/btnBuyDetails"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"

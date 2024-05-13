@@ -39,9 +39,6 @@ class WalletFragment : Fragment() {
         viewBinding.rvAssetsWallet.adapter = adapter
 
         viewModel.currentAccount.observe(viewLifecycleOwner) { account ->
-            if (viewModel.wallets.value != null) {
-
-            }
             viewModel.findWalletByUserId(account.id)
             viewModel.findAccountByEmail(account.email)
             viewBinding.btnCreateNewWallet.setOnClickListener {
@@ -64,7 +61,6 @@ class WalletFragment : Fragment() {
             if (viewModel.currentWallet.value != null) {
                 viewModel.findAssetsByWalletId(viewModel.currentWallet.value!!.id)
             }
-
         }
 
 
@@ -73,7 +69,6 @@ class WalletFragment : Fragment() {
                 adapter.submitList(viewModel.currentAssets.value!!)
                 viewBinding.currentBalanceText.stringFormat(viewModel.currentBalance())
             }
-
         }
 
 
@@ -89,7 +84,6 @@ class WalletFragment : Fragment() {
         }
 
 
-
         viewBinding.btnHistory.setOnClickListener {
             when {
                 viewModel.currentWallet.value != null -> {
@@ -100,10 +94,7 @@ class WalletFragment : Fragment() {
                 else -> showToast("You have to CREATE a WALLET first")
 
             }
-
-
         }
-
     }
 
     private fun showToast(message: String) {

@@ -2,19 +2,23 @@ package com.example.cfinanceapp.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cfinanceapp.R
 import com.example.cfinanceapp.data.models.Transaction
 import com.example.cfinanceapp.databinding.TransactionsItemBinding
-
-
+import com.example.cfinanceapp.tools.ViewModel
+import java.time.format.DateTimeFormatter
 
 
 class TransactionsAdapter(
     private var dataTransactions: List<Transaction> = listOf(),
-    private val context : Context
+    private val context : Context,
+    private val viewModel : ViewModel
 ) : RecyclerView.Adapter<TransactionsAdapter.ItemViewHolder>() {
 
 
@@ -43,9 +47,10 @@ class TransactionsAdapter(
 
 
 
+
         holder.binding.tvAmountTransaction.text = String.format("%.2f", transaction.amount)
 
-        holder.binding.tvDateTransaction.text = transaction.date.format("yyyy-MM-dd HH:mm:ss")
+        holder.binding.tvDateTransaction.text = transaction.date
 
         holder.binding.tvSymbolTransaction.text = transaction.symbol
 
@@ -63,6 +68,11 @@ class TransactionsAdapter(
             }
         }
 
+
+        holder.itemView.setOnClickListener {
+            viewModel.getCurrentTransaction(transaction)
+            it.findNavController().navigate(R.id.transactionsDetailFragment)
+        }
 
     }
 }

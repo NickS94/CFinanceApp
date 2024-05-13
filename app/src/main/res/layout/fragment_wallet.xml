@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="180dp"
         android:layout_margin="10dp"
-        app:cardCornerRadius="40dp"
+
         app:layout_constraintBottom_toTopOf="@+id/materialCardView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -85,7 +85,7 @@
         android:layout_margin="10dp"
         android:layout_marginTop="20dp"
         app:cardBackgroundColor="@color/dark_grey_background"
-        app:cardCornerRadius="20dp"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

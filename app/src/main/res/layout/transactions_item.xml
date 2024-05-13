@@ -5,7 +5,6 @@
     android:layout_margin="5dp"
     android:layout_width="match_parent"
     app:cardBackgroundColor="@android:color/transparent"
-    app:strokeColor="@color/turquoise_light"
     android:layout_height="90dp">
 
 

@@ -74,4 +74,10 @@
     <string name="_0_00">0.00$</string>
     <string name="yyyy_mm_dd_00_00_00">YYYY-MM-DD 00:00:00</string>
     <string name="status">Status</string>
+    <string name="transaction_details">Transaction Details</string>
+    <string name="quantity">Quantity</string>
+    <string name="_200_usdt">200 USDT</string>
+    <string name="transactions_account">Transactions Account</string>
+    <string name="time">Time</string>
+    <string name="transaction_hash">Transaction Hash</string>
 </resources>

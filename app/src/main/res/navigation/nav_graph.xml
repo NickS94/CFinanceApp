@@ -37,7 +37,14 @@
         android:id="@+id/walletFragment"
         android:name="com.example.cfinanceapp.ui.WalletFragment"
         android:label="fragment_wallet"
-        tools:layout="@layout/fragment_wallet" />
+        tools:layout="@layout/fragment_wallet" >
+        <action
+            android:id="@+id/action_walletFragment_to_transactionsFragment"
+            app:destination="@id/transactionsFragment" />
+        <action
+            android:id="@+id/action_walletFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.cfinanceapp.ui.ProfileFragment"
@@ -52,5 +59,14 @@
         android:id="@+id/transactionsFragment"
         android:name="com.example.cfinanceapp.ui.TransactionsFragment"
         android:label="fragment_transactions"
-        tools:layout="@layout/fragment_transactions" />
+        tools:layout="@layout/fragment_transactions" >
+        <action
+            android:id="@+id/action_transactionsFragment_to_transactionsDetailFragment"
+            app:destination="@id/transactionsDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/transactionsDetailFragment"
+        android:name="com.example.cfinanceapp.ui.TransactionsDetailFragment"
+        android:label="fragment_transactions_detail"
+        tools:layout="@layout/fragment_transactions_detail" />
 </navigation>
