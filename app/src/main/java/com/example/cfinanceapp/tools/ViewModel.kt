@@ -103,7 +103,10 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun getCurrentCoin(coin: CryptoCurrency) {
-        _currentCrypto.value = coin
+        viewModelScope.launch {
+            _currentCrypto.value = coin
+        }
+
     }
 
 
@@ -333,27 +336,22 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     fun currentBalance(): Double {
         var balance = 0.0
 
-        try {
-            if (_currentAssets.value != null) {
-                val fiatValue = _currentAssets.value?.find { it.fiat != null }?.amount
-                val cryptoAssetAmount =
-                    _currentAssets.value?.find { it.cryptoCurrency != null }
-                if (cryptoAssetAmount == null && fiatValue != null) {
-                    balance = fiatValue
-                } else {
+        viewModelScope.launch {
+            try {
+                if (_currentAssets.value != null) {
                     for (asset in _currentAssets.value!!) {
-
                         val cryptoValue = asset.cryptoCurrency?.quote?.usdData?.price ?: 0.0
                         balance += cryptoValue * asset.amount
                     }
+                    val fiatValue = _currentAssets.value?.find { it.fiat != null }?.amount ?: 0.0
+                    balance += fiatValue
 
-                    balance += fiatValue ?: 0.0
+                } else {
+                    balance = 0.0
                 }
-            } else {
-                balance = 0.0
+            } catch (e: Exception) {
+                throw e
             }
-        } catch (e: Exception) {
-            throw e
         }
         return balance
     }

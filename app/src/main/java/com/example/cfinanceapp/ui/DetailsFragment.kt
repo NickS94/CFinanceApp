@@ -49,37 +49,6 @@ class DetailsFragment : Fragment() {
 
             loadChart(cryptoCurrency, "D")
 
-            viewBinding.btn1h.setOnClickListener {
-
-                selectedButton?.setBackgroundResource(android.R.color.transparent)
-                selectedButton = viewBinding.btn1h
-                viewBinding.btn1h.setBackgroundResource(R.drawable.round_transparent)
-
-
-                loadChart(cryptoCurrency, viewBinding.btn1h.text.toString())
-
-            }
-            viewBinding.btn24h.setOnClickListener {
-
-                selectedButton?.setBackgroundResource(android.R.color.transparent)
-                selectedButton = viewBinding.btn24h
-                viewBinding.btn24h.setBackgroundResource(R.drawable.round_transparent)
-
-
-                loadChart(cryptoCurrency, viewBinding.btn24h.text.toString())
-            }
-            viewBinding.btnWeek.setOnClickListener {
-
-                selectedButton?.setBackgroundResource(android.R.color.transparent)
-                selectedButton = viewBinding.btnWeek
-                viewBinding.btnWeek.setBackgroundResource(R.drawable.round_transparent)
-
-                loadChart(cryptoCurrency, viewBinding.btnWeek.text.toString())
-            }
-
-
-
-
             viewBinding.ivCoinLogoDetails.load(viewModel.getCoinLogo(cryptoCurrency.id.toString()))
 
             viewBinding.tvCoinNameDetails.text = cryptoCurrency.name
@@ -137,14 +106,43 @@ class DetailsFragment : Fragment() {
                 viewBinding.tvMaxSupplyDetail.text = "Max: $formattedMaxSupply"
             }
 
-            viewBinding.btnBuyDetails.setOnClickListener {
-                if (viewModel.currentWallet.value != null) {
-                    showBuyCryptoDialog(cryptoCurrency, viewModel)
-                } else {
-                    showToast("Please CREATE a WALLET for transactions")
-                }
-            }
 
+
+        }
+        viewBinding.btn1h.setOnClickListener {
+
+            selectedButton?.setBackgroundResource(android.R.color.transparent)
+            selectedButton = viewBinding.btn1h
+            viewBinding.btn1h.setBackgroundResource(R.drawable.round_transparent)
+
+
+            loadChart(viewModel.currentCrypto.value!!, viewBinding.btn1h.text.toString())
+
+        }
+        viewBinding.btn24h.setOnClickListener {
+
+            selectedButton?.setBackgroundResource(android.R.color.transparent)
+            selectedButton = viewBinding.btn24h
+            viewBinding.btn24h.setBackgroundResource(R.drawable.round_transparent)
+
+
+            loadChart(viewModel.currentCrypto.value!!, viewBinding.btn24h.text.toString())
+        }
+        viewBinding.btnWeek.setOnClickListener {
+
+            selectedButton?.setBackgroundResource(android.R.color.transparent)
+            selectedButton = viewBinding.btnWeek
+            viewBinding.btnWeek.setBackgroundResource(R.drawable.round_transparent)
+
+            loadChart(viewModel.currentCrypto.value!!, viewBinding.btnWeek.text.toString())
+        }
+
+        viewBinding.btnBuyDetails.setOnClickListener {
+            if (viewModel.currentWallet.value != null) {
+                showBuyCryptoDialog(viewModel.currentCrypto.value!!, viewModel)
+            } else {
+                showToast("Please CREATE a WALLET for transactions")
+            }
         }
 
         viewBinding.btnBackDetails.setOnClickListener {
