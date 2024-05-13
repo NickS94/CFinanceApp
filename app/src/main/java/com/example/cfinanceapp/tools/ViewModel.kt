@@ -335,23 +335,20 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
 
     fun currentBalance(): Double {
         var balance = 0.0
-
-        viewModelScope.launch {
-            try {
-                if (_currentAssets.value != null) {
-                    for (asset in _currentAssets.value!!) {
-                        val cryptoValue = asset.cryptoCurrency?.quote?.usdData?.price ?: 0.0
-                        balance += cryptoValue * asset.amount
-                    }
-                    val fiatValue = _currentAssets.value?.find { it.fiat != null }?.amount ?: 0.0
-                    balance += fiatValue
-
-                } else {
-                    balance = 0.0
+        try {
+            if (_currentAssets.value != null) {
+                for (asset in _currentAssets.value!!) {
+                    val cryptoValue = asset.cryptoCurrency?.quote?.usdData?.price ?: 0.0
+                    balance += cryptoValue * asset.amount
                 }
-            } catch (e: Exception) {
-                throw e
+                val fiatValue = _currentAssets.value?.find { it.fiat != null }?.amount ?: 0.0
+                balance += fiatValue
+
+            } else {
+                balance = 0.0
             }
+        } catch (e: Exception) {
+            throw e
         }
         return balance
     }

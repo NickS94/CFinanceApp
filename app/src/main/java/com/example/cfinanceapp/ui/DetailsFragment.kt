@@ -107,7 +107,6 @@ class DetailsFragment : Fragment() {
             }
 
 
-
         }
         viewBinding.btn1h.setOnClickListener {
 

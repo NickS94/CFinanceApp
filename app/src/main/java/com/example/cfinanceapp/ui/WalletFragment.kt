@@ -61,7 +61,7 @@ class WalletFragment : Fragment() {
         }
 
         viewModel.assets.observe(viewLifecycleOwner) {
-            if (viewModel.currentWallet.value != null ) {
+            if (viewModel.currentWallet.value != null) {
                 viewModel.findAssetsByWalletId(viewModel.currentWallet.value!!.id)
             }
 
@@ -69,7 +69,7 @@ class WalletFragment : Fragment() {
 
 
         viewModel.currentAssets.observe(viewLifecycleOwner) {
-            if (viewModel.currentWallet.value != null){
+            if (viewModel.currentWallet.value != null) {
                 adapter.submitList(viewModel.currentAssets.value!!)
                 viewBinding.currentBalanceText.stringFormat(viewModel.currentBalance())
             }
