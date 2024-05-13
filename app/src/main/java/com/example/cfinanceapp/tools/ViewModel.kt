@@ -14,6 +14,7 @@ import com.example.cfinanceapp.data.local.DatabaseInstance
 import com.example.cfinanceapp.data.models.Account
 import com.example.cfinanceapp.data.models.Asset
 import com.example.cfinanceapp.data.models.CryptoCurrency
+import com.example.cfinanceapp.data.models.Favorite
 import com.example.cfinanceapp.data.models.Transaction
 import com.example.cfinanceapp.data.models.Wallet
 import com.google.firebase.Firebase
@@ -36,7 +37,11 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     val wallets = repository.wallets
     val assets = repository.assets
     val transactions = repository.transactions
+    val favorites = repository.favorites
 
+
+    private var _currentFavorites = MutableLiveData<MutableList<Favorite>>()
+    val currentFavorites: LiveData<MutableList<Favorite>> = _currentFavorites
 
     private var _currentTransactions = MutableLiveData<List<Transaction>>()
     val currentTransactions: LiveData<List<Transaction>> = _currentTransactions
@@ -56,9 +61,6 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     private var _currentCrypto = MutableLiveData<CryptoCurrency>()
     val currentCrypto: LiveData<CryptoCurrency> = _currentCrypto
 
-    private val _cryptoWatchList = MutableLiveData<MutableList<CryptoCurrency>>()
-    val cryptoWatchList: LiveData<MutableList<CryptoCurrency>> = _cryptoWatchList
-
 
     init {
         loadCrypto()
@@ -66,6 +68,13 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         loadAllWallets()
         loadAllAssets()
         loadAllTransactions()
+        loadAllFavorites()
+    }
+
+    private fun loadAllFavorites() {
+        viewModelScope.launch {
+            repository.getAllFavorites()
+        }
     }
 
     private fun loadAllTransactions() {
@@ -92,7 +101,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun loadCrypto() {
+    private fun loadCrypto() {
         viewModelScope.launch {
             repository.loadCryptoCurrencyList()
 
@@ -109,7 +118,6 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             _currentCrypto.value = coin
         }
-
     }
 
     fun getCurrentTransaction(transaction: Transaction) {
@@ -150,6 +158,19 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
             repository.insertTransactions(transaction)
         }
     }
+
+    private fun insertFavorite(favorite: Favorite) {
+        viewModelScope.launch {
+            repository.insertFavorite(favorite)
+        }
+    }
+
+    private fun removeFavorite(favorite: Favorite) {
+        viewModelScope.launch {
+            repository.removeFromFavorite(favorite)
+        }
+    }
+
 
     fun findWalletByUserId(accountId: Long) {
         viewModelScope.launch {
@@ -285,11 +306,17 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun addToWatchlist(coin: CryptoCurrency): MutableList<CryptoCurrency> {
-        val updatedList = (_cryptoWatchList.value ?: emptyList()).toMutableList()
-        updatedList.add(coin)
-        _cryptoWatchList.value = updatedList
-        return updatedList
+    fun addToWatchlist(coin: CryptoCurrency) {
+        val favorite = Favorite(
+                favoriteCoin = coin,
+                isFavorite = true,
+                accountId = _currentAccount.value!!.id
+        )
+        val existedFavorite = _currentFavorites.value!!.find { it.isFavorite!! }
+
+        //TODO ---->
+
+
     }
 
 

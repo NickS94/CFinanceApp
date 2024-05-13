@@ -1,5 +1,6 @@
 package com.example.cfinanceapp.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -26,6 +27,7 @@ class ProfileFragment : Fragment() {
     }
 
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -34,11 +36,13 @@ class ProfileFragment : Fragment() {
             if (it != null ){
                 viewBinding.tvName.text = it.name
                 viewBinding.tvEmailProfile.text = it.email
+                viewBinding.tvAccountId.text = "AccountID: ${it.id}"
             }
             viewBinding.tvLogout.setOnClickListener {
                 viewModel.logout()
                 findNavController().navigate(R.id.loginFragment)
             }
+
         }
 
 

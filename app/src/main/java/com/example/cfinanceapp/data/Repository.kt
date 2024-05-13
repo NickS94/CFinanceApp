@@ -8,6 +8,7 @@ import com.example.cfinanceapp.data.API.CoinMarketCapAPI
 import com.example.cfinanceapp.data.local.DatabaseInstance
 import com.example.cfinanceapp.data.models.Account
 import com.example.cfinanceapp.data.models.Asset
+import com.example.cfinanceapp.data.models.Favorite
 import com.example.cfinanceapp.data.models.ResponseAPI
 import com.example.cfinanceapp.data.models.Transaction
 import com.example.cfinanceapp.data.models.Wallet
@@ -31,7 +32,12 @@ class Repository(
 
     private val allTransactions = databaseInstance.dao.getAllTransactions()
 
+    private val allFavorites = databaseInstance.dao.getAllFavorites()
 
+
+
+    private val _favorites = allFavorites
+    val favorites :LiveData<MutableList<Favorite>> = _favorites
 
     private val _transactions = allTransactions
     val transactions:LiveData<List<Transaction>> = _transactions
@@ -95,6 +101,14 @@ class Repository(
         }
     }
 
+    fun getAllFavorites(){
+        try {
+            databaseInstance.dao.getAllFavorites()
+        }catch (e:Exception){
+            Log.d(TAG,"FAILED TO LOAD :${e.message}")
+        }
+    }
+
 
     suspend fun insertAccount(account: Account) {
         try {
@@ -126,6 +140,14 @@ class Repository(
         try {
             databaseInstance.dao.insertTransaction(transaction)
         }  catch (e: Exception) {
+            Log.d(TAG, "FAILED TO LOAD : ${e.message}")
+        }
+    }
+
+    suspend fun insertFavorite(favorite: Favorite){
+        try {
+            databaseInstance.dao.insertFavorite(favorite)
+        }catch (e: Exception) {
             Log.d(TAG, "FAILED TO LOAD : ${e.message}")
         }
     }
@@ -173,6 +195,24 @@ class Repository(
         try {
             return databaseInstance.dao.getTransactionsByWalletId(walletId)
         } catch (e: Exception) {
+            Log.d(TAG, "FAILED TO LOAD : ${e.message}")
+            throw e
+        }
+    }
+
+    suspend fun getFavoritesByAccountId(accountId: Long):MutableList<Favorite>{
+        try {
+            return databaseInstance.dao.getFavoritesByAccountId(accountId)
+        }catch (e: Exception) {
+            Log.d(TAG, "FAILED TO LOAD : ${e.message}")
+            throw e
+        }
+    }
+
+    suspend fun removeFromFavorite (favorite: Favorite){
+        try {
+            databaseInstance.dao.removeFavorite(favorite)
+        }catch (e: Exception) {
             Log.d(TAG, "FAILED TO LOAD : ${e.message}")
             throw e
         }
