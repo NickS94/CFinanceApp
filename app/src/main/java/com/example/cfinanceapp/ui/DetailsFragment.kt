@@ -41,6 +41,7 @@ class DetailsFragment : Fragment() {
 
 
         var selectedButton: Button? = null
+        var isClicked = true
 
 
         viewModel.currentCrypto.observe(viewLifecycleOwner) { cryptoCurrency ->
@@ -124,7 +125,6 @@ class DetailsFragment : Fragment() {
             selectedButton = viewBinding.btn24h
             viewBinding.btn24h.setBackgroundResource(R.drawable.round_transparent)
 
-
             loadChart(viewModel.currentCrypto.value!!, viewBinding.btn24h.text.toString())
         }
         viewBinding.btnWeek.setOnClickListener {
@@ -134,6 +134,27 @@ class DetailsFragment : Fragment() {
             viewBinding.btnWeek.setBackgroundResource(R.drawable.round_transparent)
 
             loadChart(viewModel.currentCrypto.value!!, viewBinding.btnWeek.text.toString())
+        }
+
+
+
+        if (viewModel.isFavorite(viewModel.currentCrypto.value!!)) {
+            viewBinding.ivFavorite.setImageResource(R.drawable.favorite_icon_enabled)
+        } else {
+            viewBinding.ivFavorite.setImageResource(R.drawable.favorite_icon_disable)
+        }
+
+
+        viewBinding.ivFavorite.setOnClickListener {
+
+            isClicked = !isClicked
+            if (isClicked){
+                viewBinding.ivFavorite.setImageResource(R.drawable.favorite_icon_enabled)
+            } else {
+                viewBinding.ivFavorite.setImageResource(R.drawable.favorite_icon_disable)
+            }
+
+            viewModel.addToWatchlist(viewModel.currentCrypto.value!!)
         }
 
         viewBinding.btnBuyDetails.setOnClickListener {

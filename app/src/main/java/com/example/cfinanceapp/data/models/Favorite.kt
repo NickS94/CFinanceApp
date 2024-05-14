@@ -11,7 +11,7 @@ data class Favorite(
     @ColumnInfo(name = "Watchlist")
     val favoriteCoin : CryptoCurrency?,
     @ColumnInfo(name = "Status")
-    val isFavorite : Boolean?,
+    var isFavorite : Boolean?,
 
     val accountId:Long
 )

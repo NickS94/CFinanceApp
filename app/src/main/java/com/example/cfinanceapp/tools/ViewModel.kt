@@ -191,6 +191,12 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun findFavoritesByAccountId(accountId: Long) {
+        viewModelScope.launch {
+            _currentFavorites.value = repository.getFavoritesByAccountId(accountId)
+        }
+    }
+
     @SuppressLint("NewApi")
     fun updateOrInsertCryptoCurrencyAmounts(amount: Double, coin: CryptoCurrency) {
         val currentDateTime = LocalDateTime.now()
@@ -205,7 +211,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
             isBought = true,
             walletId = _currentWallet.value!!.id
         )
-        val fiatAsset = _currentAssets.value?.find { it.fiat != null }
+        val fiatAsset = _currentAssets.value?.find { it.cryptoCurrency == null }
         viewModelScope.launch {
             val assets = repository.getAssetsByWalletId(_currentWallet.value!!.id)
             val existedAsset = assets.find { it.cryptoCurrency?.id == coin.id }
@@ -307,15 +313,21 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun addToWatchlist(coin: CryptoCurrency) {
-        val favorite = Favorite(
-                favoriteCoin = coin,
-                isFavorite = true,
-                accountId = _currentAccount.value!!.id
-        )
-        val existedFavorite = _currentFavorites.value!!.find { it.isFavorite!! }
 
-        //TODO ---->
-
+        viewModelScope.launch {
+            val favorites = repository.getFavoritesByAccountId(_currentAccount.value!!.id)
+            val existedFavorite = favorites.find { it.favoriteCoin!!.id == coin.id }
+            if (existedFavorite != null) {
+                removeFavorite(existedFavorite)
+            } else {
+                val newFavorite = Favorite(
+                    favoriteCoin = coin,
+                    isFavorite = true,
+                    accountId = _currentAccount.value!!.id
+                )
+                insertFavorite(newFavorite)
+            }
+        }
 
     }
 
@@ -397,6 +409,14 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         val fiatBalance = _currentAssets.value?.find { it.fiat != null }
         val wishAmount = _currentCrypto.value?.quote?.usdData!!.price * amount
         return fiatBalance?.fiat != null && fiatBalance.amount >= wishAmount
+    }
+
+    fun isFavorite(coin: CryptoCurrency):Boolean {
+
+        val favoriteCoins = _currentFavorites.value
+        val currentCryptoId = coin.id
+
+        return favoriteCoins!!.any { it.favoriteCoin!!.id == currentCryptoId }
     }
 
 }

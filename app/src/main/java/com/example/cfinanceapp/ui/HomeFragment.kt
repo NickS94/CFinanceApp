@@ -29,32 +29,28 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-
-
+        val adapter = WatchListAdapter(viewModel = viewModel)
+        viewBinding.rvWatchlist.adapter = adapter
 
 
         val recyclerViewHot = viewBinding.rvHotMarketList
         viewModel.cryptoList.observe(viewLifecycleOwner) {
-            recyclerViewHot.adapter = HotListAdapter(viewModel.loadHotList(),viewModel)
+            recyclerViewHot.adapter = HotListAdapter(viewModel.loadHotList(), viewModel)
         }
 
 
-        val recyclerViewWatchList = viewBinding.rvWatchlist
+        viewModel.favorites.observe(viewLifecycleOwner){
+            viewModel.findFavoritesByAccountId(viewModel.currentAccount.value!!.id)
+        }
 
-        viewModel.cryptoWatchList.observe(viewLifecycleOwner) { watchlist ->
-            recyclerViewWatchList.adapter = WatchListAdapter(watchlist,viewModel)
+        viewModel.currentFavorites.observe(viewLifecycleOwner) { watchlist ->
+            if (viewModel.currentFavorites.value != null) {
+                adapter.submitList(watchlist)
+            }
         }
 
 
     }
-
-
-
-
-
-
-
 
 
 }

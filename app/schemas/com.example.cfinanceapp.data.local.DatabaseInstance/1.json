@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "a69dff2c958bd5c8b1af8aca2bbcbfd5",
+    "identityHash": "7dca37a6d8e4f6a06ad9b22f71e0137e",
     "entities": [
       {
         "tableName": "Accounts",
@@ -167,12 +167,50 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "Favorite",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `Watchlist` TEXT, `Status` INTEGER, `accountId` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "favoriteCoin",
+            "columnName": "Watchlist",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isFavorite",
+            "columnName": "Status",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "accountId",
+            "columnName": "accountId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a69dff2c958bd5c8b1af8aca2bbcbfd5')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7dca37a6d8e4f6a06ad9b22f71e0137e')"
     ]
   }
 }

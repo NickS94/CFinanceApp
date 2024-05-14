@@ -4,19 +4,24 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.findNavController
-
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.cfinanceapp.R
 import com.example.cfinanceapp.tools.ViewModel
-import com.example.cfinanceapp.data.models.CryptoCurrency
+import com.example.cfinanceapp.data.models.Favorite
 import com.example.cfinanceapp.databinding.WatchlistItemBinding
 
 class WatchListAdapter(
-    private var dataSet: List<CryptoCurrency> = emptyList(),
+    private var dataSet: MutableList<Favorite> = mutableListOf(),
     val viewModel: ViewModel
 ) : RecyclerView.Adapter<WatchListAdapter.ItemViewHolder>() {
 
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun submitList(list: MutableList<Favorite>) {
+        dataSet = list
+        notifyDataSetChanged()
+    }
 
 
     inner class ItemViewHolder(val binding: WatchlistItemBinding) :
@@ -36,30 +41,30 @@ class WatchListAdapter(
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        val coin = dataSet[position]
+        val favorite = dataSet[position]
 
-        holder.binding.ivChart.load(viewModel.getChartEffect(coin.id.toString()))
-        holder.binding.ivCoinLogoWatchlist.load(viewModel.getCoinLogo(coin.id.toString()))
+        holder.binding.ivChart.load(viewModel.getChartEffect(favorite.favoriteCoin?.id.toString()))
+        holder.binding.ivCoinLogoWatchlist.load(viewModel.getCoinLogo(favorite.favoriteCoin?.id.toString()))
 
-        holder.binding.tvCurrentPrice.text = "$${String.format("%.2f", coin.quote.usdData.price)}"
+        holder.binding.tvCurrentPrice.text = "$${String.format("%.2f", favorite.favoriteCoin?.quote?.usdData?.price)}"
 
-        holder.binding.tv24hChangePrice.text = "${String.format("%.2f", coin.quote.usdData.percentChange24h)}%"
+        holder.binding.tv24hChangePrice.text = "${String.format("%.2f",favorite.favoriteCoin?.quote?.usdData?.percentChange24h)}%"
 
         when {
-            coin.quote.usdData.percentChange24h > 0 -> holder.binding.tv24hChangePrice.setBackgroundResource(
+            favorite.favoriteCoin?.quote?.usdData?.percentChange24h!! > 0 -> holder.binding.tv24hChangePrice.setBackgroundResource(
                 R.drawable.rounded_percentage_up
             )
 
-            coin.quote.usdData.percentChange24h < 0 -> holder.binding.tv24hChangePrice.setBackgroundResource(
+            favorite.favoriteCoin.quote.usdData.percentChange24h < 0 -> holder.binding.tv24hChangePrice.setBackgroundResource(
                 R.drawable.rounded_percentage_down
             )
         }
 
-        holder.binding.tvCoinNameAndSymbol.text = "${coin.name}\n${coin.symbol}"
+        holder.binding.tvCoinNameAndSymbol.text = "${favorite.favoriteCoin?.name}\n${favorite.favoriteCoin?.symbol}"
 
 
         holder.itemView.setOnClickListener {
-            viewModel.getCurrentCoin(coin)
+            viewModel.getCurrentCoin(favorite.favoriteCoin!!)
             it.findNavController().navigate(R.id.detailsFragment)
         }
 
