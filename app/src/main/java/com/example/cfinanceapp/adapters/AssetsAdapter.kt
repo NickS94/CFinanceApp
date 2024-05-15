@@ -1,6 +1,7 @@
 package com.example.cfinanceapp.adapters
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.findNavController
@@ -13,7 +14,8 @@ import com.example.cfinanceapp.tools.ViewModel
 
 class AssetsAdapter(
     private var assetsData: MutableList<Asset> = mutableListOf(),
-    val viewModel: ViewModel
+    val viewModel: ViewModel,
+    val context: Context
 ) : RecyclerView.Adapter<AssetsAdapter.AssetsViewHolder>() {
 
 
@@ -43,16 +45,32 @@ class AssetsAdapter(
 
 
         if (asset.cryptoCurrency != null) {
-            holder.binding.ivLogoMarketItem.load(viewModel.getCoinLogo(asset.cryptoCurrency.id.toString()))
-            holder.binding.tvCoinName.text = asset.cryptoCurrency.name
+            holder.binding.ivLogoMarketItem.load(viewModel.getCoinLogo(asset.cryptoCurrency!!.id.toString()))
+            holder.binding.tvCoinName.text = asset.cryptoCurrency!!.name
             holder.binding.tvCurrentPriceMarket.text = asset.amount.toString()
-            holder.binding.tvCoinSymbol.text = asset.cryptoCurrency.symbol
+            holder.binding.tvCoinSymbol.text = asset.cryptoCurrency!!.symbol
             holder.binding.tvChangePercentageMarket.text =
-                "$${String.format("%.2f",viewModel.actualCoinPriceUpdater(asset)* asset.amount)}"
+                "$${String.format("%.2f", viewModel.actualCoinPriceUpdater(asset) * asset.amount)}"
+            when {
+                viewModel.profitOrLossInAsset(asset) > 0 -> holder.binding.tvProfitOrLoss.setTextColor(
+                    context.getColor(R.color.green)
+                )
+
+                viewModel.profitOrLossInAsset(asset) < 0 -> holder.binding.tvProfitOrLoss.setTextColor(
+                    context.getColor(R.color.red)
+                )
+
+                else -> holder.binding.tvProfitOrLoss.setTextColor(context.getColor(R.color.white))
+            }
+            holder.binding.tvProfitOrLoss.text =
+                "$${String.format("%.2f", viewModel.profitOrLossInAsset(asset) * asset.amount)}"
+
+
             holder.itemView.setOnClickListener {
-                viewModel.getCurrentCoin(asset.cryptoCurrency)
+                viewModel.getCurrentCoin(viewModel.actualCoinFinder(asset)!!)
                 it.findNavController().navigate(R.id.detailsFragment)
             }
+
         } else {
             holder.binding.tvCoinName.text = "USD"
             holder.binding.tvChangePercentageMarket.text =

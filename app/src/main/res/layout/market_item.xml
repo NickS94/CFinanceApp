@@ -56,7 +56,7 @@
             android:id="@+id/tvCurrentPriceMarket"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="6dp"
             android:layout_marginEnd="16dp"
             android:text="@string/current_price"
             android:textColor="@color/white"
@@ -67,12 +67,12 @@
             android:id="@+id/tvChangePercentageMarket"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="12dp"
             android:text="@string/change"
             android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvCurrentPriceMarket" />
 
         <ImageView
             android:id="@+id/ivArrow"
@@ -82,6 +82,17 @@
             app:layout_constraintEnd_toStartOf="@+id/tvChangePercentageMarket"
             app:layout_constraintTop_toTopOf="@+id/tvChangePercentageMarket"
             tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/tvProfitOrLoss"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="1dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvChangePercentageMarket" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

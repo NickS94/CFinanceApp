@@ -46,11 +46,11 @@ class MarketAdapter(
         when {
             coin.quote.usdData.percentChange24h > 0 -> {
                 holder.binding.ivArrow.load(R.drawable.price_up_arrow)
-                holder.binding.tvChangePercentageMarket.setTextColor(context.resources.getColor(R.color.green))
+                holder.binding.tvChangePercentageMarket.setTextColor(context.getColor(R.color.green))
             }
             coin.quote.usdData.percentChange24h < 0 -> {
                 holder.binding.ivArrow.load(R.drawable.price_down_arrow)
-                holder.binding.tvChangePercentageMarket.setTextColor(context.resources.getColor(R.color.red))
+                holder.binding.tvChangePercentageMarket.setTextColor(context.getColor(R.color.red))
             }
         }
 

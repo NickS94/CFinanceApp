@@ -46,7 +46,7 @@ class WatchListAdapter(
         holder.binding.ivChart.load(viewModel.getChartEffect(favorite.favoriteCoin?.id.toString()))
         holder.binding.ivCoinLogoWatchlist.load(viewModel.getCoinLogo(favorite.favoriteCoin?.id.toString()))
 
-        holder.binding.tvCurrentPrice.text = "$${String.format("%.2f", favorite.favoriteCoin?.quote?.usdData?.price)}"
+        holder.binding.tvCurrentPrice.text = "$${String.format("%.2f", viewModel.actualCoinPriceUpdaterWatchlist(favorite))}"
 
         holder.binding.tv24hChangePrice.text = "${String.format("%.2f",favorite.favoriteCoin?.quote?.usdData?.percentChange24h)}%"
 
@@ -55,7 +55,7 @@ class WatchListAdapter(
                 R.drawable.rounded_percentage_up
             )
 
-            favorite.favoriteCoin.quote.usdData.percentChange24h < 0 -> holder.binding.tv24hChangePrice.setBackgroundResource(
+            favorite.favoriteCoin!!.quote.usdData.percentChange24h < 0 -> holder.binding.tv24hChangePrice.setBackgroundResource(
                 R.drawable.rounded_percentage_down
             )
         }
@@ -64,7 +64,7 @@ class WatchListAdapter(
 
 
         holder.itemView.setOnClickListener {
-            viewModel.getCurrentCoin(favorite.favoriteCoin!!)
+            viewModel.getCurrentCoin(viewModel.actualCoinFinderWatchlist(favorite)!!)
             it.findNavController().navigate(R.id.detailsFragment)
         }
 

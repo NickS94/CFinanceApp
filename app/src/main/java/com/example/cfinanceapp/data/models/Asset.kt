@@ -13,7 +13,7 @@ data class Asset(
     @ColumnInfo(name = "Fiat")
     val fiat :String?,
     @ColumnInfo(name = "CryptoCurrency")
-    val cryptoCurrency: CryptoCurrency?,
+    var cryptoCurrency: CryptoCurrency?,
     @ColumnInfo(name = "Amount")
     var amount :Double,
 

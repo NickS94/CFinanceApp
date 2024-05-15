@@ -9,7 +9,7 @@ data class Favorite(
     @PrimaryKey(autoGenerate = true)
     val id : Long = 0,
     @ColumnInfo(name = "Watchlist")
-    val favoriteCoin : CryptoCurrency?,
+    var favoriteCoin : CryptoCurrency?,
 
     val accountId:Long
 )

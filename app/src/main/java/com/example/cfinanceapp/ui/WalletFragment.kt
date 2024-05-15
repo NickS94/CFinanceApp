@@ -33,10 +33,11 @@ class WalletFragment : Fragment() {
     }
 
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = AssetsAdapter(viewModel = viewModel)
+        val adapter = AssetsAdapter(viewModel = viewModel, context = this.requireContext())
         viewBinding.rvAssetsWallet.adapter = adapter
 
         viewModel.currentAccount.observe(viewLifecycleOwner) { account ->
@@ -67,17 +68,36 @@ class WalletFragment : Fragment() {
         viewModel.transactions.observe(viewLifecycleOwner) {
             if (viewModel.currentWallet.value != null) {
                 viewModel.findTransactionsByWalletId(viewModel.currentWallet.value!!.id)
+
             }
         }
 
+
         viewModel.currentTransactions.observe(viewLifecycleOwner) {
             viewBinding.tvProfit.stringFormat(viewModel.profitOrLoss())
+            when {
+                viewModel.profitOrLoss() > 0 -> viewBinding.tvProfit.setTextColor(
+                    requireContext().getColor(
+                        R.color.green
+                    )
+                )
+
+                viewModel.profitOrLoss() < 0 -> viewBinding.tvProfit.setTextColor(
+                    requireContext().getColor(
+                        R.color.red
+                    )
+                )
+
+                else -> viewBinding.tvProfit.setTextColor(requireContext().getColor(R.color.white))
+            }
         }
+
 
         viewModel.currentAssets.observe(viewLifecycleOwner) {
             if (viewModel.currentWallet.value != null) {
                 adapter.submitList(viewModel.currentAssets.value!!)
-                viewBinding.currentBalanceText.stringFormat(viewModel.currentBalance())
+                viewBinding.currentBalanceText.text =
+                    "${String.format("%.2f", viewModel.currentBalance())}$"
 
             }
         }
@@ -85,10 +105,8 @@ class WalletFragment : Fragment() {
 
 
         viewBinding.btnDeposit.setOnClickListener {
-
             if (viewModel.currentWallet.value != null) {
                 showBuyCryptoDialog(viewModel)
-
             } else {
                 showToast("You need to CREATE WALLET first")
             }
@@ -117,7 +135,7 @@ class WalletFragment : Fragment() {
     }
 
     private fun TextView.stringFormat(balance: Double) {
-        val formattedText = String.format("%.2f $", balance)
+        val formattedText = String.format("%.2f $ P/L", balance)
         text = formattedText
     }
 

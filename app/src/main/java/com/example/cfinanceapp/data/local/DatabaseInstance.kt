@@ -11,13 +11,11 @@ import com.example.cfinanceapp.data.models.Favorite
 import com.example.cfinanceapp.data.models.Transaction
 import com.example.cfinanceapp.data.models.Wallet
 import com.example.cfinanceapp.tools.CryptocurrencyConverter
-import com.example.cfinanceapp.tools.QuoteConverter
-import com.example.cfinanceapp.tools.USDataConverter
 
 
 
 @Database(entities = [Account::class,Wallet::class,Asset::class,Transaction::class,Favorite::class], version = 1)
-@TypeConverters(CryptocurrencyConverter::class, QuoteConverter::class, USDataConverter::class)
+@TypeConverters(CryptocurrencyConverter::class)
 abstract class DatabaseInstance : RoomDatabase() {
     abstract val dao: ProfileDao
 
