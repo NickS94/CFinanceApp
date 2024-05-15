@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.detailsFragment -> viewBinding.bottomNavigationView.visibility = View.GONE
                 R.id.registerFragment -> viewBinding.bottomNavigationView.visibility = View.GONE
                 R.id.loginFragment -> viewBinding.bottomNavigationView.visibility = View.GONE
+                R.id.transactionsFragment -> viewBinding.bottomNavigationView.visibility = View.GONE
                 R.id.transactionsDetailFragment -> viewBinding.bottomNavigationView.visibility =
                     View.GONE
 

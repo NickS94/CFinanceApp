@@ -63,7 +63,7 @@ class AssetsAdapter(
                 else -> holder.binding.tvProfitOrLoss.setTextColor(context.getColor(R.color.white))
             }
             holder.binding.tvProfitOrLoss.text =
-                "$${String.format("%.2f", viewModel.profitOrLossInAsset(asset) * asset.amount)}"
+                "$${String.format("%.2f", viewModel.profitOrLossInAsset(asset) * asset.amount)} P/L"
 
 
             holder.itemView.setOnClickListener {
