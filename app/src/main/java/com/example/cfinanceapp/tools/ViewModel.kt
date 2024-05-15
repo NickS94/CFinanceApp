@@ -37,6 +37,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     val wallets = repository.wallets
     val assets = repository.assets
     val favorites = repository.favorites
+    val transactions = repository.transactions
 
 
     private var _currentFavorites = MutableLiveData<MutableList<Favorite>>()
@@ -429,26 +430,46 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
 
     fun currentBalance(): Double {
         var balance = 0.0
+        if (_currentAssets.value != null) {
+            for (asset in _currentAssets.value!!) {
+                val assetValue: Double = actualCoinPriceUpdater(asset)
+                balance += assetValue * asset.amount
+            }
+            val fiatAsset =
+                _currentAssets.value?.find { it.cryptoCurrency == null }?.amount ?: 0.0
+            balance += fiatAsset
+        } else {
+            balance = 0.0
+        }
+        return balance
+    }
 
+    fun actualCoinPriceUpdater(asset: Asset): Double {
+        var actualCoinPrice = 0.0
         viewModelScope.launch {
-            if (_currentAssets.value != null) {
-                for (asset in _currentAssets.value!!) {
-                    val actualCryptoPrice =
-                        cryptoList.value?.data?.find { it.id == asset.cryptoCurrency?.id }?.quote?.usdData?.price
-                            ?: 0.0
-                    val assetValue: Double = actualCryptoPrice
-                    balance += assetValue * asset.amount
-                }
-                val fiatAsset =
-                    _currentAssets.value?.find { it.cryptoCurrency == null }?.amount ?: 0.0
-                balance += fiatAsset
+            actualCoinPrice = if (_currentAssets.value != null) {
+                val actualCryptoPrice =
+                    cryptoList.value?.data?.find { it.id == asset.cryptoCurrency?.id }?.quote?.usdData?.price
+                        ?: 0.0
+                actualCryptoPrice
             } else {
-                balance = 0.0
+                0.0
             }
         }
+        return actualCoinPrice
+    }
 
-
-        return balance
+    fun profitOrLoss(): Double {
+        var actualInvestment = 0.0
+        viewModelScope.launch {
+            if (_currentTransactions.value != null) {
+                val fiatTransactions = _currentTransactions.value!!.filter { it.price == null }
+                actualInvestment = fiatTransactions.sumOf { it.amount }
+            }
+        }
+        val initialInvestment = actualInvestment
+        val currentBalance = currentBalance()
+        return currentBalance - initialInvestment
     }
 
     fun isEnoughFiat(amount: Double): Boolean {

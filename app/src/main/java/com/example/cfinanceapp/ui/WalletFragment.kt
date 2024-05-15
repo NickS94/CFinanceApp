@@ -64,11 +64,21 @@ class WalletFragment : Fragment() {
             }
         }
 
+        viewModel.transactions.observe(viewLifecycleOwner) {
+            if (viewModel.currentWallet.value != null) {
+                viewModel.findTransactionsByWalletId(viewModel.currentWallet.value!!.id)
+            }
+        }
+
+        viewModel.currentTransactions.observe(viewLifecycleOwner) {
+            viewBinding.tvProfit.stringFormat(viewModel.profitOrLoss())
+        }
 
         viewModel.currentAssets.observe(viewLifecycleOwner) {
             if (viewModel.currentWallet.value != null) {
                 adapter.submitList(viewModel.currentAssets.value!!)
                 viewBinding.currentBalanceText.stringFormat(viewModel.currentBalance())
+
             }
         }
 

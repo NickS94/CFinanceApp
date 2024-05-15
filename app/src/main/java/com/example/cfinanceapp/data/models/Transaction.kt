@@ -13,7 +13,7 @@ data class Transaction(
     @ColumnInfo("Symbol")
     val symbol : String,
     @ColumnInfo("Amount")
-    val amount : Double,
+    var amount : Double,
     @ColumnInfo("Price")
     val price : Double?,
     @ColumnInfo("Date")

@@ -48,7 +48,7 @@ class AssetsAdapter(
             holder.binding.tvCurrentPriceMarket.text = asset.amount.toString()
             holder.binding.tvCoinSymbol.text = asset.cryptoCurrency.symbol
             holder.binding.tvChangePercentageMarket.text =
-                "$${String.format("%.2f", asset.cryptoCurrency.quote.usdData.price * asset.amount)}"
+                "$${String.format("%.2f",viewModel.actualCoinPriceUpdater(asset)* asset.amount)}"
             holder.itemView.setOnClickListener {
                 viewModel.getCurrentCoin(asset.cryptoCurrency)
                 it.findNavController().navigate(R.id.detailsFragment)
