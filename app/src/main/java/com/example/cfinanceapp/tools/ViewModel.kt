@@ -433,12 +433,14 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             if (_currentAssets.value != null) {
                 for (asset in _currentAssets.value!!) {
-                    val actualCryptoPrice = cryptoList.value?.data?.find { it.id == asset.cryptoCurrency?.id }?.quote?.usdData?.price?:0.0
-                    var assetValue = asset.cryptoCurrency?.quote?.usdData?.price?:0.0
-                    assetValue = actualCryptoPrice
+                    val actualCryptoPrice =
+                        cryptoList.value?.data?.find { it.id == asset.cryptoCurrency?.id }?.quote?.usdData?.price
+                            ?: 0.0
+                    val assetValue: Double = actualCryptoPrice
                     balance += assetValue * asset.amount
                 }
-                val fiatAsset = _currentAssets.value?.find { it.cryptoCurrency == null }?.amount?: 0.0
+                val fiatAsset =
+                    _currentAssets.value?.find { it.cryptoCurrency == null }?.amount ?: 0.0
                 balance += fiatAsset
             } else {
                 balance = 0.0
