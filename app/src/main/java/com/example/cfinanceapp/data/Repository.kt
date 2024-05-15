@@ -35,12 +35,11 @@ class Repository(
     private val allFavorites = databaseInstance.dao.getAllFavorites()
 
 
-
     private val _favorites = allFavorites
-    val favorites :LiveData<MutableList<Favorite>> = _favorites
+    val favorites: LiveData<MutableList<Favorite>> = _favorites
 
     private val _transactions = allTransactions
-    val transactions:LiveData<List<Transaction>> = _transactions
+    val transactions: LiveData<List<Transaction>> = _transactions
 
     private val _assets = allAssets
     val assets: LiveData<MutableList<Asset>> = _assets
@@ -93,19 +92,19 @@ class Repository(
         }
     }
 
-    fun getAllTransactions(){
+    fun getAllTransactions() {
         try {
             databaseInstance.dao.getAllTransactions()
-        }catch (e:Exception){
-            Log.d(TAG,"FAILED TO LOAD :${e.message}")
+        } catch (e: Exception) {
+            Log.d(TAG, "FAILED TO LOAD :${e.message}")
         }
     }
 
-    fun getAllFavorites(){
+    fun getAllFavorites() {
         try {
             databaseInstance.dao.getAllFavorites()
-        }catch (e:Exception){
-            Log.d(TAG,"FAILED TO LOAD :${e.message}")
+        } catch (e: Exception) {
+            Log.d(TAG, "FAILED TO LOAD :${e.message}")
         }
     }
 
@@ -136,18 +135,18 @@ class Repository(
         }
     }
 
-    suspend fun insertTransactions(transaction: Transaction){
+    suspend fun insertTransactions(transaction: Transaction) {
         try {
             databaseInstance.dao.insertTransaction(transaction)
-        }  catch (e: Exception) {
+        } catch (e: Exception) {
             Log.d(TAG, "FAILED TO LOAD : ${e.message}")
         }
     }
 
-    suspend fun insertFavorite(favorite: Favorite){
+    suspend fun insertFavorite(favorite: Favorite) {
         try {
             databaseInstance.dao.insertFavorite(favorite)
-        }catch (e: Exception) {
+        } catch (e: Exception) {
             Log.d(TAG, "FAILED TO LOAD : ${e.message}")
         }
     }
@@ -191,7 +190,7 @@ class Repository(
         }
     }
 
-    suspend fun getTransactionsByWalletId(walletId : Long):List<Transaction>{
+    suspend fun getTransactionsByWalletId(walletId: Long): List<Transaction> {
         try {
             return databaseInstance.dao.getTransactionsByWalletId(walletId)
         } catch (e: Exception) {
@@ -200,21 +199,28 @@ class Repository(
         }
     }
 
-    suspend fun getFavoritesByAccountId(accountId: Long):MutableList<Favorite>{
+    suspend fun getFavoritesByAccountId(accountId: Long): MutableList<Favorite> {
         try {
             return databaseInstance.dao.getFavoritesByAccountId(accountId)
-        }catch (e: Exception) {
+        } catch (e: Exception) {
             Log.d(TAG, "FAILED TO LOAD : ${e.message}")
             throw e
         }
     }
 
-    suspend fun removeFromFavorite (favorite: Favorite){
+    suspend fun removeFromFavorite(favorite: Favorite) {
         try {
             databaseInstance.dao.removeFavorite(favorite)
-        }catch (e: Exception) {
+        } catch (e: Exception) {
             Log.d(TAG, "FAILED TO LOAD : ${e.message}")
-            throw e
+        }
+    }
+
+    suspend fun removeAsset(asset: Asset) {
+        try {
+            databaseInstance.dao.removeAsset(asset)
+        } catch (e: Exception) {
+            Log.d(TAG, "FAILED TO LOAD : ${e.message}")
         }
     }
 

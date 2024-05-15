@@ -36,7 +36,6 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     val accounts = repository.accounts
     val wallets = repository.wallets
     val assets = repository.assets
-    val transactions = repository.transactions
     val favorites = repository.favorites
 
 
@@ -153,6 +152,12 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    private fun removeCryptoCurrencyAsset(asset: Asset) {
+        viewModelScope.launch {
+            repository.removeAsset(asset)
+        }
+    }
+
     private fun insertTransaction(transaction: Transaction) {
         viewModelScope.launch {
             repository.insertTransactions(transaction)
@@ -211,10 +216,11 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
             isBought = true,
             walletId = _currentWallet.value!!.id
         )
-        val fiatAsset = _currentAssets.value?.find { it.cryptoCurrency == null }
+
         viewModelScope.launch {
             val assets = repository.getAssetsByWalletId(_currentWallet.value!!.id)
             val existedAsset = assets.find { it.cryptoCurrency?.id == coin.id }
+            val fiatAsset = assets.find { it.cryptoCurrency == null }
             if (existedAsset != null) {
                 val updatedFiatAmount = fiatAsset?.amount!! - (coin.quote.usdData.price * amount)
                 fiatAsset.amount = updatedFiatAmount
@@ -274,6 +280,43 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
+    @SuppressLint("NewApi")
+    fun sellCryptoCurrencyAsset(coin: CryptoCurrency, amount: Double) {
+        val currentDateTime = LocalDateTime.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        val formattedDateTime = currentDateTime.format(formatter)
+        val transaction = Transaction(
+            symbol = coin.symbol,
+            amount = amount,
+            price = coin.quote.usdData.price,
+            date = formattedDateTime,
+            transactionHash = generateTransactionHash(),
+            isBought = false,
+            walletId = _currentWallet.value!!.id
+        )
+        viewModelScope.launch {
+            val assets = repository.getAssetsByWalletId(_currentWallet.value!!.id)
+            val existedAsset = assets.find { it.cryptoCurrency?.id == coin.id }
+            val fiatAsset = assets.find { it.cryptoCurrency == null }
+
+            if (existedAsset != null && isEnoughCrypto(amount)) {
+                val updatedFiatAmount = fiatAsset?.amount!! + (coin.quote.usdData.price * amount)
+                fiatAsset.amount = updatedFiatAmount
+                val updatedAmount = existedAsset.amount.minus(amount)
+                existedAsset.amount = updatedAmount
+                updateAsset(fiatAsset)
+                updateAsset(existedAsset)
+                insertTransaction(transaction)
+                if (existedAsset.amount == 0.0) {
+                    removeCryptoCurrencyAsset(existedAsset)
+                }
+            }
+
+
+        }
+
+    }
+
     fun isAccountAlreadyRegistered(email: String): Boolean {
         return accounts.value?.any { it.email == email } ?: false
     }
@@ -322,7 +365,6 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
             } else {
                 val newFavorite = Favorite(
                     favoriteCoin = coin,
-                    isFavorite = true,
                     accountId = _currentAccount.value!!.id
                 )
                 insertFavorite(newFavorite)
@@ -387,36 +429,43 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
 
     fun currentBalance(): Double {
         var balance = 0.0
-        try {
+
+        viewModelScope.launch {
             if (_currentAssets.value != null) {
                 for (asset in _currentAssets.value!!) {
-                    val cryptoValue = asset.cryptoCurrency?.quote?.usdData?.price ?: 0.0
-                    balance += cryptoValue * asset.amount
+                    val actualCryptoPrice = cryptoList.value?.data?.find { it.id == asset.cryptoCurrency?.id }?.quote?.usdData?.price?:0.0
+                    var assetValue = asset.cryptoCurrency?.quote?.usdData?.price?:0.0
+                    assetValue = actualCryptoPrice
+                    balance += assetValue * asset.amount
                 }
-                val fiatValue = _currentAssets.value?.find { it.fiat != null }?.amount ?: 0.0
-                balance += fiatValue
-
+                val fiatAsset = _currentAssets.value?.find { it.cryptoCurrency == null }?.amount?: 0.0
+                balance += fiatAsset
             } else {
                 balance = 0.0
             }
-        } catch (e: Exception) {
-            throw e
         }
+
+
         return balance
     }
 
     fun isEnoughFiat(amount: Double): Boolean {
-        val fiatBalance = _currentAssets.value?.find { it.fiat != null }
+        val fiatBalance = _currentAssets.value?.find { it.fiat == "USD" }
         val wishAmount = _currentCrypto.value?.quote?.usdData!!.price * amount
         return fiatBalance?.fiat != null && fiatBalance.amount >= wishAmount
     }
 
-    fun isFavorite(coin: CryptoCurrency):Boolean {
 
+    fun isEnoughCrypto(amount: Double): Boolean {
+        val cryptoBalance = _currentAssets.value?.find { it.cryptoCurrency != null }
+        return cryptoBalance?.cryptoCurrency != null && cryptoBalance.amount >= amount
+    }
+
+    fun isFavorite(coin: CryptoCurrency): Boolean {
         val favoriteCoins = _currentFavorites.value
         val currentCryptoId = coin.id
-
-        return favoriteCoins!!.any { it.favoriteCoin!!.id == currentCryptoId }
+        return favoriteCoins?.any { it.favoriteCoin?.id == currentCryptoId } ?: false
     }
+
 
 }

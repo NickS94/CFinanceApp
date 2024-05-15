@@ -20,11 +20,14 @@ import com.example.cfinanceapp.data.models.CryptoCurrency
 import com.example.cfinanceapp.databinding.FragmentDetailsBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
+import kotlin.properties.Delegates
 
 
 class DetailsFragment : Fragment() {
     private lateinit var viewBinding: FragmentDetailsBinding
     private val viewModel: ViewModel by activityViewModels()
+    private var isFavorite: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,9 +42,7 @@ class DetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         var selectedButton: Button? = null
-        var isClicked = true
 
 
         viewModel.currentCrypto.observe(viewLifecycleOwner) { cryptoCurrency ->
@@ -107,6 +108,7 @@ class DetailsFragment : Fragment() {
                 viewBinding.tvMaxSupplyDetail.text = "Max: $formattedMaxSupply"
             }
 
+            isFavorite = viewModel.isFavorite(viewModel.currentCrypto.value!!)
 
         }
         viewBinding.btn1h.setOnClickListener {
@@ -137,24 +139,24 @@ class DetailsFragment : Fragment() {
         }
 
 
-
         if (viewModel.isFavorite(viewModel.currentCrypto.value!!)) {
             viewBinding.ivFavorite.setImageResource(R.drawable.favorite_icon_enabled)
         } else {
             viewBinding.ivFavorite.setImageResource(R.drawable.favorite_icon_disable)
         }
 
-
         viewBinding.ivFavorite.setOnClickListener {
 
-            isClicked = !isClicked
-            if (isClicked){
+            isFavorite = !isFavorite
+
+            viewModel.addToWatchlist(viewModel.currentCrypto.value!!)
+
+            if (isFavorite ) {
                 viewBinding.ivFavorite.setImageResource(R.drawable.favorite_icon_enabled)
             } else {
                 viewBinding.ivFavorite.setImageResource(R.drawable.favorite_icon_disable)
             }
 
-            viewModel.addToWatchlist(viewModel.currentCrypto.value!!)
         }
 
         viewBinding.btnBuyDetails.setOnClickListener {
@@ -165,11 +167,17 @@ class DetailsFragment : Fragment() {
             }
         }
 
+        viewBinding.btnSell.setOnClickListener {
+            if (viewModel.currentWallet.value != null) {
+                showSellCryptoDialog(viewModel.currentCrypto.value!!, viewModel)
+            } else {
+                showToast("Please CREATE a WALLET for transactions")
+            }
+        }
+
         viewBinding.btnBackDetails.setOnClickListener {
             findNavController().navigateUp()
         }
-
-
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -218,7 +226,7 @@ class DetailsFragment : Fragment() {
     @SuppressLint("InflateParams")
     private fun showBuyCryptoDialog(cryptoCurrency: CryptoCurrency, viewModel: ViewModel) {
         val dialog = BottomSheetDialog(requireContext())
-        val viewLayout = layoutInflater.inflate(R.layout.bottom_sheet_dialog_layout, null)
+        val viewLayout = layoutInflater.inflate(R.layout.bottom_sheet_dialog_buy_layout, null)
         val btnConfirm = viewLayout.findViewById<AppCompatButton>(R.id.btnConfirm)
         val btnCancel = viewLayout.findViewById<AppCompatButton>(R.id.btnCancel)
         val etAmount = viewLayout.findViewById<TextInputEditText>(R.id.etAmount)
@@ -230,15 +238,58 @@ class DetailsFragment : Fragment() {
                 amountText!!.isNotEmpty() && viewModel.isEnoughFiat(
                     amountText.toString().toDouble()
                 ) -> {
-                    val amount = amountText.toString().toDouble()
-                    viewModel.updateOrInsertCryptoCurrencyAmounts(amount, cryptoCurrency)
-                    showToast("Bought $amount ${cryptoCurrency.name}")
+                    viewModel.updateOrInsertCryptoCurrencyAmounts(
+                        amountText.toString().toDouble(),
+                        cryptoCurrency
+                    )
+                    showToast("Bought $amountText ${cryptoCurrency.name}")
                     dialog.dismiss()
                 }
 
                 amountText.isEmpty() -> showToast("Please enter a valid amount")
 
                 !viewModel.isEnoughFiat(
+                    amountText.toString().toDouble()
+                ) -> showToast("Insufficient funds ")
+            }
+
+        }
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.setContentView(viewLayout)
+        dialog.show()
+    }
+
+    @SuppressLint("InflateParams")
+    private fun showSellCryptoDialog(cryptoCurrency: CryptoCurrency, viewModel: ViewModel) {
+        val dialog = BottomSheetDialog(requireContext())
+        val viewLayout = layoutInflater.inflate(R.layout.bottom_sheet_dialog_buy_layout, null)
+        val btnConfirm = viewLayout.findViewById<AppCompatButton>(R.id.btnConfirm)
+        val btnCancel = viewLayout.findViewById<AppCompatButton>(R.id.btnCancel)
+        val etAmount = viewLayout.findViewById<TextInputEditText>(R.id.etAmount)
+        val textInputHint = viewLayout.findViewById<TextInputLayout>(R.id.textInputLayoutAmount)
+
+        textInputHint.hint = getText(R.string.amountSell)
+
+        btnConfirm.setOnClickListener {
+            val amountText = etAmount.text
+            viewModel.findAssetsByWalletId(viewModel.currentWallet.value!!.id)
+            when {
+                amountText!!.isNotEmpty() && viewModel.isEnoughCrypto(
+                    amountText.toString().toDouble()
+                ) -> {
+                    viewModel.sellCryptoCurrencyAsset(
+                        cryptoCurrency,
+                        amountText.toString().toDouble()
+                    )
+                    showToast("Sold $amountText ${cryptoCurrency.name}")
+                    dialog.dismiss()
+                }
+
+                amountText.isEmpty() -> showToast("Please enter a valid amount")
+
+                !viewModel.isEnoughCrypto(
                     amountText.toString().toDouble()
                 ) -> showToast("Insufficient funds ")
             }

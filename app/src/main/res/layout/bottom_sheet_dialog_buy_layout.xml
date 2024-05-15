@@ -20,11 +20,11 @@
 
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout6"
+            android:id="@+id/textInputLayoutAmount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="25dp"
-            android:hint="@string/amount"
+            android:hint="@string/amountBuy"
             android:textColorHint="@color/white"
             app:boxStrokeColor="@color/turquoise_50"
             app:cursorColor="@color/turquoise_50"
@@ -54,7 +54,7 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout6" />
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayoutAmount" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnCancel"
@@ -69,7 +69,7 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout6" />
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayoutAmount" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

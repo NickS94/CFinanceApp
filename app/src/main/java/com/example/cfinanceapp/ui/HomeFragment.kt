@@ -39,8 +39,11 @@ class HomeFragment : Fragment() {
         }
 
 
-        viewModel.favorites.observe(viewLifecycleOwner){
-            viewModel.findFavoritesByAccountId(viewModel.currentAccount.value!!.id)
+        viewModel.favorites.observe(viewLifecycleOwner) {
+            if (viewModel.currentAccount.value != null ) {
+                viewModel.findFavoritesByAccountId(viewModel.currentAccount.value!!.id)
+            }
+
         }
 
         viewModel.currentFavorites.observe(viewLifecycleOwner) { watchlist ->

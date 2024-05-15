@@ -56,7 +56,8 @@
     <string name="d">D</string>
     <string name="w">W</string>
     <string name="new_wallet">New Wallet</string>
-    <string name="amount">Amount</string>
+    <string name="amountBuy">Amount To Buy</string>
+    <string name="amountSell">Amount To Sell</string>
     <string name="not_registered_yet_create_account">Not Registered yet? Create account</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
@@ -69,4 +70,6 @@
     <string name="transactions_account">Transactions Account</string>
     <string name="time">Time</string>
     <string name="transaction_hash">Transaction Hash</string>
+    <string name="amount">Amount</string>
+    <string name="transaction_price">Transaction Price</string>
 </resources>

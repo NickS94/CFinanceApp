@@ -40,6 +40,8 @@ class AssetsAdapter(
     override fun onBindViewHolder(holder: AssetsViewHolder, position: Int) {
         val asset = assetsData[position]
 
+
+
         if (asset.cryptoCurrency != null) {
             holder.binding.ivLogoMarketItem.load(viewModel.getCoinLogo(asset.cryptoCurrency.id.toString()))
             holder.binding.tvCoinName.text = asset.cryptoCurrency.name

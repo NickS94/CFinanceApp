@@ -17,6 +17,7 @@ import com.example.cfinanceapp.databinding.FragmentWalletBinding
 import com.example.cfinanceapp.tools.ViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 
 class WalletFragment : Fragment() {
 
@@ -114,11 +115,12 @@ class WalletFragment : Fragment() {
     @SuppressLint("InflateParams")
     private fun showBuyCryptoDialog(viewModel: ViewModel) {
         val dialog = BottomSheetDialog(requireContext())
-        val viewLayout = layoutInflater.inflate(R.layout.bottom_sheet_dialog_layout, null)
+        val viewLayout = layoutInflater.inflate(R.layout.bottom_sheet_dialog_buy_layout, null)
         val btnConfirm = viewLayout.findViewById<AppCompatButton>(R.id.btnConfirm)
         val btnCancel = viewLayout.findViewById<AppCompatButton>(R.id.btnCancel)
         val etAmount = viewLayout.findViewById<TextInputEditText>(R.id.etAmount)
-
+        val textInputHint = viewLayout.findViewById<TextInputLayout>(R.id.textInputLayoutAmount)
+        textInputHint.hint = getText(R.string.amount)
         btnConfirm.setOnClickListener {
             val amountText = etAmount.text
             if (amountText!!.isNotEmpty()) {

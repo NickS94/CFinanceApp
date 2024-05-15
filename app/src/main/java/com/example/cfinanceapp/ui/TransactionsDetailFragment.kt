@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.cfinanceapp.R
-
 import com.example.cfinanceapp.databinding.FragmentTransactionsDetailBinding
 import com.example.cfinanceapp.tools.ViewModel
 
@@ -61,6 +60,11 @@ class TransactionsDetailFragment : Fragment() {
             viewBinding.tvTransactionsTime.text = it.date
 
             viewBinding.tvTransactionsHashDetails.text = it.transactionHash
+
+            viewBinding.tvTransactionPrice.text = when {
+                it.price != null -> "${String.format("%.2f", it.price)}$"
+                else -> ""
+            }
 
         }
 

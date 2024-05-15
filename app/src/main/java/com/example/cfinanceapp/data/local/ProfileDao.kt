@@ -51,6 +51,9 @@ interface ProfileDao {
     @Update
     suspend fun updateAsset(asset: Asset)
 
+    @Delete
+    suspend fun removeAsset (asset: Asset)
+
 
     @Query("SELECT * FROM ASSETS WHERE walletId = :walletId")
     suspend fun getAssetsById(walletId: Long):MutableList<Asset>

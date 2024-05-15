@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "7dca37a6d8e4f6a06ad9b22f71e0137e",
+    "identityHash": "5d16c3e9eddd9bc1f8abe55c7987a2ea",
     "entities": [
       {
         "tableName": "Accounts",
@@ -170,7 +170,7 @@
       },
       {
         "tableName": "Favorite",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `Watchlist` TEXT, `Status` INTEGER, `accountId` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `Watchlist` TEXT, `accountId` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -182,12 +182,6 @@
             "fieldPath": "favoriteCoin",
             "columnName": "Watchlist",
             "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "isFavorite",
-            "columnName": "Status",
-            "affinity": "INTEGER",
             "notNull": false
           },
           {
@@ -210,7 +204,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7dca37a6d8e4f6a06ad9b22f71e0137e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5d16c3e9eddd9bc1f8abe55c7987a2ea')"
     ]
   }
 }
