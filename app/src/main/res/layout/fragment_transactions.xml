@@ -12,36 +12,58 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
+        android:layout_marginTop="8dp"
         android:src="@drawable/navigate_before_48dp_icon"
-        app:layout_constraintBottom_toTopOf="@+id/rvTransactions"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
         tools:ignore="ContentDescription" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTransactions"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="5dp"
+        android:layout_margin="10dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnBackTransactions"
-        tools:listitem="@layout/transactions_item"/>
+        tools:listitem="@layout/transactions_item" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/btnSortTransactions"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginEnd="28dp"
-        android:background="@drawable/filter_list_48dp_icon"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="150dp"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/round_transparent"
+        app:boxStrokeColor="@android:color/transparent"
         app:layout_constraintBottom_toTopOf="@+id/rvTransactions"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <AutoCompleteTextView
+            android:id="@+id/textOptionsDropDownMenuTransactions"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="none"
+            android:text="@string/all"
+            android:textSize="14sp"
+            tools:ignore="LabelFor" />
+
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/tvEmptyTransactions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.435" />
-
-
+        app:layout_constraintVertical_bias="0.5" />
 </androidx.constraintlayout.widget.ConstraintLayout>

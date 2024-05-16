@@ -34,7 +34,7 @@ class TransactionsDetailFragment : Fragment() {
 
 
         viewModel.currentTransaction.observe(viewLifecycleOwner) {
-            viewBinding.tvQuantity.text = "${it.amount} ${it.symbol}"
+            viewBinding.tvQuantity.text = "${String.format("%.2f",it.amount)} ${it.symbol}"
 
             val tvStatus = viewBinding.tvStatusTransactionDetails
             when (it.isBought) {

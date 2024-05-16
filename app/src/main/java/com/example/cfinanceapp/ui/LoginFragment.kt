@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.cfinanceapp.R
-import com.example.cfinanceapp.data.models.Account
 import com.example.cfinanceapp.databinding.FragmentLoginBinding
 import com.example.cfinanceapp.tools.ViewModel
 
@@ -29,8 +28,7 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.accounts.observe(viewLifecycleOwner) {
-
+        viewModel.accounts.observe(viewLifecycleOwner){
         }
 
         viewBinding.btnLogin.setOnClickListener {

@@ -56,10 +56,18 @@
     <string name="_24ht">24H:</string>
     <string name="_7dt">7D:</string>
     <string name="supply">Supply</string>
-    <string-array name="options">
+
+    <string-array name="optionsMarket">
         <item>All</item>
         <item>Gain</item>
         <item>Lose</item>
+    </string-array>
+
+    <string-array name="optionsTransactions">
+        <item>Bought</item>
+        <item>Sold</item>
+        <item>Deposits</item>
+        <item>All</item>
     </string-array>
 
     <string name="here"><u>here</u></string>

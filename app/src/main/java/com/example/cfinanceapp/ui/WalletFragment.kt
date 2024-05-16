@@ -63,6 +63,7 @@ class WalletFragment : Fragment() {
             if (viewModel.currentWallet.value != null) {
                 viewModel.findAssetsByWalletId(viewModel.currentWallet.value!!.id)
             }
+
         }
 
         viewModel.transactions.observe(viewLifecycleOwner) {
@@ -72,7 +73,6 @@ class WalletFragment : Fragment() {
             }
         }
 
-
         viewModel.currentTransactions.observe(viewLifecycleOwner) {
             viewBinding.tvProfit.stringFormat(viewModel.profitOrLoss())
             when {
@@ -81,25 +81,25 @@ class WalletFragment : Fragment() {
                         R.color.green
                     )
                 )
-
                 viewModel.profitOrLoss() < 0 -> viewBinding.tvProfit.setTextColor(
                     requireContext().getColor(
                         R.color.red
                     )
                 )
-
                 else -> viewBinding.tvProfit.setTextColor(requireContext().getColor(R.color.white))
             }
         }
 
 
         viewModel.currentAssets.observe(viewLifecycleOwner) {
-            if (viewModel.currentWallet.value != null) {
+            if (viewModel.currentWallet.value != null ) {
                 adapter.submitList(viewModel.currentAssets.value!!)
                 viewBinding.currentBalanceText.text =
                     "${String.format("%.2f", viewModel.currentBalance())}$"
 
             }
+
+
         }
 
 

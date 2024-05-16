@@ -336,7 +336,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         return searchList
     }
 
-    fun filteredLists(input: String): List<CryptoCurrency> {
+    fun filteredCryptoLists(input: String): List<CryptoCurrency> {
         val gainers = cryptoList.value!!.data.filter { it.quote.usdData.percentChange24h > 0 }
         val losers = cryptoList.value!!.data.filter { it.quote.usdData.percentChange24h < 0 }
 
@@ -348,8 +348,23 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun addToWatchlist(coin: CryptoCurrency) {
+    fun filteredTransactionsList(input: String): List<Transaction> {
+        val boughtTransactions = _currentTransactions.value?.filter { it.isBought == true }!!.sortedByDescending { it.date }
+        val soldTransactions = _currentTransactions.value?.filter { it.isBought == false }!!.sortedByDescending { it.date }
+        val depositTransactions = _currentTransactions.value?.filter { it.symbol == "USD" }!!.sortedByDescending { it.date }
+        val allTransactionsSortedByDate = _currentTransactions.value?.sortedByDescending { it.date }
 
+        return when (input) {
+            "Bought" -> boughtTransactions
+            "Sold" -> soldTransactions
+            "Deposits" -> depositTransactions
+            "All" -> allTransactionsSortedByDate!!
+            else -> allTransactionsSortedByDate!!
+
+        }
+    }
+
+    fun addToWatchlist(coin: CryptoCurrency) {
         viewModelScope.launch {
             val favorites = repository.getFavoritesByAccountId(_currentAccount.value!!.id)
             val existedFavorite = favorites.find { it.favoriteCoin!!.id == coin.id }
@@ -477,7 +492,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         return actualCoinPrice
     }
 
-    fun actualCoinFinder(asset: Asset):CryptoCurrency?{
+    fun actualCoinFinder(asset: Asset): CryptoCurrency? {
         viewModelScope.launch {
             val actualCrypto = cryptoList.value?.data?.find { it.id == asset.cryptoCurrency?.id }
             asset.cryptoCurrency = actualCrypto
@@ -500,7 +515,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         return actualCoinPrice
     }
 
-    fun actualCoinFinderWatchlist(favorite: Favorite):CryptoCurrency?{
+    fun actualCoinFinderWatchlist(favorite: Favorite): CryptoCurrency? {
         viewModelScope.launch {
             val actualCrypto = cryptoList.value?.data?.find { it.id == favorite.favoriteCoin?.id }
             favorite.favoriteCoin = actualCrypto
