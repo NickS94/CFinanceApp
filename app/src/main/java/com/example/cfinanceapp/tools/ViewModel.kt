@@ -76,26 +76,25 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
             repository.getAllFavorites()
         }
     }
-
-    private fun loadAllTransactions() {
+    fun loadAllTransactions() {
         viewModelScope.launch {
             repository.getAllTransactions()
         }
     }
 
-    private fun loadAllAssets() {
+    fun loadAllAssets() {
         viewModelScope.launch {
             repository.getAllAssets()
         }
     }
 
-    private fun loadAllWallets() {
+    fun loadAllWallets() {
         viewModelScope.launch {
             repository.getAllWallets()
         }
     }
 
-    private fun loadAllAccounts() {
+    fun loadAllAccounts() {
         viewModelScope.launch {
             repository.getAllAccounts()
         }
@@ -438,7 +437,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         if (_currentAssets.value != null) {
             for (asset in _currentAssets.value!!) {
                 val assetValue: Double = actualCoinPriceUpdater(asset)
-                balance += assetValue * asset.amount
+                balance += (assetValue * asset.amount)
             }
             val fiatAsset =
                 _currentAssets.value?.find { it.cryptoCurrency == null }?.amount ?: 0.0
