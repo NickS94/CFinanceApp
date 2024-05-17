@@ -28,42 +28,34 @@ class TransactionsFragment : Fragment() {
         return viewBinding.root
     }
 
-
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = TransactionsAdapter(context = this.requireContext(), viewModel = viewModel)
 
         val spinnerOptions = resources.getStringArray(R.array.optionsTransactions)
         val arrayAdapter = ArrayAdapter(requireContext(), R.layout.drop_down_item, spinnerOptions)
         viewBinding.textOptionsDropDownMenuTransactions.setAdapter(
             arrayAdapter
         )
+
+        val adapter = TransactionsAdapter(context = this.requireContext(), viewModel = viewModel)
         viewBinding.rvTransactions.adapter = adapter
 
-        viewModel.transactions.observe(viewLifecycleOwner){
-            if (viewModel.currentWallet.value != null){
+        viewModel.transactions.observe(viewLifecycleOwner) {
+            if (viewModel.currentWallet.value != null) {
                 viewModel.findTransactionsByWalletId(viewModel.currentWallet.value!!.id)
             }
-
         }
 
         viewModel.currentTransactions.observe(viewLifecycleOwner) {
             adapter.submitListTransactions(viewModel.currentTransactions.value!!.sortedByDescending { it.date })
             viewBinding.textOptionsDropDownMenuTransactions.addTextChangedListener {
                 adapter.submitListTransactions(viewModel.filteredTransactionsList(viewBinding.textOptionsDropDownMenuTransactions.text.toString()))
-
             }
         }
-
-
 
         viewBinding.btnBackTransactions.setOnClickListener {
             findNavController().navigateUp()
         }
-
-
     }
-
-
 }

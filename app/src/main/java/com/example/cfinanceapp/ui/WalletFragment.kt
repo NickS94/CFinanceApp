@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.cfinanceapp.R
@@ -90,6 +91,8 @@ class WalletFragment : Fragment() {
 
                 else -> viewBinding.tvProfit.setTextColor(requireContext().getColor(R.color.white))
             }
+
+            viewBinding.tvChangePercentageAssets.setChangeText(viewModel.profitOrLossPercentage())
         }
 
 
@@ -109,7 +112,7 @@ class WalletFragment : Fragment() {
 
         viewBinding.btnDeposit.setOnClickListener {
             if (viewModel.currentWallet.value != null) {
-                showBuyCryptoDialog(viewModel)
+                showDepositDialog(viewModel)
             } else {
                 showToast("You need to CREATE WALLET first")
             }
@@ -144,7 +147,7 @@ class WalletFragment : Fragment() {
 
 
     @SuppressLint("InflateParams")
-    private fun showBuyCryptoDialog(viewModel: ViewModel) {
+    private fun showDepositDialog(viewModel: ViewModel) {
         val dialog = BottomSheetDialog(requireContext())
         val viewLayout = layoutInflater.inflate(R.layout.bottom_sheet_dialog_buy_layout, null)
         val btnConfirm = viewLayout.findViewById<AppCompatButton>(R.id.btnConfirm)
@@ -168,6 +171,19 @@ class WalletFragment : Fragment() {
         }
         dialog.setContentView(viewLayout)
         dialog.show()
+    }
+
+    private fun TextView.setChangeText(change: Double) {
+        val formattedChange = String.format("%.2f", change)
+        text = formattedChange
+
+        val colorResId = when {
+            change > 0 -> R.color.green
+            change < 0 -> R.color.red
+            else -> android.R.color.white
+        }
+
+        setTextColor(ContextCompat.getColor(context, colorResId))
     }
 
 }

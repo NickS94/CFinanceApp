@@ -76,25 +76,25 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
             repository.getAllFavorites()
         }
     }
-    fun loadAllTransactions() {
+    private fun loadAllTransactions() {
         viewModelScope.launch {
             repository.getAllTransactions()
         }
     }
 
-    fun loadAllAssets() {
+    private fun loadAllAssets() {
         viewModelScope.launch {
             repository.getAllAssets()
         }
     }
 
-    fun loadAllWallets() {
+    private fun loadAllWallets() {
         viewModelScope.launch {
             repository.getAllWallets()
         }
     }
 
-    fun loadAllAccounts() {
+    private fun loadAllAccounts() {
         viewModelScope.launch {
             repository.getAllAccounts()
         }
@@ -457,6 +457,16 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         val initialInvestment = actualInvestment
         val currentBalance = currentBalance()
         return currentBalance - initialInvestment
+    }
+
+    fun profitOrLossPercentage(): Double {
+        var actualInvestment = 0.0
+        val profitOrLossValue = profitOrLoss()
+        if (_currentTransactions.value != null) {
+            val fiatTransactions = _currentTransactions.value!!.filter { it.price == null }
+            actualInvestment = fiatTransactions.sumOf { it.amount }
+        }
+        return (profitOrLossValue / actualInvestment) * 100.0
     }
 
     fun isEnoughFiat(amount: Double): Boolean {
