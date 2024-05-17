@@ -64,10 +64,10 @@
     </string-array>
 
     <string-array name="optionsTransactions">
+        <item>All</item>
         <item>Bought</item>
         <item>Sold</item>
         <item>Deposits</item>
-        <item>All</item>
     </string-array>
 
     <string name="here"><u>here</u></string>
