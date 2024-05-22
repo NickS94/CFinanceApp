@@ -38,7 +38,6 @@ class WalletFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         val adapter = AssetsAdapter(viewModel = viewModel, context = this.requireContext())
         viewBinding.rvAssetsWallet.adapter = adapter
 
@@ -72,9 +71,12 @@ class WalletFragment : Fragment() {
             if (viewModel.currentWallet.value != null) {
                 viewModel.findTransactionsByWalletId(viewModel.currentWallet.value!!.id)
             }
+
+
         }
 
         viewModel.currentTransactions.observe(viewLifecycleOwner) {
+
             viewBinding.tvProfit.stringFormat(viewModel.profitOrLoss())
             when {
                 viewModel.profitOrLoss() > 0 -> viewBinding.tvProfit.setTextColor(

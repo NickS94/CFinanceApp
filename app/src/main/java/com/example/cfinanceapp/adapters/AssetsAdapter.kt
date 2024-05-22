@@ -42,42 +42,55 @@ class AssetsAdapter(
     override fun onBindViewHolder(holder: AssetsViewHolder, position: Int) {
         val asset = assetsData[position]
 
+        when {
+            asset.cryptoCurrency != null -> {
+
+                holder.binding.ivLogoMarketItem.load(viewModel.getCoinLogo(asset.cryptoCurrency!!.id.toString()))
+                holder.binding.tvCoinName.text = asset.cryptoCurrency!!.name
+                holder.binding.tvCurrentPriceMarket.text = asset.amount.toString()
+                holder.binding.tvCoinSymbol.text = asset.cryptoCurrency!!.symbol
+                holder.binding.tvChangePercentageMarket.text =
+                    "$${
+                        String.format(
+                            "%.2f",
+                            viewModel.actualCoinPriceUpdater(asset) * asset.amount
+                        )
+                    }"
+                when {
+                    viewModel.profitOrLossInAsset(asset) > 0 -> holder.binding.tvProfitOrLoss.setTextColor(
+                        context.getColor(R.color.green)
+                    )
+
+                    viewModel.profitOrLossInAsset(asset) < 0 -> holder.binding.tvProfitOrLoss.setTextColor(
+                        context.getColor(R.color.red)
+                    )
+
+                    else -> holder.binding.tvProfitOrLoss.setTextColor(context.getColor(R.color.white))
+                }
+                holder.binding.tvProfitOrLoss.text =
+                    "$${
+                        String.format(
+                            "%.2f",
+                            viewModel.profitOrLossInAsset(asset) * asset.amount
+                        )
+                    } P/L"
 
 
-        if (asset.cryptoCurrency != null) {
-            holder.binding.ivLogoMarketItem.load(viewModel.getCoinLogo(asset.cryptoCurrency!!.id.toString()))
-            holder.binding.tvCoinName.text = asset.cryptoCurrency!!.name
-            holder.binding.tvCurrentPriceMarket.text = asset.amount.toString()
-            holder.binding.tvCoinSymbol.text = asset.cryptoCurrency!!.symbol
-            holder.binding.tvChangePercentageMarket.text =
-                "$${String.format("%.2f", viewModel.actualCoinPriceUpdater(asset) * asset.amount)}"
-            when {
-                viewModel.profitOrLossInAsset(asset) > 0 -> holder.binding.tvProfitOrLoss.setTextColor(
-                    context.getColor(R.color.green)
-                )
-
-                viewModel.profitOrLossInAsset(asset) < 0 -> holder.binding.tvProfitOrLoss.setTextColor(
-                    context.getColor(R.color.red)
-                )
-
-                else -> holder.binding.tvProfitOrLoss.setTextColor(context.getColor(R.color.white))
+                holder.itemView.setOnClickListener {
+                    viewModel.getCurrentCoin(viewModel.actualCoinFinder(asset)!!)
+                    it.findNavController().navigate(R.id.detailsFragment)
+                }
             }
-            holder.binding.tvProfitOrLoss.text =
-                "$${String.format("%.2f", viewModel.profitOrLossInAsset(asset) * asset.amount)} P/L"
 
-
-            holder.itemView.setOnClickListener {
-                viewModel.getCurrentCoin(viewModel.actualCoinFinder(asset)!!)
-                it.findNavController().navigate(R.id.detailsFragment)
+            asset.fiat == "USD" -> {
+                holder.binding.tvCoinName.text = "USD"
+                holder.binding.tvChangePercentageMarket.text =
+                    "${String.format("%.2f", asset.amount)}$"
+                holder.binding.tvCurrentPriceMarket.text = "Amount"
+                holder.binding.tvCoinSymbol.text = "Fiat Currency"
+                holder.binding.ivLogoMarketItem.setImageResource(R.drawable.dollar_usd_64)
             }
 
-        } else {
-            holder.binding.tvCoinName.text = "USD"
-            holder.binding.tvChangePercentageMarket.text =
-                "${String.format("%.2f", asset.amount)}$"
-            holder.binding.tvCurrentPriceMarket.text = "Amount"
-            holder.binding.tvCoinSymbol.text = "Fiat Currency"
-            holder.binding.ivLogoMarketItem.setImageResource(R.drawable.dollar_usd_64)
         }
     }
 }

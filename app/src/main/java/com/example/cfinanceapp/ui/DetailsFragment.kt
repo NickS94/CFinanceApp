@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebViewClient
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -21,7 +22,6 @@ import com.example.cfinanceapp.databinding.FragmentDetailsBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import kotlin.properties.Delegates
 
 
 class DetailsFragment : Fragment() {
@@ -151,7 +151,7 @@ class DetailsFragment : Fragment() {
 
             viewModel.addToWatchlist(viewModel.currentCrypto.value!!)
 
-            if (isFavorite ) {
+            if (isFavorite) {
                 viewBinding.ivFavorite.setImageResource(R.drawable.favorite_icon_enabled)
             } else {
                 viewBinding.ivFavorite.setImageResource(R.drawable.favorite_icon_disable)
@@ -186,12 +186,12 @@ class DetailsFragment : Fragment() {
 
         viewBinding.wvChartDetails.settings.javaScriptEnabled = true
         viewBinding.wvChartDetails.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
+        viewBinding.wvChartDetails.webViewClient = WebViewClient()
         viewBinding.wvChartDetails.loadUrl(
             "https://s.tradingview.com/widgetembed/?frameElementId=tradingview_76d87&symbol=" + coin.symbol + "usd&interval=" + timeframe +
                     "&hidesidetoolbar=1&hidetoptoolbar=1&symboledit=1&saveimage=1&toolbarbg=F1F3F6&studies=[]" +
                     "&hideideas=1&theme=Dark&style=1&timezone=Etc%2FUTC&studies_overrides={}&overrides={}" +
                     "&enabled_features=[]&disabled_features=[]&locale=en&utm_source=coinmarketcap.com&utm_medium=widget&utm_campaign=chart&utm_term"
-
         )
     }
 
@@ -219,7 +219,6 @@ class DetailsFragment : Fragment() {
             change < 0 -> R.color.red
             else -> android.R.color.white
         }
-
         setTextColor(ContextCompat.getColor(context, colorResId))
     }
 

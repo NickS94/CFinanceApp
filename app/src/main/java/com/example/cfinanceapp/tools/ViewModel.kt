@@ -76,6 +76,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
             repository.getAllFavorites()
         }
     }
+
     private fun loadAllTransactions() {
         viewModelScope.launch {
             repository.getAllTransactions()
@@ -348,9 +349,12 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun filteredTransactionsList(input: String): List<Transaction> {
-        val boughtTransactions = _currentTransactions.value?.filter { it.isBought == true }!!.sortedByDescending { it.date }
-        val soldTransactions = _currentTransactions.value?.filter { it.isBought == false }!!.sortedByDescending { it.date }
-        val depositTransactions = _currentTransactions.value?.filter { it.symbol == "USD" }!!.sortedByDescending { it.date }
+        val boughtTransactions = _currentTransactions.value?.filter { it.isBought == true }!!
+            .sortedByDescending { it.date }
+        val soldTransactions = _currentTransactions.value?.filter { it.isBought == false }!!
+            .sortedByDescending { it.date }
+        val depositTransactions = _currentTransactions.value?.filter { it.symbol == "USD" }!!
+            .sortedByDescending { it.date }
         val allTransactionsSortedByDate = _currentTransactions.value?.sortedByDescending { it.date }
 
         return when (input) {
@@ -453,6 +457,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         if (_currentTransactions.value != null) {
             val fiatTransactions = _currentTransactions.value!!.filter { it.price == null }
             actualInvestment = fiatTransactions.sumOf { it.amount }
+
         }
         val initialInvestment = actualInvestment
         val currentBalance = currentBalance()
