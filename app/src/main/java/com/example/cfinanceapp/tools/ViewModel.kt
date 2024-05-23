@@ -40,6 +40,9 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     val transactions = repository.transactions
 
 
+
+
+
     private var _currentFavorites = MutableLiveData<MutableList<Favorite>>()
     val currentFavorites: LiveData<MutableList<Favorite>> = _currentFavorites
 

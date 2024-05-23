@@ -41,21 +41,34 @@ class TransactionsFragment : Fragment() {
         val adapter = TransactionsAdapter(context = this.requireContext(), viewModel = viewModel)
         viewBinding.rvTransactions.adapter = adapter
 
-        viewModel.transactions.observe(viewLifecycleOwner) {
-            if (viewModel.currentWallet.value != null) {
-                viewModel.findTransactionsByWalletId(viewModel.currentWallet.value!!.id)
-            }
-        }
 
         viewModel.currentTransactions.observe(viewLifecycleOwner) {
             adapter.submitListTransactions(viewModel.currentTransactions.value!!.sortedByDescending { it.date })
-            viewBinding.textOptionsDropDownMenuTransactions.addTextChangedListener {
-                adapter.submitListTransactions(viewModel.filteredTransactionsList(viewBinding.textOptionsDropDownMenuTransactions.text.toString()))
-            }
         }
 
         viewBinding.btnBackTransactions.setOnClickListener {
             findNavController().navigateUp()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val spinnerOptions = resources.getStringArray(R.array.optionsTransactions)
+        val arrayAdapter = ArrayAdapter(requireContext(), R.layout.drop_down_item, spinnerOptions)
+        viewBinding.textOptionsDropDownMenuTransactions.setAdapter(
+            arrayAdapter
+        )
+
+        val adapter = TransactionsAdapter(context = this.requireContext(), viewModel = viewModel)
+        viewBinding.rvTransactions.adapter = adapter
+
+        viewBinding.textOptionsDropDownMenuTransactions.addTextChangedListener {
+            adapter.submitListTransactions(viewModel.filteredTransactionsList(viewBinding.textOptionsDropDownMenuTransactions.text.toString()))
+        }
+
+        adapter.submitListTransactions(viewModel.filteredTransactionsList(viewBinding.textOptionsDropDownMenuTransactions.text.toString()))
+
+
     }
 }

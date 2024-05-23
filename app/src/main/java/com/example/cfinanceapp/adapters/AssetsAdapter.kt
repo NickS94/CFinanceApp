@@ -10,13 +10,15 @@ import coil.load
 import com.example.cfinanceapp.R
 import com.example.cfinanceapp.data.models.Asset
 import com.example.cfinanceapp.databinding.MarketItemBinding
+import com.example.cfinanceapp.databinding.UsdAssetItemBinding
+import com.example.cfinanceapp.tools.AssetType
 import com.example.cfinanceapp.tools.ViewModel
 
 class AssetsAdapter(
     private var assetsData: MutableList<Asset> = mutableListOf(),
     val viewModel: ViewModel,
     val context: Context
-) : RecyclerView.Adapter<AssetsAdapter.AssetsViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
     @SuppressLint("NotifyDataSetChanged")
@@ -25,13 +27,45 @@ class AssetsAdapter(
         notifyDataSetChanged()
     }
 
+    companion object {
+        private const val VIEW_TYPE_USD_ASSET = 1
+        private const val VIEW_TYPE_CRYPTO_ASSET = 2
+    }
 
-    inner class AssetsViewHolder(val binding: MarketItemBinding) :
+    inner class FiatAssetsViewHolder(val binding: UsdAssetItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AssetsViewHolder {
-        val binding = MarketItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return AssetsViewHolder(binding)
+    inner class CryptoAssetsViewHolder(val binding: MarketItemBinding) :
+        RecyclerView.ViewHolder(binding.root)
+
+
+    override fun getItemViewType(position: Int): Int {
+        val asset = assetsData[position]
+
+        return when (AssetType.fromAssetType(asset.fiat?:"USD")) {
+            AssetType.ASSET_TYPE_USD -> VIEW_TYPE_USD_ASSET
+            AssetType.ASSET_TYPE_CRYPTO -> VIEW_TYPE_CRYPTO_ASSET
+
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+
+        return when (viewType) {
+            VIEW_TYPE_USD_ASSET -> {
+                val binding =
+                    UsdAssetItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                FiatAssetsViewHolder(binding)
+            }
+
+            VIEW_TYPE_CRYPTO_ASSET -> {
+                val binding =
+                    MarketItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                CryptoAssetsViewHolder(binding)
+            }
+
+            else -> throw IllegalArgumentException("Invalid view type")
+        }
     }
 
     override fun getItemCount(): Int {
@@ -39,17 +73,17 @@ class AssetsAdapter(
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onBindViewHolder(holder: AssetsViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val asset = assetsData[position]
 
-        when {
-            asset.cryptoCurrency != null -> {
-
-                holder.binding.ivLogoMarketItem.load(viewModel.getCoinLogo(asset.cryptoCurrency!!.id.toString()))
-                holder.binding.tvCoinName.text = asset.cryptoCurrency!!.name
-                holder.binding.tvCurrentPriceMarket.text = asset.amount.toString()
-                holder.binding.tvCoinSymbol.text = asset.cryptoCurrency!!.symbol
-                holder.binding.tvChangePercentageMarket.text =
+        when (getItemViewType(position)){
+            VIEW_TYPE_CRYPTO_ASSET -> {
+                val cryptoAsset = holder as CryptoAssetsViewHolder
+                cryptoAsset.binding.ivLogoMarketItem.load(viewModel.getCoinLogo(asset.cryptoCurrency!!.id.toString()))
+                cryptoAsset.binding.tvCoinName.text = asset.cryptoCurrency!!.name
+                cryptoAsset.binding.tvCurrentPriceMarket.text = asset.amount.toString()
+                cryptoAsset.binding.tvCoinSymbol.text = asset.cryptoCurrency!!.symbol
+                cryptoAsset.binding.tvChangePercentageMarket.text =
                     "$${
                         String.format(
                             "%.2f",
@@ -57,17 +91,17 @@ class AssetsAdapter(
                         )
                     }"
                 when {
-                    viewModel.profitOrLossInAsset(asset) > 0 -> holder.binding.tvProfitOrLoss.setTextColor(
+                    viewModel.profitOrLossInAsset(asset) > 0 -> cryptoAsset.binding.tvProfitOrLoss.setTextColor(
                         context.getColor(R.color.green)
                     )
 
-                    viewModel.profitOrLossInAsset(asset) < 0 -> holder.binding.tvProfitOrLoss.setTextColor(
+                    viewModel.profitOrLossInAsset(asset) < 0 -> cryptoAsset.binding.tvProfitOrLoss.setTextColor(
                         context.getColor(R.color.red)
                     )
 
-                    else -> holder.binding.tvProfitOrLoss.setTextColor(context.getColor(R.color.white))
+                    else -> cryptoAsset.binding.tvProfitOrLoss.setTextColor(context.getColor(R.color.white))
                 }
-                holder.binding.tvProfitOrLoss.text =
+                cryptoAsset.binding.tvProfitOrLoss.text =
                     "$${
                         String.format(
                             "%.2f",
@@ -82,13 +116,11 @@ class AssetsAdapter(
                 }
             }
 
-            asset.fiat == "USD" -> {
-                holder.binding.tvCoinName.text = "USD"
-                holder.binding.tvChangePercentageMarket.text =
+            VIEW_TYPE_USD_ASSET -> {
+                val usdAsset = holder as FiatAssetsViewHolder
+                usdAsset.binding.tvUsdAssetSymbol.text = "USD"
+                usdAsset.binding.tvUsdAssetAmount.text =
                     "${String.format("%.2f", asset.amount)}$"
-                holder.binding.tvCurrentPriceMarket.text = "Amount"
-                holder.binding.tvCoinSymbol.text = "Fiat Currency"
-                holder.binding.ivLogoMarketItem.setImageResource(R.drawable.dollar_usd_64)
             }
 
         }

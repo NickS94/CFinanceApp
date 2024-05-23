@@ -70,34 +70,25 @@ class WalletFragment : Fragment() {
         viewModel.transactions.observe(viewLifecycleOwner) {
             if (viewModel.currentWallet.value != null) {
                 viewModel.findTransactionsByWalletId(viewModel.currentWallet.value!!.id)
+                viewBinding.tvProfit.stringFormat(viewModel.profitOrLoss())
+                when {
+                    viewModel.profitOrLoss() > 0 -> viewBinding.tvProfit.setTextColor(
+                        requireContext().getColor(
+                            R.color.green
+                        )
+                    )
+                    viewModel.profitOrLoss() < 0 -> viewBinding.tvProfit.setTextColor(
+                        requireContext().getColor(
+                            R.color.red
+                        )
+                    )
+                    else -> viewBinding.tvProfit.setTextColor(requireContext().getColor(R.color.white))
+                }
+                viewBinding.tvChangePercentageAssets.setChangeText(viewModel.profitOrLossPercentage())
             }
 
 
         }
-
-        viewModel.currentTransactions.observe(viewLifecycleOwner) {
-
-            viewBinding.tvProfit.stringFormat(viewModel.profitOrLoss())
-            when {
-                viewModel.profitOrLoss() > 0 -> viewBinding.tvProfit.setTextColor(
-                    requireContext().getColor(
-                        R.color.green
-                    )
-                )
-
-                viewModel.profitOrLoss() < 0 -> viewBinding.tvProfit.setTextColor(
-                    requireContext().getColor(
-                        R.color.red
-                    )
-                )
-
-                else -> viewBinding.tvProfit.setTextColor(requireContext().getColor(R.color.white))
-            }
-
-            viewBinding.tvChangePercentageAssets.setChangeText(viewModel.profitOrLossPercentage())
-        }
-
-
 
         viewModel.currentAssets.observe(viewLifecycleOwner) {
             if (viewModel.currentWallet.value != null) {

@@ -23,11 +23,12 @@ class MarketFragment : Fragment() {
     ): View {
         viewBinding = FragmentMarketBinding.inflate(inflater)
         return viewBinding.root
-    }
 
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
 
         val recyclerView = viewBinding.rvMarketList
 
@@ -35,28 +36,28 @@ class MarketFragment : Fragment() {
         val arrayAdapter = ArrayAdapter(requireContext(), R.layout.drop_down_item, spinnerOptions)
         viewBinding.textOptionsDropDownMenu.setAdapter(arrayAdapter)
 
+        viewBinding.textOptionsDropDownMenu.addTextChangedListener {
+            recyclerView.adapter = MarketAdapter(
+                viewModel.filteredCryptoLists(viewBinding.textOptionsDropDownMenu.text.toString()),
+                this.requireContext(),
+                viewModel
+            )
+        }
 
+        viewBinding.searchViewMarket.setOnQueryTextListener(object : OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                recyclerView.adapter =
+                    MarketAdapter(viewModel.search(newText.toString()), requireContext(), viewModel)
+                return true
+            }
+        })
 
         viewModel.cryptoList.observe(viewLifecycleOwner) {
             recyclerView.adapter = MarketAdapter(it.data, this.requireContext(), viewModel)
-            viewBinding.textOptionsDropDownMenu.addTextChangedListener {
-                recyclerView.adapter = MarketAdapter(
-                    viewModel.filteredCryptoLists(viewBinding.textOptionsDropDownMenu.text.toString()),
-                    this.requireContext(),
-                    viewModel
-                )
-            }
-            viewBinding.searchViewMarket.setOnQueryTextListener(object : OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    return false
-                }
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    recyclerView.adapter =
-                        MarketAdapter(viewModel.search(newText.toString()), context!!, viewModel)
-                    return true
-                }
-            })
 
         }
 
@@ -65,11 +66,22 @@ class MarketFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        val recyclerView = viewBinding.rvMarketList
+
+        viewBinding.searchViewMarket.setQuery("",false)
+
         val spinnerOptions = resources.getStringArray(R.array.optionsMarket)
         val arrayAdapter = ArrayAdapter(requireContext(), R.layout.drop_down_item, spinnerOptions)
         viewBinding.textOptionsDropDownMenu.setAdapter(arrayAdapter)
 
+        recyclerView.adapter = MarketAdapter(
+            viewModel.filteredCryptoLists(viewBinding.textOptionsDropDownMenu.text.toString()),
+            this.requireContext(),
+            viewModel
+        )
+
 
     }
+
 
 }
