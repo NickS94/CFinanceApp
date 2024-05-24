@@ -47,8 +47,6 @@ class DetailsFragment : Fragment() {
 
         viewModel.currentCrypto.observe(viewLifecycleOwner) { cryptoCurrency ->
 
-            viewModel.findWalletByUserId(viewModel.currentAccount.value!!.id)
-
             loadChart(cryptoCurrency, "D")
 
             viewBinding.ivCoinLogoDetails.load(viewModel.getCoinLogo(cryptoCurrency.id.toString()))
@@ -232,7 +230,6 @@ class DetailsFragment : Fragment() {
 
         btnConfirm.setOnClickListener {
             val amountText = etAmount.text
-            viewModel.findAssetsByWalletId(viewModel.currentWallet.value!!.id)
             when {
                 amountText!!.isNotEmpty() && viewModel.isEnoughFiat(
                     amountText.toString().toDouble()
@@ -273,7 +270,6 @@ class DetailsFragment : Fragment() {
 
         btnConfirm.setOnClickListener {
             val amountText = etAmount.text
-            viewModel.findAssetsByWalletId(viewModel.currentWallet.value!!.id)
             when {
                 amountText!!.isNotEmpty() && viewModel.isEnoughCrypto(
                     amountText.toString().toDouble()

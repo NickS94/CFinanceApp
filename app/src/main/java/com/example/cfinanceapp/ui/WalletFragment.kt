@@ -38,70 +38,42 @@ class WalletFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.findWalletByUserId()
+
         val adapter = AssetsAdapter(viewModel = viewModel, context = this.requireContext())
         viewBinding.rvAssetsWallet.adapter = adapter
 
-        viewModel.currentAccount.observe(viewLifecycleOwner) { account ->
-            viewModel.findWalletByUserId(account.id)
-            viewModel.findAccountByEmail(account.email)
-            viewBinding.btnCreateNewWallet.setOnClickListener {
-                if (viewModel.currentWallet.value?.accountId != account.id) {
-                    viewModel.createNewWallet()
-                    showToast("Your WALLET have been CREATED SUCCESSFULLY ")
-                } else {
-                    showToast("You Already have a wallet created")
-                }
-            }
-        }
-
-        viewModel.wallets.observe(viewLifecycleOwner) {
-            if (viewModel.currentAccount.value != null) {
-                viewModel.findWalletByUserId(viewModel.currentAccount.value!!.id)
-            }
-        }
-
-        viewModel.assets.observe(viewLifecycleOwner) {
-            if (viewModel.currentWallet.value != null) {
-                viewModel.findAssetsByWalletId(viewModel.currentWallet.value!!.id)
-            }
-
-        }
-
-        viewModel.transactions.observe(viewLifecycleOwner) {
-            if (viewModel.currentWallet.value != null) {
-                viewModel.findTransactionsByWalletId(viewModel.currentWallet.value!!.id)
-                viewBinding.tvProfit.stringFormat(viewModel.profitOrLoss())
-                when {
-                    viewModel.profitOrLoss() > 0 -> viewBinding.tvProfit.setTextColor(
-                        requireContext().getColor(
-                            R.color.green
-                        )
-                    )
-                    viewModel.profitOrLoss() < 0 -> viewBinding.tvProfit.setTextColor(
-                        requireContext().getColor(
-                            R.color.red
-                        )
-                    )
-                    else -> viewBinding.tvProfit.setTextColor(requireContext().getColor(R.color.white))
-                }
-                viewBinding.tvChangePercentageAssets.setChangeText(viewModel.profitOrLossPercentage())
-            }
-
-
+        viewModel.currentWallet.observe(viewLifecycleOwner) {
+            viewModel.findTransactionsByWalletId()
         }
 
         viewModel.currentAssets.observe(viewLifecycleOwner) {
+            adapter.submitList(viewModel.currentAssets.value!!)
+        }
+
+        viewModel.assets.observe(viewLifecycleOwner) {
+            viewModel.findAssetsByWalletId()
             if (viewModel.currentWallet.value != null) {
-                adapter.submitList(viewModel.currentAssets.value!!)
+
+                profitLossCount()
                 viewBinding.currentBalanceText.text =
                     "${String.format("%.2f", viewModel.currentBalance())}$"
-
+                viewBinding.tvProfit.stringFormat(viewModel.profitOrLoss())
             }
-
-
         }
 
 
+
+
+
+        viewBinding.btnCreateNewWallet.setOnClickListener {
+            if (viewModel.currentWallet.value?.accountId != viewModel.currentAccount.value!!.id) {
+                viewModel.createNewWallet()
+                showToast("Your WALLET have been CREATED SUCCESSFULLY ")
+            } else {
+                showToast("You Already have a wallet created")
+            }
+        }
 
         viewBinding.btnDeposit.setOnClickListener {
             if (viewModel.currentWallet.value != null) {
@@ -111,18 +83,35 @@ class WalletFragment : Fragment() {
             }
         }
 
-
         viewBinding.btnHistory.setOnClickListener {
             when {
                 viewModel.currentWallet.value != null -> {
-                    viewModel.findTransactionsByWalletId(viewModel.currentWallet.value!!.id)
+                    viewModel.findTransactionsByWalletId()
                     findNavController().navigate(R.id.transactionsFragment)
                 }
 
                 else -> showToast("You have to CREATE a WALLET first")
-
             }
         }
+    }
+
+    private fun profitLossCount() {
+        when {
+            viewModel.profitOrLoss() > 0 -> viewBinding.tvProfit.setTextColor(
+                requireContext().getColor(
+                    R.color.green
+                )
+            )
+
+            viewModel.profitOrLoss() < 0 -> viewBinding.tvProfit.setTextColor(
+                requireContext().getColor(
+                    R.color.red
+                )
+            )
+
+            else -> viewBinding.tvProfit.setTextColor(requireContext().getColor(R.color.white))
+        }
+        viewBinding.tvChangePercentageAssets.setChangeText(viewModel.profitOrLossPercentage())
     }
 
     private fun showToast(message: String) {
@@ -138,7 +127,6 @@ class WalletFragment : Fragment() {
         text = formattedText
     }
 
-
     @SuppressLint("InflateParams")
     private fun showDepositDialog(viewModel: ViewModel) {
         val dialog = BottomSheetDialog(requireContext())
@@ -153,7 +141,7 @@ class WalletFragment : Fragment() {
             if (amountText!!.isNotEmpty()) {
                 val amount = amountText.toString().toDouble()
                 viewModel.updateOrInsertFiatCurrencyAmounts(amount)
-                showToast("Deposit $amount$ COMPLETED ")
+                showToast("Deposit $amount$ COMPLETED,")
                 dialog.dismiss()
             } else {
                 showToast("Please enter a valid amount")

@@ -30,29 +30,26 @@ class RegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.accounts.observe(viewLifecycleOwner) {
+        viewBinding.btnCompleteRegister.setOnClickListener {
 
-            viewBinding.btnCompleteRegister.setOnClickListener {
+            val etEmail = viewBinding.etEmailRegister.text.toString()
+            val etPassword = viewBinding.etPasswordRegister.text.toString()
+            val etPasswordRepeat = viewBinding.etPasswordRegisterRepeat.text.toString()
+            val etName = viewBinding.etName.text.toString()
 
-                val etEmail = viewBinding.etEmailRegister.text.toString()
-                val etPassword = viewBinding.etPasswordRegister.text.toString()
-                val etPasswordRepeat = viewBinding.etPasswordRegisterRepeat.text.toString()
-                val etName = viewBinding.etName.text.toString()
+            viewModel.findAccountByEmail(etEmail)
+            when {
 
-                when {
-
-                    etEmail.isEmpty() -> showToast("Please insert an EMAIL")
-                    !isEmailValid(etEmail) -> showToast("Please insert an valid EMAIL")
-                    viewModel.isAccountAlreadyRegistered(etEmail) -> showToast("This account is ALREADY registered")
-                    etPassword.isEmpty() -> showToast("Please insert an PASSWORD")
-                    correctPasswordLength(etPassword) -> showToast("The PASSWORD must be AT LEAST 8 numbers,letters etc.")
-                    etPasswordRepeat.isEmpty() || etPasswordRepeat != etPassword -> showToast("Please ensure that the REPEATED password is CORRECT")
-                    else -> {
-
-                        viewModel.registration(etEmail, etPassword,etName) {
-                            showToast("Success")
-                            findNavController().navigate(R.id.loginFragment)
-                        }
+                etEmail.isEmpty() -> showToast("Please insert an EMAIL")
+                !isEmailValid(etEmail) -> showToast("Please insert an valid EMAIL")
+                viewModel.isAccountAlreadyRegistered(etEmail) -> showToast("This account is ALREADY registered")
+                etPassword.isEmpty() -> showToast("Please insert an PASSWORD")
+                correctPasswordLength(etPassword) -> showToast("The PASSWORD must be AT LEAST 8 numbers,letters etc.")
+                etPasswordRepeat.isEmpty() || etPasswordRepeat != etPassword -> showToast("Please ensure that the REPEATED password is CORRECT")
+                else -> {
+                    viewModel.registration(etEmail, etPassword,etName) {
+                        showToast("Success")
+                        findNavController().navigate(R.id.loginFragment)
                     }
                 }
             }

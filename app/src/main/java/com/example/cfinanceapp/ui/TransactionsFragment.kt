@@ -32,6 +32,7 @@ class TransactionsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.findTransactionsByWalletId()
         val spinnerOptions = resources.getStringArray(R.array.optionsTransactions)
         val arrayAdapter = ArrayAdapter(requireContext(), R.layout.drop_down_item, spinnerOptions)
         viewBinding.textOptionsDropDownMenuTransactions.setAdapter(
