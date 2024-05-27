@@ -40,42 +40,26 @@ class WalletFragment : Fragment() {
 
         viewModel.findWalletByUserId()
 
+        viewModel.findTransactionsByWalletId()
+
+        viewModel.findAssetsByWalletId()
+
         val adapter = AssetsAdapter(viewModel = viewModel, context = this.requireContext())
         viewBinding.rvAssetsWallet.adapter = adapter
-
-        viewModel.transactions.observe(viewLifecycleOwner) {
-            if (viewModel.currentTransactions.value != null) {
-                viewModel.findTransactionsByWalletId()
-            }
-        }
-
-        viewModel.assets.observe(viewLifecycleOwner) {
-            if (viewModel.currentAssets.value != null && viewModel.currentWallet.value != null) {
-                viewModel.findAssetsByWalletId()
-
-                viewBinding.currentBalanceText.text =
-                    "${String.format("%.2f", viewModel.currentBalance())}$"
-                profitLossCount()
-                viewBinding.tvProfit.stringFormat(viewModel.profitOrLoss())
-
-
-            }
-
-        }
-
-        viewModel.currentWallet.observe(viewLifecycleOwner) {
-            viewModel.findTransactionsByWalletId()
-            viewModel.findAssetsByWalletId()
-        }
-
-
-
 
 
         viewModel.currentAssets.observe(viewLifecycleOwner) {
             if (viewModel.currentWallet.value != null) {
                 adapter.submitList(viewModel.currentAssets.value!!)
+                if (viewModel.currentTransactions.value != null && viewModel.currentAssets.value != null) {
+                    viewBinding.currentBalanceText.text =
+                        "${String.format("%.2f", viewModel.currentBalance())}$"
+                    profitLossCount()
+                    viewBinding.tvProfit.stringFormat(viewModel.profitOrLoss())
+                }
             }
+
+
         }
 
 

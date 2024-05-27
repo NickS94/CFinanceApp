@@ -83,13 +83,8 @@ class AssetsAdapter(
                 cryptoAsset.binding.tvCoinName.text = asset.cryptoCurrency!!.name
                 cryptoAsset.binding.tvCurrentPriceMarket.text = asset.amount.toString()
                 cryptoAsset.binding.tvCoinSymbol.text = asset.cryptoCurrency!!.symbol
-                cryptoAsset.binding.tvChangePercentageMarket.text =
-                    "$${
-                        String.format(
-                            "%.2f",
-                            viewModel.actualCoinPriceUpdater(asset) * asset.amount
-                        )
-                    }"
+                cryptoAsset.binding.tvChangePercentageMarket.text = viewModel.formatDecimalsAmount( viewModel.actualCoinPriceUpdater(asset) * asset.amount)
+
                 when {
                     viewModel.profitOrLossInAsset(asset) > 0 -> cryptoAsset.binding.tvProfitOrLoss.setTextColor(
                         context.getColor(R.color.green)

@@ -35,13 +35,11 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
 
     var cryptoList = repository.coinsList
     val accounts = repository.accounts
-    val assets = repository.assets
     val favorites = repository.favorites
-    val transactions = repository.transactions
 
 
-    private val _maxAmount = MutableLiveData<Double>()
-    val maxAmount: LiveData<Double>
+    private val _maxAmount = MutableLiveData<String>()
+    val maxAmount: LiveData<String>
         get() = _maxAmount
 
     private var _currentFavorites = MutableLiveData<MutableList<Favorite>>()
@@ -278,23 +276,25 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
             isBought = null,
             walletId = _currentWallet.value!!.id
         )
-        val existedFiatAsset = _currentAssets.value?.find { it.fiat != null }
-        if (existedFiatAsset != null && _currentAssets.value != null) {
-            val updatedAmount = existedFiatAsset.amount.plus(amount)
-            existedFiatAsset.amount = updatedAmount
-            updateAsset(existedFiatAsset)
-            insertTransaction(transaction)
-        } else {
-            val newFiatAsset = Asset(
-                fiat = "USD",
-                cryptoCurrency = null,
-                amount = amount,
-                walletId = _currentWallet.value!!.id
-            )
-            insertAsset(newFiatAsset)
-            insertTransaction(transaction)
+        viewModelScope.launch {
+            val assets = repository.getAssetsByWalletId(_currentWallet.value!!.id)
+            val existedFiatAsset =assets.find { it.fiat != null }
+            if (existedFiatAsset != null) {
+                val updatedAmount = existedFiatAsset.amount.plus(amount)
+                existedFiatAsset.amount = updatedAmount
+                updateAsset(existedFiatAsset)
+                insertTransaction(transaction)
+            } else {
+                val newFiatAsset = Asset(
+                    fiat = "USD",
+                    cryptoCurrency = null,
+                    amount = amount,
+                    walletId = _currentWallet.value!!.id
+                )
+                insertAsset(newFiatAsset)
+                insertTransaction(transaction)
+            }
         }
-
     }
 
     @SuppressLint("NewApi")
@@ -492,8 +492,10 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun isEnoughFiat(amount: Double): Boolean {
+
         val fiatBalance = _currentAssets.value?.find { it.fiat == "USD" }
         val wishAmount = _currentCrypto.value?.quote?.usdData!!.price * amount
+
         return fiatBalance?.fiat != null && fiatBalance.amount >= wishAmount
     }
 
@@ -566,27 +568,53 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             val assets = repository.getAssetsByWalletId(_currentWallet.value!!.id)
             val existedAsset = assets.find { it.cryptoCurrency?.symbol == coin.symbol }
-            _maxAmount.postValue((existedAsset?.amount ?: 0.0))
+            _maxAmount.postValue((existedAsset?.amount ?: 0.0).toString())
         }
     }
 
-    fun maxToBuy(coin: CryptoCurrency){
+    fun maxToBuy(coin: CryptoCurrency) {
         viewModelScope.launch {
             val assets = repository.getAssetsByWalletId(_currentWallet.value!!.id)
             val existedFiatAsset = assets.find { it.fiat == "USD" }
-            val fiatAmount = existedFiatAsset?.amount?:0.0
+            val fiatAmount = existedFiatAsset?.amount ?: 0.0
             val cryptoPrice = coin.quote.usdData.price
 
-            val maxBuyAmount = if (cryptoPrice > 0){
+            val maxBuyAmount = if (existedFiatAsset != null) {
                 fiatAmount / cryptoPrice
-            }else{
+            } else {
                 0.0
             }
-            _maxAmount.postValue(maxBuyAmount)
+            _maxAmount.postValue("${String.format("%.5f", maxBuyAmount)} ")
         }
     }
 
     fun resetMaxAmount() {
-        _maxAmount.value = 0.0
+        _maxAmount.value = ""
     }
+
+    private fun getDecimalPlaces(number: Double): Int {
+
+        val numberSubstring = number.toString().substringAfter(".")
+
+        for ((index,char) in numberSubstring.withIndex()) {
+            if (char != '0'){
+                return index + 1
+            }
+        }
+
+        return 0
+    }
+
+    fun formatDecimalsAmount(amount: Double): String {
+
+        val significantDecimals = getDecimalPlaces(amount)
+
+        return if (significantDecimals > 0) {
+            String.format("%.${significantDecimals}f $", amount)
+        } else {
+            String.format("%.3f $", amount)
+        }
+    }
+
+
 }

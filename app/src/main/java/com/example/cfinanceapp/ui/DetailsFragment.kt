@@ -59,10 +59,10 @@ class DetailsFragment : Fragment() {
             viewBinding.tvCoinSymbolDetails.text = cryptoCurrency.symbol
 
             viewBinding.tvChangePercentageDetails.text =
-                "${String.format("%.02f", cryptoCurrency.quote.usdData.percentChange24h)}%"
+                "${String.format("%.2f", cryptoCurrency.quote.usdData.percentChange24h)}%"
 
             viewBinding.tvCurrentPriceDetails.text =
-                "${String.format("%.02f", cryptoCurrency.quote.usdData.price)}$"
+                "${String.format("%.3f", cryptoCurrency.quote.usdData.price)}$"
 
             when {
                 cryptoCurrency.quote.usdData.percentChange24h > 0 -> {
@@ -117,7 +117,6 @@ class DetailsFragment : Fragment() {
             selectedButton?.setBackgroundResource(android.R.color.transparent)
             selectedButton = viewBinding.btn1h
             viewBinding.btn1h.setBackgroundResource(R.drawable.round_transparent)
-
 
             loadChart(viewModel.currentCrypto.value!!, viewBinding.btn1h.text.toString())
 

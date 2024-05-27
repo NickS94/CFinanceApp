@@ -2,17 +2,15 @@ package com.example.cfinanceapp.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cfinanceapp.R
 import com.example.cfinanceapp.data.models.Transaction
 import com.example.cfinanceapp.databinding.TransactionsItemBinding
 import com.example.cfinanceapp.tools.ViewModel
-import java.time.format.DateTimeFormatter
+
 
 
 class TransactionsAdapter(
@@ -48,7 +46,7 @@ class TransactionsAdapter(
 
 
 
-        holder.binding.tvAmountTransaction.text = String.format("%.2f", transaction.amount)
+        holder.binding.tvAmountTransaction.text =  String.format("%.3f", transaction.amount)
 
         holder.binding.tvDateTransaction.text = transaction.date
 
@@ -73,8 +71,9 @@ class TransactionsAdapter(
             viewModel.getCurrentTransaction(transaction)
             it.findNavController().navigate(R.id.transactionsDetailFragment)
         }
-
     }
+
+
 }
 
 

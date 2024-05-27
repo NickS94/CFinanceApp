@@ -1,6 +1,6 @@
 package com.example.cfinanceapp.adapters
 
-import android.annotation.SuppressLint
+
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -32,15 +32,15 @@ class MarketAdapter(
         return dataListCrypto.size
     }
 
-    @SuppressLint("SetTextI18n")
+
     override fun onBindViewHolder(holder: MarketViewHolder, position: Int) {
         val coin = dataListCrypto[position]
 
 
         holder.binding.tvCoinName.text = coin.name
         holder.binding.tvCoinSymbol.text = coin.symbol
-        holder.binding.tvCurrentPriceMarket.text = "$${String.format("%.02f", coin.quote.usdData.price)}"
-        "${String.format("%.02f", coin.quote.usdData.percentChange24h)}%".also { holder.binding.tvChangePercentageMarket.text = it }
+        holder.binding.tvCurrentPriceMarket.text = viewModel.formatDecimalsAmount( coin.quote.usdData.price)
+        "${String.format("%.2f", coin.quote.usdData.percentChange24h)}%".also { holder.binding.tvChangePercentageMarket.text = it }
         holder.binding.ivLogoMarketItem.load(viewModel.getCoinLogo(coin.id.toString()))
 
         when {

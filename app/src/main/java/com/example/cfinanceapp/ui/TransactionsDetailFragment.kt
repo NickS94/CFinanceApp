@@ -62,7 +62,7 @@ class TransactionsDetailFragment : Fragment() {
             viewBinding.tvTransactionsHashDetails.text = it.transactionHash
 
             viewBinding.tvTransactionPrice.text = when {
-                it.price != null -> "${String.format("%.2f", it.price)}$"
+                it.price != null -> "${String.format("%.4f", it.price)}$"
                 else -> ""
             }
 

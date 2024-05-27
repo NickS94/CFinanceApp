@@ -30,6 +30,7 @@ class HotListAdapter(
     }
 
 
+
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val coin = dataList[position]
@@ -42,7 +43,7 @@ class HotListAdapter(
 
         holder.binding.ivArrow.visibility = View.GONE
 
-        holder.binding.tvCurrentPriceMarket.text = "$${String.format("%.2f",coin.quote.usdData.price)}"
+        holder.binding.tvCurrentPriceMarket.text = viewModel.formatDecimalsAmount(coin.quote.usdData.price)
 
 
         val volume24h = coin.quote.usdData.volume24h

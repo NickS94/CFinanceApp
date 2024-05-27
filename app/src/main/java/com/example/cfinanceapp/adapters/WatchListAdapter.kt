@@ -46,9 +46,9 @@ class WatchListAdapter(
         holder.binding.ivChart.load(viewModel.getChartEffect(favorite.favoriteCoin?.id.toString()))
         holder.binding.ivCoinLogoWatchlist.load(viewModel.getCoinLogo(favorite.favoriteCoin?.id.toString()))
 
-        holder.binding.tvCurrentPrice.text = "$${String.format("%.2f", viewModel.actualCoinPriceUpdaterWatchlist(favorite))}"
+        holder.binding.tvCurrentPrice.text = viewModel.formatDecimalsAmount(viewModel.actualCoinPriceUpdaterWatchlist(favorite))
 
-        holder.binding.tv24hChangePrice.text = "${String.format("%.2f",favorite.favoriteCoin?.quote?.usdData?.percentChange24h)}%"
+        holder.binding.tv24hChangePrice.text = "${String.format("%.3f",favorite.favoriteCoin?.quote?.usdData?.percentChange24h)}%"
 
         when {
             favorite.favoriteCoin?.quote?.usdData?.percentChange24h!! > 0 -> holder.binding.tv24hChangePrice.setBackgroundResource(
