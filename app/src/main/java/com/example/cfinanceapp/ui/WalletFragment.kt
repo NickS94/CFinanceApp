@@ -43,25 +43,39 @@ class WalletFragment : Fragment() {
         val adapter = AssetsAdapter(viewModel = viewModel, context = this.requireContext())
         viewBinding.rvAssetsWallet.adapter = adapter
 
+        viewModel.transactions.observe(viewLifecycleOwner) {
+            if (viewModel.currentTransactions.value != null) {
+                viewModel.findTransactionsByWalletId()
+            }
+        }
+
+        viewModel.assets.observe(viewLifecycleOwner) {
+            if (viewModel.currentAssets.value != null && viewModel.currentWallet.value != null) {
+                viewModel.findAssetsByWalletId()
+
+                viewBinding.currentBalanceText.text =
+                    "${String.format("%.2f", viewModel.currentBalance())}$"
+                profitLossCount()
+                viewBinding.tvProfit.stringFormat(viewModel.profitOrLoss())
+
+
+            }
+
+        }
+
         viewModel.currentWallet.observe(viewLifecycleOwner) {
             viewModel.findTransactionsByWalletId()
             viewModel.findAssetsByWalletId()
         }
 
+
+
+
+
         viewModel.currentAssets.observe(viewLifecycleOwner) {
             if (viewModel.currentWallet.value != null) {
                 adapter.submitList(viewModel.currentAssets.value!!)
             }
-
-
-        }
-
-
-        if (viewModel.currentWallet.value != null) {
-            profitLossCount()
-            viewBinding.currentBalanceText.text =
-                "${String.format("%.2f", viewModel.currentBalance())}$"
-            viewBinding.tvProfit.stringFormat(viewModel.profitOrLoss())
         }
 
 
@@ -133,8 +147,13 @@ class WalletFragment : Fragment() {
         val btnConfirm = viewLayout.findViewById<AppCompatButton>(R.id.btnConfirm)
         val btnCancel = viewLayout.findViewById<AppCompatButton>(R.id.btnCancel)
         val etAmount = viewLayout.findViewById<TextInputEditText>(R.id.etAmount)
+        val btnMax = viewLayout.findViewById<AppCompatButton>(R.id.btnMax)
         val textInputHint = viewLayout.findViewById<TextInputLayout>(R.id.textInputLayoutAmount)
+
+        btnMax.visibility = View.GONE
+
         textInputHint.hint = getText(R.string.amount)
+
         btnConfirm.setOnClickListener {
             val amountText = etAmount.text
             if (amountText!!.isNotEmpty()) {

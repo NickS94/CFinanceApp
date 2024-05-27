@@ -24,6 +24,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.random.Random
 
+
 class ViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = Repository(CoinMarketCapAPI, DatabaseInstance.getDatabase(application))
@@ -34,12 +35,14 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
 
     var cryptoList = repository.coinsList
     val accounts = repository.accounts
-    val wallets = repository.wallets
     val assets = repository.assets
     val favorites = repository.favorites
     val transactions = repository.transactions
 
 
+    private val _maxAmount = MutableLiveData<Double>()
+    val maxAmount: LiveData<Double>
+        get() = _maxAmount
 
     private var _currentFavorites = MutableLiveData<MutableList<Favorite>>()
     val currentFavorites: LiveData<MutableList<Favorite>>
@@ -556,5 +559,34 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
             cryptoList.value?.data?.find { it.id == asset.cryptoCurrency?.id }?.quote?.usdData?.price
         val assetSavedPrice = asset.cryptoCurrency?.quote?.usdData?.price ?: 0.0
         return actualCoinPrice?.minus(assetSavedPrice) ?: 0.0
+    }
+
+
+    fun maxOfAsset(coin: CryptoCurrency) {
+        viewModelScope.launch {
+            val assets = repository.getAssetsByWalletId(_currentWallet.value!!.id)
+            val existedAsset = assets.find { it.cryptoCurrency?.symbol == coin.symbol }
+            _maxAmount.postValue((existedAsset?.amount ?: 0.0))
+        }
+    }
+
+    fun maxToBuy(coin: CryptoCurrency){
+        viewModelScope.launch {
+            val assets = repository.getAssetsByWalletId(_currentWallet.value!!.id)
+            val existedFiatAsset = assets.find { it.fiat == "USD" }
+            val fiatAmount = existedFiatAsset?.amount?:0.0
+            val cryptoPrice = coin.quote.usdData.price
+
+            val maxBuyAmount = if (cryptoPrice > 0){
+                fiatAmount / cryptoPrice
+            }else{
+                0.0
+            }
+            _maxAmount.postValue(maxBuyAmount)
+        }
+    }
+
+    fun resetMaxAmount() {
+        _maxAmount.value = 0.0
     }
 }

@@ -23,7 +23,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
-
 class DetailsFragment : Fragment() {
     private lateinit var viewBinding: FragmentDetailsBinding
     private val viewModel: ViewModel by activityViewModels()
@@ -44,8 +43,12 @@ class DetailsFragment : Fragment() {
 
         var selectedButton: Button? = null
 
+        viewModel.findAssetsByWalletId()
+
+        viewModel.findWalletByUserId()
 
         viewModel.currentCrypto.observe(viewLifecycleOwner) { cryptoCurrency ->
+
 
             loadChart(cryptoCurrency, "D")
 
@@ -226,26 +229,38 @@ class DetailsFragment : Fragment() {
         val viewLayout = layoutInflater.inflate(R.layout.bottom_sheet_dialog_buy_layout, null)
         val btnConfirm = viewLayout.findViewById<AppCompatButton>(R.id.btnConfirm)
         val btnCancel = viewLayout.findViewById<AppCompatButton>(R.id.btnCancel)
+        val btnMax = viewLayout.findViewById<AppCompatButton>(R.id.btnMax)
         val etAmount = viewLayout.findViewById<TextInputEditText>(R.id.etAmount)
 
+        viewModel.resetMaxAmount()
+
+        viewModel.findAssetsByWalletId()
+
+        viewModel.maxAmount.observe(viewLifecycleOwner) { maxAmount ->
+            etAmount.setText(maxAmount.toString())
+        }
+
+        btnMax.setOnClickListener {
+            viewModel.maxToBuy(cryptoCurrency)
+        }
         btnConfirm.setOnClickListener {
-            val amountText = etAmount.text
+            val amountText = etAmount.text.toString()
             when {
-                amountText!!.isNotEmpty() && viewModel.isEnoughFiat(
-                    amountText.toString().toDouble()
-                ) -> {
+                amountText.isNotEmpty() && viewModel.isEnoughFiat(
+                    amountText.toDouble()
+                ) && amountText.toDouble() > 0 -> {
                     viewModel.updateOrInsertCryptoCurrencyAmounts(
-                        amountText.toString().toDouble(),
+                        amountText.toDouble(),
                         cryptoCurrency
                     )
                     showToast("Bought $amountText ${cryptoCurrency.name}")
                     dialog.dismiss()
                 }
 
-                amountText.isEmpty() -> showToast("Please enter a valid amount")
+                amountText.isEmpty() || amountText.toDouble() <= 0 -> showToast("Please enter a valid amount")
 
                 !viewModel.isEnoughFiat(
-                    amountText.toString().toDouble()
+                    amountText.toDouble()
                 ) -> showToast("Insufficient funds ")
             }
 
@@ -264,28 +279,41 @@ class DetailsFragment : Fragment() {
         val btnConfirm = viewLayout.findViewById<AppCompatButton>(R.id.btnConfirm)
         val btnCancel = viewLayout.findViewById<AppCompatButton>(R.id.btnCancel)
         val etAmount = viewLayout.findViewById<TextInputEditText>(R.id.etAmount)
+        val btnMax = viewLayout.findViewById<AppCompatButton>(R.id.btnMax)
         val textInputHint = viewLayout.findViewById<TextInputLayout>(R.id.textInputLayoutAmount)
 
         textInputHint.hint = getText(R.string.amountSell)
 
+        viewModel.resetMaxAmount()
+
+        viewModel.findAssetsByWalletId()
+
+        viewModel.maxAmount.observe(viewLifecycleOwner) { maxAmount ->
+            etAmount.setText(maxAmount.toString())
+        }
+
+        btnMax.setOnClickListener {
+            viewModel.maxOfAsset(cryptoCurrency).toString()
+        }
+
         btnConfirm.setOnClickListener {
-            val amountText = etAmount.text
+            val amountText = etAmount.text.toString()
             when {
-                amountText!!.isNotEmpty() && viewModel.isEnoughCrypto(
-                    amountText.toString().toDouble()
-                ) -> {
+                amountText.isNotEmpty() && viewModel.isEnoughCrypto(
+                    amountText.toDouble()
+                ) && amountText.toDouble() > 0 -> {
                     viewModel.sellCryptoCurrencyAsset(
                         cryptoCurrency,
-                        amountText.toString().toDouble()
+                        amountText.toDouble()
                     )
                     showToast("Sold $amountText ${cryptoCurrency.name}")
                     dialog.dismiss()
                 }
 
-                amountText.isEmpty() -> showToast("Please enter a valid amount")
+                amountText.isEmpty() || amountText.toDouble() <= 0 -> showToast("Please enter a valid amount")
 
                 !viewModel.isEnoughCrypto(
-                    amountText.toString().toDouble()
+                    amountText.toDouble()
                 ) -> showToast("Insufficient funds ")
             }
 
@@ -296,6 +324,5 @@ class DetailsFragment : Fragment() {
         dialog.setContentView(viewLayout)
         dialog.show()
     }
-
 
 }

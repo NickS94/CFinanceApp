@@ -40,6 +40,7 @@ class LoginFragment : Fragment() {
                 !viewModel.isAccountAlreadyRegistered(etEmail) -> showToast("You are not Registered , Please REGISTER an ACCOUNT.")
                 else -> viewModel.loginAuthentication(etEmail, etPassword) {
                     viewModel.findAccountByEmail(etEmail)
+                    viewModel.findWalletByUserId()
                     showToast("Welcome!")
                     findNavController().navigate(R.id.homeFragment)
                 }
