@@ -40,7 +40,7 @@ class HomeFragment : Fragment() {
 
 
         viewModel.favorites.observe(viewLifecycleOwner) {
-            if (viewModel.currentAccount.value != null ) {
+            if (viewModel.currentAccount.value != null) {
                 viewModel.findFavoritesByAccountId(viewModel.currentAccount.value!!.id)
             }
 

@@ -66,7 +66,7 @@ class DetailsFragment : Fragment() {
                 "${String.format("%.2f", cryptoCurrency.quote.usdData.percentChange24h)}%"
 
             viewBinding.tvCurrentPriceDetails.text =
-                "${String.format("%.3f", cryptoCurrency.quote.usdData.price)}$"
+                "${String.format("%.2f", cryptoCurrency.quote.usdData.price)}$"
 
             when {
                 cryptoCurrency.quote.usdData.percentChange24h > 0 -> {

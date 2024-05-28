@@ -753,7 +753,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         return if (significantDecimals > 0) {
             String.format("%.${significantDecimals}f $", amount)
         } else {
-            String.format("%.3f $", amount)
+            String.format("%.2f $", amount)
         }
     }
 
