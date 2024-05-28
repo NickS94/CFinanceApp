@@ -53,6 +53,7 @@ class TransactionsFragment : Fragment() {
         }
     }
 
+    // Here i also use the onResume function so i can save the current state of filtering.
     override fun onResume() {
         super.onResume()
 

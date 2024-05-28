@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.cfinanceapp.R
-import com.example.cfinanceapp.data.models.Account
 import com.example.cfinanceapp.databinding.FragmentRegisterBinding
 import com.example.cfinanceapp.tools.ViewModel
 

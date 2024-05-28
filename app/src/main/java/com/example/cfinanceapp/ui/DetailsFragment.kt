@@ -26,6 +26,8 @@ import com.google.android.material.textfield.TextInputLayout
 class DetailsFragment : Fragment() {
     private lateinit var viewBinding: FragmentDetailsBinding
     private val viewModel: ViewModel by activityViewModels()
+
+    //This variable checks together with our isFavorite function from view model if the current crypto is in the watchlist.
     private var isFavorite: Boolean = false
 
     override fun onCreateView(
@@ -41,6 +43,8 @@ class DetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // This variable sets the button to null every time we get out of our detail fragment and gives it value every time we press the specific button we want.
+        // I used it for the enabled animation on the chart timeframe buttons.
         var selectedButton: Button? = null
 
         viewModel.findAssetsByWalletId()
@@ -139,6 +143,7 @@ class DetailsFragment : Fragment() {
         }
 
 
+        // Sets the favorite drawable.
         if (viewModel.isFavorite(viewModel.currentCrypto.value!!)) {
             viewBinding.ivFavorite.setImageResource(R.drawable.favorite_icon_enabled)
         } else {
@@ -147,6 +152,7 @@ class DetailsFragment : Fragment() {
 
         viewBinding.ivFavorite.setOnClickListener {
 
+            // Changes the value of isFavorite variable from true to false and vice versa.
             isFavorite = !isFavorite
 
             viewModel.addToWatchlist(viewModel.currentCrypto.value!!)
@@ -156,7 +162,6 @@ class DetailsFragment : Fragment() {
             } else {
                 viewBinding.ivFavorite.setImageResource(R.drawable.favorite_icon_disable)
             }
-
         }
 
         viewBinding.btnBuyDetails.setOnClickListener {
@@ -180,9 +185,15 @@ class DetailsFragment : Fragment() {
         }
     }
 
+
+    /**
+     * This function loads a web view with a chart from Trading View website based on the coin symbol
+     * and the timeframe we picked.
+     * @param coin is for the crypto we are looking for.
+     * @param timeframe is for the time frame we want to watch for.
+     */
     @SuppressLint("SetJavaScriptEnabled")
     private fun loadChart(coin: CryptoCurrency, timeframe: String) {
-
 
         viewBinding.wvChartDetails.settings.javaScriptEnabled = true
         viewBinding.wvChartDetails.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
@@ -195,6 +206,10 @@ class DetailsFragment : Fragment() {
         )
     }
 
+    /**
+     * This function shows a toast with a specific text we give .
+     * @param message is for the TOAST message we want to show.
+     */
     private fun showToast(message: String) {
         Toast.makeText(
             context, message, Toast.LENGTH_SHORT
@@ -202,6 +217,9 @@ class DetailsFragment : Fragment() {
 
     }
 
+    /**
+     * This function is to format a long double number.
+     */
     private fun Double.formatVolume(): String {
         return if (this >= 1_000_000_000) {
             String.format("%.2f Bil", this / 1_000_000_000)
@@ -210,6 +228,10 @@ class DetailsFragment : Fragment() {
         }
     }
 
+    /**
+     * This function is to change the format of a text view and the color.
+     * @param change is for the text in our text view.
+     */
     private fun TextView.setChangeText(change: Double) {
         val formattedChange = String.format("%.2f", change)
         text = formattedChange
@@ -222,6 +244,12 @@ class DetailsFragment : Fragment() {
         setTextColor(ContextCompat.getColor(context, colorResId))
     }
 
+    /**
+     * This function is to show the bottom sheet window for the buy transaction .
+     * Also make the transaction inside it from the view model.
+     * @param cryptoCurrency is for the crypto we want to transact.
+     * @param viewModel is for our view model.
+     */
     @SuppressLint("InflateParams")
     private fun showBuyCryptoDialog(cryptoCurrency: CryptoCurrency, viewModel: ViewModel) {
         val dialog = BottomSheetDialog(requireContext())
@@ -271,6 +299,9 @@ class DetailsFragment : Fragment() {
         dialog.show()
     }
 
+    /**
+     * This function does the same thing as the last one but for a sell transaction.
+     */
     @SuppressLint("InflateParams")
     private fun showSellCryptoDialog(cryptoCurrency: CryptoCurrency, viewModel: ViewModel) {
         val dialog = BottomSheetDialog(requireContext())

@@ -24,6 +24,9 @@ interface ProfileDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAccount(account: Account)
 
+    @Update
+    suspend fun updateAccount(account: Account)
+
 
     @Query("SELECT * FROM accounts WHERE email = :email")
     suspend fun getAccountByEmail(email: String):Account

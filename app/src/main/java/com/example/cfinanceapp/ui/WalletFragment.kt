@@ -124,6 +124,10 @@ class WalletFragment : Fragment() {
         text = formattedText
     }
 
+    /**
+     * This function shows the bottom sheet window for the deposit transaction.
+     * @param viewModel is because the update or insert amount happens inside the dialog.
+     */
     @SuppressLint("InflateParams")
     private fun showDepositDialog(viewModel: ViewModel) {
         val dialog = BottomSheetDialog(requireContext())

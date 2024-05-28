@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.cfinanceapp.BuildConfig
-import com.example.cfinanceapp.data.API.CoinMarketCapAPI
+import com.example.cfinanceapp.data.api.CoinMarketCapAPI
 import com.example.cfinanceapp.data.local.DatabaseInstance
 import com.example.cfinanceapp.data.models.Account
 import com.example.cfinanceapp.data.models.Asset
@@ -24,28 +24,13 @@ class Repository(
 
     private val key = BuildConfig.apiKey
 
-    private val allAssets = databaseInstance.dao.getAllAssets()
-
     private val allAccounts = databaseInstance.dao.getAllAccounts()
-
-    private val allWallets = databaseInstance.dao.getAllWallets()
-
-    private val allTransactions = databaseInstance.dao.getAllTransactions()
 
     private val allFavorites = databaseInstance.dao.getAllFavorites()
 
 
     private val _favorites = allFavorites
     val favorites: LiveData<MutableList<Favorite>> = _favorites
-
-    private val _transactions = allTransactions
-    val transactions: LiveData<List<Transaction>> = _transactions
-
-    private val _assets = allAssets
-    val assets: LiveData<MutableList<Asset>> = _assets
-
-    private val _wallets = allWallets
-    val wallets: LiveData<List<Wallet>> = _wallets
 
     private val _accounts = allAccounts
     val accounts: LiveData<List<Account>> = _accounts
@@ -155,6 +140,14 @@ class Repository(
         try {
             databaseInstance.dao.updateAsset(asset)
         } catch (e: Exception) {
+            Log.d(TAG, "FAILED TO LOAD : ${e.message}")
+        }
+    }
+
+    suspend fun updateAccount(account: Account){
+        try {
+            databaseInstance.dao.updateAccount(account)
+        }catch (e: Exception) {
             Log.d(TAG, "FAILED TO LOAD : ${e.message}")
         }
     }

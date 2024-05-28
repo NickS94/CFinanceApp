@@ -64,6 +64,7 @@ class MarketFragment : Fragment() {
 
     }
 
+    // I used on resume lifecycle function so i save the current state of my search and sorting .
     override fun onResume() {
         super.onResume()
         val recyclerView = viewBinding.rvMarketList
