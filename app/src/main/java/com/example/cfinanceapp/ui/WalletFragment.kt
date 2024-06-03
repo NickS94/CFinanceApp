@@ -58,8 +58,6 @@ class WalletFragment : Fragment() {
                     viewBinding.tvProfit.stringFormat(viewModel.profitOrLoss())
                 }
             }
-
-
         }
 
 
