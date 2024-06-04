@@ -26,20 +26,14 @@ class Repository(
 
     private val allAccounts = databaseInstance.dao.getAllAccounts()
 
-    private val allFavorites = databaseInstance.dao.getAllFavorites()
-
-
-    private val _favorites = allFavorites
-    val favorites: LiveData<MutableList<Favorite>>
-        get()= _favorites
 
     private val _accounts = allAccounts
     val accounts: LiveData<List<Account>>
-        get()= _accounts
+        get() = _accounts
 
     private val _coinsList = MutableLiveData<ResponseAPI>()
     val coinsList: LiveData<ResponseAPI>
-        get()= _coinsList
+        get() = _coinsList
 
 
     suspend fun loadCryptoCurrencyList() {

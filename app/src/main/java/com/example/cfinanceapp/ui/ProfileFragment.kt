@@ -35,14 +35,11 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-
         viewModel.accounts.observe(viewLifecycleOwner) {
             viewModel.findAccountByEmail(viewModel.currentAccount.value!!.email)
         }
 
         viewModel.currentAccount.observe(viewLifecycleOwner) {
-
             if (it != null) {
                 viewBinding.tvName.text = it.name
                 viewBinding.tvEmailProfile.text = it.email
@@ -51,14 +48,11 @@ class ProfileFragment : Fragment() {
 
         }
 
-
-
         viewBinding.tvLogout.setOnClickListener {
             viewModel.logout()
             showToast("Logout successfully")
             findNavController().navigate(R.id.loginFragment)
         }
-
 
         viewBinding.btnEditNameProfile.setOnClickListener {
             showDialog(viewModel)
@@ -79,8 +73,6 @@ class ProfileFragment : Fragment() {
             .setView(dialogBinding.root)
             .create()
 
-
-
         dialogBinding.btnConfirmDialogBox.setOnClickListener {
             val newNameText = dialogBinding.etNameProfileDialog.text.toString()
             viewModel.updateUserName(newNameText)
@@ -94,6 +86,7 @@ class ProfileFragment : Fragment() {
 
         dialogWindow.show()
     }
+
 
     private fun showToast(message: String) {
         Toast.makeText(

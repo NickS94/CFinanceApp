@@ -44,6 +44,7 @@ class WalletFragment : Fragment() {
 
         viewModel.findAssetsByWalletId()
 
+
         val adapter = AssetsAdapter(viewModel = viewModel, context = this.requireContext())
         viewBinding.rvAssetsWallet.adapter = adapter
 

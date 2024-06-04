@@ -35,7 +35,6 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
 
     var cryptoList = repository.coinsList
     val accounts = repository.accounts
-    val favorites = repository.favorites
 
 
     private val _maxAmount = MutableLiveData<String>()
@@ -145,8 +144,10 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun createNewWallet() {
+
+        val wallet = Wallet(accountId = _currentAccount.value!!.id)
+
         if (_currentAccount.value != null) {
-            val wallet = Wallet(accountId = _currentAccount.value!!.id)
             viewModelScope.launch {
                 repository.insertWallet(wallet)
                 _currentWallet.value = wallet
@@ -197,8 +198,9 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun findWalletByUserId() {
-        if (_currentAccount.value != null) {
-            viewModelScope.launch {
+
+        viewModelScope.launch {
+            if (_currentAccount.value != null) {
                 _currentWallet.value = repository.getWalletById(_currentAccount.value!!.id)
             }
         }
@@ -206,8 +208,9 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun findAssetsByWalletId() {
-        if (_currentWallet.value != null) {
-            viewModelScope.launch {
+
+        viewModelScope.launch {
+            if (_currentWallet.value != null) {
                 _currentAssets.value = repository.getAssetsByWalletId(_currentWallet.value!!.id)
             }
         }
@@ -215,17 +218,22 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun findTransactionsByWalletId() {
-        if (_currentWallet.value != null) {
-            viewModelScope.launch {
+
+        viewModelScope.launch {
+            if (_currentWallet.value != null) {
                 _currentTransactions.value =
                     repository.getTransactionsByWalletId(_currentWallet.value!!.id)
             }
         }
     }
 
-    fun findFavoritesByAccountId(accountId: Long) {
+    fun findFavoritesByAccountId() {
         viewModelScope.launch {
-            _currentFavorites.value = repository.getFavoritesByAccountId(accountId)
+            if (_currentAccount.value != null) {
+                _currentFavorites.value =
+                    repository.getFavoritesByAccountId(_currentAccount.value!!.id)
+            }
+
         }
     }
 

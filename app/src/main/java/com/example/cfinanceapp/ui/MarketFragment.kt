@@ -60,8 +60,6 @@ class MarketFragment : Fragment() {
             recyclerView.adapter = MarketAdapter(it.data, this.requireContext(), viewModel)
 
         }
-
-
     }
 
     // I used on resume lifecycle function so i save the current state of my search and sorting .
@@ -80,7 +78,6 @@ class MarketFragment : Fragment() {
             this.requireContext(),
             viewModel
         )
-
 
     }
 

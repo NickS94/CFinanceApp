@@ -32,18 +32,11 @@ class HomeFragment : Fragment() {
         val adapter = WatchListAdapter(viewModel = viewModel)
         viewBinding.rvWatchlist.adapter = adapter
 
+        viewModel.findFavoritesByAccountId()
 
         val recyclerViewHot = viewBinding.rvHotMarketList
         viewModel.cryptoList.observe(viewLifecycleOwner) {
             recyclerViewHot.adapter = HotListAdapter(viewModel.loadHotList(), viewModel)
-        }
-
-
-        viewModel.favorites.observe(viewLifecycleOwner) {
-            if (viewModel.currentAccount.value != null) {
-                viewModel.findFavoritesByAccountId(viewModel.currentAccount.value!!.id)
-            }
-
         }
 
         viewModel.currentFavorites.observe(viewLifecycleOwner) { watchlist ->
