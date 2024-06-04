@@ -88,6 +88,10 @@ class WalletFragment : Fragment() {
                 else -> showToast("You have to CREATE a WALLET first")
             }
         }
+
+        viewBinding.btnSend.setOnClickListener {
+            showToast("Coming Soon!")
+        }
     }
 
     private fun profitLossCount() {

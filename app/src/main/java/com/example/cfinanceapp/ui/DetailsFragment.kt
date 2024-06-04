@@ -261,7 +261,6 @@ class DetailsFragment : Fragment() {
 
         viewModel.resetMaxAmount()
 
-        viewModel.findAssetsByWalletId()
 
         viewModel.maxAmount.observe(viewLifecycleOwner) { maxAmount ->
             etAmount.setText(maxAmount.toString())
@@ -316,7 +315,7 @@ class DetailsFragment : Fragment() {
 
         viewModel.resetMaxAmount()
 
-        viewModel.findAssetsByWalletId()
+
 
         viewModel.maxAmount.observe(viewLifecycleOwner) { maxAmount ->
             etAmount.setText(maxAmount.toString())
@@ -327,10 +326,11 @@ class DetailsFragment : Fragment() {
         }
 
         btnConfirm.setOnClickListener {
+
             val amountText = etAmount.text.toString()
             when {
                 amountText.isNotEmpty() && viewModel.isEnoughCrypto(
-                    amountText.toDouble()
+                    amountText.toDouble(),cryptoCurrency
                 ) && amountText.toDouble() > 0 -> {
                     viewModel.sellCryptoCurrencyAsset(
                         cryptoCurrency,
@@ -343,7 +343,7 @@ class DetailsFragment : Fragment() {
                 amountText.isEmpty() || amountText.toDouble() <= 0 -> showToast("Please enter a valid amount")
 
                 !viewModel.isEnoughCrypto(
-                    amountText.toDouble()
+                    amountText.toDouble(),cryptoCurrency
                 ) -> showToast("Insufficient funds ")
             }
 

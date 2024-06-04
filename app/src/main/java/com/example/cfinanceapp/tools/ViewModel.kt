@@ -145,7 +145,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun createNewWallet() {
-        if (_currentAccount.value != null){
+        if (_currentAccount.value != null) {
             val wallet = Wallet(accountId = _currentAccount.value!!.id)
             viewModelScope.launch {
                 repository.insertWallet(wallet)
@@ -343,7 +343,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
             val assets = repository.getAssetsByWalletId(_currentWallet.value!!.id)
             val existedAsset = assets.find { it.cryptoCurrency?.id == coin.id }
             val fiatAsset = assets.find { it.cryptoCurrency == null }
-            if (existedAsset != null && isEnoughCrypto(amount)) {
+            if (existedAsset != null && isEnoughCrypto(amount, existedAsset.cryptoCurrency!!)) {
                 val updatedFiatAmount = fiatAsset?.amount!! + (coin.quote.usdData.price * amount)
                 fiatAsset.amount = updatedFiatAmount
                 val updatedAmount = existedAsset.amount.minus(amount)
@@ -581,7 +581,6 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
      * @param amount is the amount we look to buy.
      */
     fun isEnoughFiat(amount: Double): Boolean {
-
         var fiatBalance = 0.0
         var wishAmount = 0.0
         viewModelScope.launch {
@@ -597,10 +596,12 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
      * than that we have.
      * @param amount is the amount of crypto currency we have in our assets.
      */
-    fun isEnoughCrypto(amount: Double): Boolean {
+    fun isEnoughCrypto(amount: Double, coin: CryptoCurrency): Boolean {
         var cryptoBalance = 0.0
         viewModelScope.launch {
-            cryptoBalance = _currentAssets.value?.find { it.cryptoCurrency != null }?.amount ?: 0.0
+            cryptoBalance =
+                _currentAssets.value?.find { it.cryptoCurrency?.symbol == coin.symbol }?.amount
+                    ?: 0.0
         }
         return cryptoBalance >= amount
     }

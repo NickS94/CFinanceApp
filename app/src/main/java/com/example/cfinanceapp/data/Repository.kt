@@ -30,13 +30,16 @@ class Repository(
 
 
     private val _favorites = allFavorites
-    val favorites: LiveData<MutableList<Favorite>> = _favorites
+    val favorites: LiveData<MutableList<Favorite>>
+        get()= _favorites
 
     private val _accounts = allAccounts
-    val accounts: LiveData<List<Account>> = _accounts
+    val accounts: LiveData<List<Account>>
+        get()= _accounts
 
     private val _coinsList = MutableLiveData<ResponseAPI>()
-    val coinsList: LiveData<ResponseAPI> = _coinsList
+    val coinsList: LiveData<ResponseAPI>
+        get()= _coinsList
 
 
     suspend fun loadCryptoCurrencyList() {
@@ -144,10 +147,10 @@ class Repository(
         }
     }
 
-    suspend fun updateAccount(account: Account){
+    suspend fun updateAccount(account: Account) {
         try {
             databaseInstance.dao.updateAccount(account)
-        }catch (e: Exception) {
+        } catch (e: Exception) {
             Log.d(TAG, "FAILED TO LOAD : ${e.message}")
         }
     }
