@@ -28,7 +28,6 @@
             app:boxStrokeColor="@color/turquoise_50"
             app:hintTextColor="@color/turquoise_50"
             app:cursorColor="@color/turquoise_50"
-            app:endIconMode="custom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">

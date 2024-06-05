@@ -37,7 +37,6 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     var cryptoList = repository.coinsList
     val accounts = repository.accounts
 
-
     private val _firebaseUser = MutableLiveData<FirebaseUser?>(firebaseAuthentication.currentUser)
     val firebaseUser: LiveData<FirebaseUser?>
         get() = _firebaseUser
@@ -123,7 +122,8 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
             }
             if (_currentWallet.value != null) {
                 _currentAssets.value = repository.getAssetsByWalletId(_currentWallet.value!!.id)
-                _currentTransactions.value = repository.getTransactionsByWalletId(_currentWallet.value!!.id)
+                _currentTransactions.value =
+                    repository.getTransactionsByWalletId(_currentWallet.value!!.id)
             }
         }
     }
@@ -168,7 +168,6 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
 
     fun createNewWallet() {
         val wallet = Wallet(accountId = _currentAccount.value!!.id)
-
         if (_currentAccount.value != null) {
             viewModelScope.launch {
                 repository.insertWallet(wallet)
@@ -218,8 +217,6 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
             repository.removeFromFavorite(favorite)
         }
     }
-
-
 
     fun findTransactionsByWalletId() {
         viewModelScope.launch {
@@ -376,7 +373,8 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
                     removeCryptoCurrencyAsset(existedAsset)
                 }
                 _currentAssets.value = repository.getAssetsByWalletId(_currentWallet.value!!.id)
-                _currentTransactions.value = repository.getTransactionsByWalletId(_currentWallet.value!!.id)
+                _currentTransactions.value =
+                    repository.getTransactionsByWalletId(_currentWallet.value!!.id)
             }
         }
     }
@@ -645,15 +643,15 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
      */
     fun actualCoinPriceUpdater(asset: Asset): Double {
 
-           val actualCoinPrice = if (_currentAssets.value != null) {
-                val actualCryptoPrice =
-                    cryptoList.value?.data?.find { it.id == asset.cryptoCurrency?.id }?.quote?.usdData?.price
-                        ?: 0.0
-                actualCryptoPrice
+        val actualCoinPrice = if (_currentAssets.value != null) {
+            val actualCryptoPrice =
+                cryptoList.value?.data?.find { it.id == asset.cryptoCurrency?.id }?.quote?.usdData?.price
+                    ?: 0.0
+            actualCryptoPrice
 
-            } else {
-                0.0
-            }
+        } else {
+            0.0
+        }
         return actualCoinPrice
     }
 

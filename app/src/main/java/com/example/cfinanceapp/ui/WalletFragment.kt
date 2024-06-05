@@ -125,6 +125,7 @@ class WalletFragment : Fragment() {
      */
     @SuppressLint("InflateParams")
     private fun showDepositDialog(viewModel: ViewModel) {
+        viewModel.loadWalletData()
         val dialog = BottomSheetDialog(requireContext())
         val viewLayout = layoutInflater.inflate(R.layout.bottom_sheet_dialog_buy_layout, null)
         val btnConfirm = viewLayout.findViewById<AppCompatButton>(R.id.btnConfirm)
