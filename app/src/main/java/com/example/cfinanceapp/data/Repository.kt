@@ -26,7 +26,6 @@ class Repository(
 
     private val allAccounts = databaseInstance.dao.getAllAccounts()
 
-
     private val _accounts = allAccounts
     val accounts: LiveData<List<Account>>
         get() = _accounts

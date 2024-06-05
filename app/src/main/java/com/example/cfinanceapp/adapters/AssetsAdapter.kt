@@ -15,17 +15,11 @@ import com.example.cfinanceapp.tools.AssetType
 import com.example.cfinanceapp.tools.ViewModel
 
 class AssetsAdapter(
-    private var assetsData: MutableList<Asset> = mutableListOf(),
+    private var assetsData: MutableList<Asset>,
     val viewModel: ViewModel,
     val context: Context
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun submitList(list: MutableList<Asset>) {
-        assetsData = list
-        notifyDataSetChanged()
-    }
 
     companion object {
         private const val VIEW_TYPE_USD_ASSET = 1

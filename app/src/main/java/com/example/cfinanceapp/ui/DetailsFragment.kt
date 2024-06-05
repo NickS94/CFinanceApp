@@ -34,10 +34,12 @@ class DetailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        viewModel.loadWalletData()
+
         viewBinding = FragmentDetailsBinding.inflate(inflater)
         return viewBinding.root
     }
-
 
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -47,12 +49,9 @@ class DetailsFragment : Fragment() {
         // I used it for the enabled animation on the chart timeframe buttons.
         var selectedButton: Button? = null
 
-        viewModel.findAssetsByWalletId()
 
-        viewModel.findWalletByUserId()
 
         viewModel.currentCrypto.observe(viewLifecycleOwner) { cryptoCurrency ->
-
 
             loadChart(cryptoCurrency, "D")
 
@@ -113,9 +112,28 @@ class DetailsFragment : Fragment() {
                 viewBinding.tvMaxSupplyDetail.text = "Max: $formattedMaxSupply"
             }
 
-            isFavorite = viewModel.isFavorite(viewModel.currentCrypto.value!!)
+            isFavorite = viewModel.isFavorite(cryptoCurrency)
+
+
+            viewBinding.btnBuyDetails.setOnClickListener {
+                if (viewModel.currentWallet.value != null) {
+                    showBuyCryptoDialog(cryptoCurrency, viewModel)
+                } else {
+                    showToast("Please CREATE a WALLET for transactions")
+                }
+            }
+
+            viewBinding.btnSell.setOnClickListener {
+                if (viewModel.currentWallet.value != null) {
+                    showSellCryptoDialog(cryptoCurrency, viewModel)
+                } else {
+                    showToast("Please CREATE a WALLET for transactions")
+                }
+            }
 
         }
+
+
         viewBinding.btn1h.setOnClickListener {
 
             selectedButton?.setBackgroundResource(android.R.color.transparent)
@@ -164,21 +182,7 @@ class DetailsFragment : Fragment() {
             }
         }
 
-        viewBinding.btnBuyDetails.setOnClickListener {
-            if (viewModel.currentWallet.value != null) {
-                showBuyCryptoDialog(viewModel.currentCrypto.value!!, viewModel)
-            } else {
-                showToast("Please CREATE a WALLET for transactions")
-            }
-        }
 
-        viewBinding.btnSell.setOnClickListener {
-            if (viewModel.currentWallet.value != null) {
-                showSellCryptoDialog(viewModel.currentCrypto.value!!, viewModel)
-            } else {
-                showToast("Please CREATE a WALLET for transactions")
-            }
-        }
 
         viewBinding.btnBackDetails.setOnClickListener {
             findNavController().navigateUp()
@@ -252,6 +256,9 @@ class DetailsFragment : Fragment() {
      */
     @SuppressLint("InflateParams")
     private fun showBuyCryptoDialog(cryptoCurrency: CryptoCurrency, viewModel: ViewModel) {
+
+        viewModel.loadWalletData()
+
         val dialog = BottomSheetDialog(requireContext())
         val viewLayout = layoutInflater.inflate(R.layout.bottom_sheet_dialog_buy_layout, null)
         val btnConfirm = viewLayout.findViewById<AppCompatButton>(R.id.btnConfirm)
@@ -261,7 +268,6 @@ class DetailsFragment : Fragment() {
 
         viewModel.resetMaxAmount()
 
-
         viewModel.maxAmount.observe(viewLifecycleOwner) { maxAmount ->
             etAmount.setText(maxAmount.toString())
         }
@@ -270,6 +276,7 @@ class DetailsFragment : Fragment() {
             viewModel.maxToBuy(cryptoCurrency)
         }
         btnConfirm.setOnClickListener {
+
             val amountText = etAmount.text.toString()
             when {
                 amountText.isNotEmpty() && viewModel.isEnoughFiat(
@@ -303,6 +310,9 @@ class DetailsFragment : Fragment() {
      */
     @SuppressLint("InflateParams")
     private fun showSellCryptoDialog(cryptoCurrency: CryptoCurrency, viewModel: ViewModel) {
+
+        viewModel.loadWalletData()
+
         val dialog = BottomSheetDialog(requireContext())
         val viewLayout = layoutInflater.inflate(R.layout.bottom_sheet_dialog_buy_layout, null)
         val btnConfirm = viewLayout.findViewById<AppCompatButton>(R.id.btnConfirm)
@@ -316,7 +326,6 @@ class DetailsFragment : Fragment() {
         viewModel.resetMaxAmount()
 
 
-
         viewModel.maxAmount.observe(viewLifecycleOwner) { maxAmount ->
             etAmount.setText(maxAmount.toString())
         }
@@ -328,6 +337,7 @@ class DetailsFragment : Fragment() {
         btnConfirm.setOnClickListener {
 
             val amountText = etAmount.text.toString()
+
             when {
                 amountText.isNotEmpty() && viewModel.isEnoughCrypto(
                     amountText.toDouble(),cryptoCurrency

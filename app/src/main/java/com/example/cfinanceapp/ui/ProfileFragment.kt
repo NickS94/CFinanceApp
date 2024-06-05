@@ -48,10 +48,14 @@ class ProfileFragment : Fragment() {
 
         }
 
+        viewModel.firebaseUser.observe(viewLifecycleOwner){
+            if (it == null){
+                findNavController().navigate(R.id.loginFragment)
+            }
+        }
         viewBinding.tvLogout.setOnClickListener {
             viewModel.logout()
             showToast("Logout successfully")
-            findNavController().navigate(R.id.loginFragment)
         }
 
         viewBinding.btnEditNameProfile.setOnClickListener {

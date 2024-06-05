@@ -12,16 +12,9 @@ import com.example.cfinanceapp.data.models.Favorite
 import com.example.cfinanceapp.databinding.WatchlistItemBinding
 
 class WatchListAdapter(
-    private var dataSet: MutableList<Favorite> = mutableListOf(),
+    private var dataSet: MutableList<Favorite>,
     val viewModel: ViewModel
 ) : RecyclerView.Adapter<WatchListAdapter.ItemViewHolder>() {
-
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun submitList(list: MutableList<Favorite>) {
-        dataSet = list
-        notifyDataSetChanged()
-    }
 
 
     inner class ItemViewHolder(val binding: WatchlistItemBinding) :
@@ -43,30 +36,34 @@ class WatchListAdapter(
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val favorite = dataSet[position]
 
-        holder.binding.ivChart.load(viewModel.getChartEffect(favorite.favoriteCoin?.id.toString()))
-        holder.binding.ivCoinLogoWatchlist.load(viewModel.getCoinLogo(favorite.favoriteCoin?.id.toString()))
+        if (favorite.favoriteCoin != null){
 
-        holder.binding.tvCurrentPrice.text = viewModel.formatDecimalsAmount(viewModel.actualCoinFinderWatchlist(favorite)!!.quote.usdData.price)
+            holder.binding.ivChart.load(viewModel.getChartEffect(favorite.favoriteCoin?.id.toString()))
+            holder.binding.ivCoinLogoWatchlist.load(viewModel.getCoinLogo(favorite.favoriteCoin?.id.toString()))
 
-        holder.binding.tv24hChangePrice.text = "${String.format("%.2f",viewModel.actualCoinFinderWatchlist(favorite)!!.quote.usdData.percentChange24h)}%"
+            holder.binding.tvCurrentPrice.text = viewModel.formatDecimalsAmount(viewModel.actualCoinFinderWatchlist(favorite)?.quote?.usdData?.price?:0.0)
 
-        when {
-            favorite.favoriteCoin?.quote?.usdData?.percentChange24h!! > 0 -> holder.binding.tv24hChangePrice.setBackgroundResource(
-                R.drawable.rounded_percentage_up
-            )
+            holder.binding.tv24hChangePrice.text = "${String.format("%.2f",viewModel.actualCoinFinderWatchlist(favorite)?.quote?.usdData?.percentChange24h)}%"
 
-            favorite.favoriteCoin!!.quote.usdData.percentChange24h < 0 -> holder.binding.tv24hChangePrice.setBackgroundResource(
-                R.drawable.rounded_percentage_down
-            )
+            when {
+                favorite.favoriteCoin!!.quote.usdData.percentChange24h > 0 -> holder.binding.tv24hChangePrice.setBackgroundResource(
+                    R.drawable.rounded_percentage_up
+                )
+
+                favorite.favoriteCoin!!.quote.usdData.percentChange24h < 0 -> holder.binding.tv24hChangePrice.setBackgroundResource(
+                    R.drawable.rounded_percentage_down
+                )
+            }
+
+            holder.binding.tvCoinNameAndSymbol.text = "${favorite.favoriteCoin?.name}\n${favorite.favoriteCoin?.symbol}"
+
+
+            holder.itemView.setOnClickListener {
+                viewModel.getCurrentCoin(viewModel.actualCoinFinderWatchlist(favorite)!!)
+                it.findNavController().navigate(R.id.detailsFragment)
+            }
         }
 
-        holder.binding.tvCoinNameAndSymbol.text = "${favorite.favoriteCoin?.name}\n${favorite.favoriteCoin?.symbol}"
-
-
-        holder.itemView.setOnClickListener {
-            viewModel.getCurrentCoin(viewModel.actualCoinFinderWatchlist(favorite)!!)
-            it.findNavController().navigate(R.id.detailsFragment)
-        }
 
 
     }

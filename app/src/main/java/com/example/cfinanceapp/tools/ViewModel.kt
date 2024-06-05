@@ -18,6 +18,7 @@ import com.example.cfinanceapp.data.models.Favorite
 import com.example.cfinanceapp.data.models.Transaction
 import com.example.cfinanceapp.data.models.Wallet
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -36,6 +37,10 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     var cryptoList = repository.coinsList
     val accounts = repository.accounts
 
+
+    private val _firebaseUser = MutableLiveData<FirebaseUser?>(firebaseAuthentication.currentUser)
+    val firebaseUser: LiveData<FirebaseUser?>
+        get() = _firebaseUser
 
     private val _maxAmount = MutableLiveData<String>()
     val maxAmount: LiveData<String>
@@ -71,12 +76,14 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
 
 
     init {
-        loadCrypto()
-        loadAllAccounts()
-        loadAllWallets()
-        loadAllAssets()
-        loadAllTransactions()
-        loadAllFavorites()
+        if (_firebaseUser.value != null) {
+            loadCrypto()
+            loadAllAccounts()
+            loadAllWallets()
+            loadAllAssets()
+            loadAllTransactions()
+            loadAllFavorites()
+        }
     }
 
     private fun loadAllFavorites() {
@@ -112,7 +119,12 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     private fun loadCrypto() {
         viewModelScope.launch {
             repository.loadCryptoCurrencyList()
+            _currentAccount.value = repository.getAccountByEmail(_firebaseUser.value!!.email!!)
 
+            if (_currentAccount.value != null) {
+                _currentFavorites.value =
+                    repository.getFavoritesByAccountId(_currentAccount.value!!.id)
+            }
         }
     }
 
@@ -122,7 +134,6 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     fun loadHotList(): List<CryptoCurrency> {
         val sortedByVolume = cryptoList.value!!.data
         return sortedByVolume.subList(0, 10).sortedByDescending { it.quote.usdData.volume24h }
-
     }
 
     fun getCurrentCoin(coin: CryptoCurrency) {
@@ -197,25 +208,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun findWalletByUserId() {
 
-        viewModelScope.launch {
-            if (_currentAccount.value != null) {
-                _currentWallet.value = repository.getWalletById(_currentAccount.value!!.id)
-            }
-        }
-
-    }
-
-    fun findAssetsByWalletId() {
-
-        viewModelScope.launch {
-            if (_currentWallet.value != null) {
-                _currentAssets.value = repository.getAssetsByWalletId(_currentWallet.value!!.id)
-            }
-        }
-
-    }
 
     fun findTransactionsByWalletId() {
 
@@ -230,10 +223,10 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     fun findFavoritesByAccountId() {
         viewModelScope.launch {
             if (_currentAccount.value != null) {
+                Log.d("VIEW MODEL", "NICK")
                 _currentFavorites.value =
                     repository.getFavoritesByAccountId(_currentAccount.value!!.id)
             }
-
         }
     }
 
@@ -283,6 +276,9 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
                 insertAsset(newAsset)
                 insertTransaction(transaction)
             }
+            _currentAssets.value = repository.getAssetsByWalletId(_currentWallet.value!!.id)
+            _currentTransactions.value =
+                repository.getTransactionsByWalletId(_currentWallet.value!!.id)
         }
 
     }
@@ -324,6 +320,9 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
                 insertAsset(newFiatAsset)
                 insertTransaction(transaction)
             }
+            _currentAssets.value = repository.getAssetsByWalletId(_currentWallet.value!!.id)
+            _currentTransactions.value =
+                repository.getTransactionsByWalletId(_currentWallet.value!!.id)
         }
     }
 
@@ -352,21 +351,24 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
             val existedAsset = assets.find { it.cryptoCurrency?.id == coin.id }
             val fiatAsset = assets.find { it.cryptoCurrency == null }
             if (existedAsset != null && isEnoughCrypto(amount, existedAsset.cryptoCurrency!!)) {
+
                 val updatedFiatAmount = fiatAsset?.amount!! + (coin.quote.usdData.price * amount)
                 fiatAsset.amount = updatedFiatAmount
+
                 val updatedAmount = existedAsset.amount.minus(amount)
                 existedAsset.amount = updatedAmount
-                updateAsset(fiatAsset)
+
                 updateAsset(existedAsset)
+                updateAsset(fiatAsset)
                 insertTransaction(transaction)
+
                 if (existedAsset.amount == 0.0) {
                     removeCryptoCurrencyAsset(existedAsset)
                 }
+                _currentAssets.value = repository.getAssetsByWalletId(_currentWallet.value!!.id)
+                _currentTransactions.value = repository.getTransactionsByWalletId(_currentWallet.value!!.id)
             }
-
-
         }
-
     }
 
     /**
@@ -524,6 +526,13 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
             firebaseAuthentication.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener {
                     if (it.isSuccessful) {
+                        _firebaseUser.value = it.result.user
+                        loadCrypto()
+                        loadAllAccounts()
+                        loadAllWallets()
+                        loadAllAssets()
+                        loadAllTransactions()
+                        loadAllFavorites()
                         completion()
                     } else {
                         Log.e("FIREBASE", it.exception.toString())
@@ -537,6 +546,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
 
     fun logout() {
         firebaseAuthentication.signOut()
+        _firebaseUser.value = null
     }
 
 
@@ -589,12 +599,9 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
      * @param amount is the amount we look to buy.
      */
     fun isEnoughFiat(amount: Double): Boolean {
-        var fiatBalance = 0.0
-        var wishAmount = 0.0
-        viewModelScope.launch {
-            fiatBalance = _currentAssets.value?.find { it.fiat == "USD" }?.amount ?: 0.0
-            wishAmount = _currentCrypto.value?.quote?.usdData!!.price * amount
-        }
+
+        val fiatBalance = _currentAssets.value?.find { it.fiat == "USD" }?.amount ?: 0.0
+        val wishAmount = _currentCrypto.value?.quote?.usdData!!.price * amount
 
         return fiatBalance >= wishAmount
     }
@@ -605,12 +612,9 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
      * @param amount is the amount of crypto currency we have in our assets.
      */
     fun isEnoughCrypto(amount: Double, coin: CryptoCurrency): Boolean {
-        var cryptoBalance = 0.0
-        viewModelScope.launch {
-            cryptoBalance =
-                _currentAssets.value?.find { it.cryptoCurrency?.symbol == coin.symbol }?.amount
-                    ?: 0.0
-        }
+        val cryptoBalance =
+            _currentAssets.value?.find { it.cryptoCurrency?.symbol == coin.symbol }?.amount
+                ?: 0.0
         return cryptoBalance >= amount
     }
 
@@ -630,17 +634,16 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
      * @param asset is for the asset element we have in our database.
      */
     fun actualCoinPriceUpdater(asset: Asset): Double {
-        var actualCoinPrice = 0.0
-        viewModelScope.launch {
-            actualCoinPrice = if (_currentAssets.value != null) {
+
+           val actualCoinPrice = if (_currentAssets.value != null) {
                 val actualCryptoPrice =
                     cryptoList.value?.data?.find { it.id == asset.cryptoCurrency?.id }?.quote?.usdData?.price
                         ?: 0.0
                 actualCryptoPrice
+
             } else {
                 0.0
             }
-        }
         return actualCoinPrice
     }
 
@@ -650,10 +653,10 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
      * @param asset is for the asset element in our recycler view.
      */
     fun actualCoinFinder(asset: Asset): CryptoCurrency? {
-        viewModelScope.launch {
-            val actualCrypto = cryptoList.value?.data?.find { it.id == asset.cryptoCurrency?.id }
-            asset.cryptoCurrency = actualCrypto
-        }
+
+        val actualCrypto = cryptoList.value?.data?.find { it.id == asset.cryptoCurrency?.id }
+        asset.cryptoCurrency = actualCrypto
+
         return asset.cryptoCurrency
     }
 
@@ -665,10 +668,10 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
      * @param favorite is for the favorite element in our recycler view.
      */
     fun actualCoinFinderWatchlist(favorite: Favorite): CryptoCurrency? {
-        viewModelScope.launch {
-            val actualCrypto = cryptoList.value?.data?.find { it.id == favorite.favoriteCoin?.id }
-            favorite.favoriteCoin = actualCrypto
-        }
+
+        val actualCrypto = cryptoList.value?.data?.find { it.id == favorite.favoriteCoin?.id }
+        favorite.favoriteCoin = actualCrypto
+
         return favorite.favoriteCoin
     }
 
@@ -678,14 +681,11 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
      * @param asset is the asset we are looking for to make the comparison.
      */
     fun profitOrLossInAsset(asset: Asset): Double {
-        var actualCoinPrice = 0.0
-        var assetSavedPrice = 0.0
-        viewModelScope.launch {
-            actualCoinPrice =
-                cryptoList.value?.data?.find { it.id == asset.cryptoCurrency?.id }?.quote?.usdData?.price
-                    ?: 0.0
-            assetSavedPrice = asset.cryptoCurrency?.quote?.usdData?.price ?: 0.0
-        }
+        val actualCoinPrice =
+            cryptoList.value?.data?.find { it.id == asset.cryptoCurrency?.id }?.quote?.usdData?.price
+                ?: 0.0
+        val assetSavedPrice = asset.cryptoCurrency?.quote?.usdData?.price ?: 0.0
+
         return actualCoinPrice.minus(assetSavedPrice)
     }
 
@@ -699,7 +699,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             val assets = repository.getAssetsByWalletId(_currentWallet.value!!.id)
             val existedAsset = assets.find { it.cryptoCurrency?.symbol == coin.symbol }
-            _maxAmount.postValue(((existedAsset?.amount ?: 0.0).toString()))
+            _maxAmount.value = (existedAsset?.amount ?: 0.0).toString()
         }
     }
 
@@ -721,7 +721,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
             } else {
                 0.0
             }
-            _maxAmount.postValue(maxBuyAmount.toString())
+            _maxAmount.value = maxBuyAmount.toString()
         }
     }
 
@@ -780,5 +780,18 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         updateAccount(updatedAccount)
     }
 
+
+    fun loadWalletData() {
+        viewModelScope.launch {
+            if (_currentAccount.value != null) {
+                _currentWallet.value = repository.getWalletById(_currentAccount.value!!.id)
+            }
+            if (_currentWallet.value != null) {
+                _currentAssets.value = repository.getAssetsByWalletId(_currentWallet.value!!.id)
+                _currentTransactions.value =
+                    repository.getTransactionsByWalletId(_currentWallet.value!!.id)
+            }
+        }
+    }
 
 }
