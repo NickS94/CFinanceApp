@@ -29,7 +29,9 @@ class WalletFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
         viewModel.loadWalletData()
+
         viewBinding = FragmentWalletBinding.inflate(inflater)
         return viewBinding.root
     }
@@ -39,19 +41,17 @@ class WalletFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.currentWallet.observe(viewLifecycleOwner) {
-
-        }
         viewModel.currentTransactions.observe(viewLifecycleOwner) {
+
             viewBinding.currentBalanceText.text =
                 "${String.format("%.2f", viewModel.currentBalance())}$"
             profitLossCount()
             viewBinding.tvProfit.stringFormat(viewModel.profitOrLoss())
+
         }
 
         viewModel.currentAssets.observe(viewLifecycleOwner) {
             viewBinding.rvAssetsWallet.adapter = AssetsAdapter(it, viewModel, requireContext())
-
         }
 
         viewBinding.btnCreateNewWallet.setOnClickListener {

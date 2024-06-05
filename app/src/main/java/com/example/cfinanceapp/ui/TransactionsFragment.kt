@@ -40,12 +40,12 @@ class TransactionsFragment : Fragment() {
             arrayAdapter
         )
 
-        val adapter = TransactionsAdapter(context = this.requireContext(), viewModel = viewModel)
-        viewBinding.rvTransactions.adapter = adapter
-
-
-        viewModel.currentTransactions.observe(viewLifecycleOwner) {
-            adapter.submitListTransactions(viewModel.currentTransactions.value!!.sortedByDescending { it.date })
+        viewModel.currentTransactions.observe(viewLifecycleOwner) { transactionsList ->
+            viewBinding.rvTransactions.adapter = TransactionsAdapter(
+                transactionsList.sortedByDescending { it.date },
+                requireContext(),
+                viewModel
+            )
         }
 
         viewBinding.btnBackTransactions.setOnClickListener {
@@ -63,14 +63,25 @@ class TransactionsFragment : Fragment() {
             arrayAdapter
         )
 
-        val adapter = TransactionsAdapter(context = this.requireContext(), viewModel = viewModel)
-        viewBinding.rvTransactions.adapter = adapter
+        viewBinding.rvTransactions.adapter = TransactionsAdapter(
+            viewModel.currentTransactions.value!!.sortedByDescending { it.date },
+            requireContext(),
+            viewModel
+        )
 
         viewBinding.textOptionsDropDownMenuTransactions.addTextChangedListener {
-            adapter.submitListTransactions(viewModel.filteredTransactionsList(viewBinding.textOptionsDropDownMenuTransactions.text.toString()))
+            viewBinding.rvTransactions.adapter = TransactionsAdapter(
+                viewModel.filteredTransactionsList(viewBinding.textOptionsDropDownMenuTransactions.text.toString()),
+                requireContext(),
+                viewModel
+            )
         }
 
-        adapter.submitListTransactions(viewModel.filteredTransactionsList(viewBinding.textOptionsDropDownMenuTransactions.text.toString()))
+        viewBinding.rvTransactions.adapter = TransactionsAdapter(
+            viewModel.filteredTransactionsList(viewBinding.textOptionsDropDownMenuTransactions.text.toString()),
+            requireContext(),
+            viewModel
+        )
 
 
     }

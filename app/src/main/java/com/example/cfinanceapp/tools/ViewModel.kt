@@ -116,6 +116,18 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun loadWalletData() {
+        viewModelScope.launch {
+            if (_currentAccount.value != null) {
+                _currentWallet.value = repository.getWalletById(_currentAccount.value!!.id)
+            }
+            if (_currentWallet.value != null) {
+                _currentAssets.value = repository.getAssetsByWalletId(_currentWallet.value!!.id)
+                _currentTransactions.value = repository.getTransactionsByWalletId(_currentWallet.value!!.id)
+            }
+        }
+    }
+
     private fun loadCrypto() {
         viewModelScope.launch {
             repository.loadCryptoCurrencyList()
@@ -155,7 +167,6 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun createNewWallet() {
-
         val wallet = Wallet(accountId = _currentAccount.value!!.id)
 
         if (_currentAccount.value != null) {
@@ -211,7 +222,6 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
 
 
     fun findTransactionsByWalletId() {
-
         viewModelScope.launch {
             if (_currentWallet.value != null) {
                 _currentTransactions.value =
@@ -778,20 +788,6 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
             name = name
         )
         updateAccount(updatedAccount)
-    }
-
-
-    fun loadWalletData() {
-        viewModelScope.launch {
-            if (_currentAccount.value != null) {
-                _currentWallet.value = repository.getWalletById(_currentAccount.value!!.id)
-            }
-            if (_currentWallet.value != null) {
-                _currentAssets.value = repository.getAssetsByWalletId(_currentWallet.value!!.id)
-                _currentTransactions.value =
-                    repository.getTransactionsByWalletId(_currentWallet.value!!.id)
-            }
-        }
     }
 
 }

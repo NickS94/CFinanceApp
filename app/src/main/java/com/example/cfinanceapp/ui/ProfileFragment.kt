@@ -39,17 +39,17 @@ class ProfileFragment : Fragment() {
             viewModel.findAccountByEmail(viewModel.currentAccount.value!!.email)
         }
 
-        viewModel.currentAccount.observe(viewLifecycleOwner) {
-            if (it != null) {
-                viewBinding.tvName.text = it.name
-                viewBinding.tvEmailProfile.text = it.email
-                viewBinding.tvAccountId.text = "AccountID: ${it.id}"
+        viewModel.currentAccount.observe(viewLifecycleOwner) {account ->
+            if (account != null) {
+                viewBinding.tvName.text = account.name
+                viewBinding.tvEmailProfile.text = account.email
+                viewBinding.tvAccountId.text = "AccountID: ${account.id}"
             }
 
         }
 
-        viewModel.firebaseUser.observe(viewLifecycleOwner){
-            if (it == null){
+        viewModel.firebaseUser.observe(viewLifecycleOwner){user->
+            if (user == null){
                 findNavController().navigate(R.id.loginFragment)
             }
         }
@@ -90,7 +90,6 @@ class ProfileFragment : Fragment() {
 
         dialogWindow.show()
     }
-
 
     private fun showToast(message: String) {
         Toast.makeText(

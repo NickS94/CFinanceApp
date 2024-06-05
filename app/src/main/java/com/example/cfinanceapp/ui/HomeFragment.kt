@@ -31,7 +31,6 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-
         val recyclerViewHot = viewBinding.rvHotMarketList
         viewModel.cryptoList.observe(viewLifecycleOwner) {
             recyclerViewHot.adapter = HotListAdapter(viewModel.loadHotList(), viewModel)

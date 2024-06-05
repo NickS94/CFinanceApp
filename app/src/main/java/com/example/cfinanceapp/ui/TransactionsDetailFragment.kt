@@ -33,11 +33,11 @@ class TransactionsDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        viewModel.currentTransaction.observe(viewLifecycleOwner) {
-            viewBinding.tvQuantity.text = "${String.format("%.2f",it.amount)} ${it.symbol}"
+        viewModel.currentTransaction.observe(viewLifecycleOwner) {transaction ->
+            viewBinding.tvQuantity.text = "${String.format("%.2f",transaction.amount)} ${transaction.symbol}"
 
             val tvStatus = viewBinding.tvStatusTransactionDetails
-            when (it.isBought) {
+            when (transaction.isBought) {
 
                 true -> {
                     tvStatus.text = "Bought"
@@ -57,12 +57,12 @@ class TransactionsDetailFragment : Fragment() {
 
             viewBinding.tvTransactionsAccount.text = viewModel.currentAccount.value!!.email
 
-            viewBinding.tvTransactionsTime.text = it.date
+            viewBinding.tvTransactionsTime.text = transaction.date
 
-            viewBinding.tvTransactionsHashDetails.text = it.transactionHash
+            viewBinding.tvTransactionsHashDetails.text = transaction.transactionHash
 
             viewBinding.tvTransactionPrice.text = when {
-                it.price != null -> "${String.format("%.4f", it.price)}$"
+                transaction.price != null -> "${String.format("%.4f", transaction.price)}$"
                 else -> ""
             }
 

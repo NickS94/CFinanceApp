@@ -37,6 +37,7 @@ class RegisterFragment : Fragment() {
             val etName = viewBinding.etName.text.toString()
 
             viewModel.findAccountByEmail(etEmail)
+
             when {
 
                 etEmail.isEmpty() -> showToast("Please insert an EMAIL")

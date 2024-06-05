@@ -14,17 +14,11 @@ import com.example.cfinanceapp.tools.ViewModel
 
 
 class TransactionsAdapter(
-    private var dataTransactions: List<Transaction> = listOf(),
+    private var dataTransactions: List<Transaction> ,
     private val context : Context,
     private val viewModel : ViewModel
 ) : RecyclerView.Adapter<TransactionsAdapter.ItemViewHolder>() {
 
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun submitListTransactions(list: List<Transaction>) {
-         dataTransactions = list
-        notifyDataSetChanged()
-    }
 
     inner class ItemViewHolder(val binding: TransactionsItemBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -42,9 +36,6 @@ class TransactionsAdapter(
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val transaction = dataTransactions[position]
-
-
-
 
         holder.binding.tvAmountTransaction.text =  String.format("%.3f", transaction.amount)
 

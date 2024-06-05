@@ -115,24 +115,25 @@ class DetailsFragment : Fragment() {
             isFavorite = viewModel.isFavorite(cryptoCurrency)
 
 
-            viewBinding.btnBuyDetails.setOnClickListener {
-                if (viewModel.currentWallet.value != null) {
-                    showBuyCryptoDialog(cryptoCurrency, viewModel)
-                } else {
-                    showToast("Please CREATE a WALLET for transactions")
-                }
-            }
 
-            viewBinding.btnSell.setOnClickListener {
-                if (viewModel.currentWallet.value != null) {
-                    showSellCryptoDialog(cryptoCurrency, viewModel)
-                } else {
-                    showToast("Please CREATE a WALLET for transactions")
-                }
-            }
 
         }
 
+        viewBinding.btnBuyDetails.setOnClickListener {
+            if (viewModel.currentWallet.value != null) {
+                showBuyCryptoDialog(viewModel.currentCrypto.value!!, viewModel)
+            } else {
+                showToast("Please CREATE a WALLET for transactions")
+            }
+        }
+
+        viewBinding.btnSell.setOnClickListener {
+            if (viewModel.currentWallet.value != null) {
+                showSellCryptoDialog(viewModel.currentCrypto.value!!, viewModel)
+            } else {
+                showToast("Please CREATE a WALLET for transactions")
+            }
+        }
 
         viewBinding.btn1h.setOnClickListener {
 
