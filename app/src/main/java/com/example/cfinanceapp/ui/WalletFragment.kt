@@ -42,16 +42,20 @@ class WalletFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.currentTransactions.observe(viewLifecycleOwner) {
+            if (viewModel.currentWallet.value != null){
+                viewBinding.currentBalanceText.text =
+                    "${String.format("%.2f", viewModel.currentBalance())}$"
+                profitLossCount()
+                viewBinding.tvProfit.stringFormat(viewModel.profitOrLoss())
+            }
 
-            viewBinding.currentBalanceText.text =
-                "${String.format("%.2f", viewModel.currentBalance())}$"
-            profitLossCount()
-            viewBinding.tvProfit.stringFormat(viewModel.profitOrLoss())
 
         }
 
         viewModel.currentAssets.observe(viewLifecycleOwner) {
-            viewBinding.rvAssetsWallet.adapter = AssetsAdapter(it, viewModel, requireContext())
+            if (viewModel.currentWallet.value != null){
+                viewBinding.rvAssetsWallet.adapter = AssetsAdapter(it, viewModel, requireContext())
+            }
         }
 
         viewBinding.btnCreateNewWallet.setOnClickListener {
