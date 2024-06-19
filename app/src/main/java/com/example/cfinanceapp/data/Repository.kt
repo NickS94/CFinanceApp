@@ -100,7 +100,6 @@ class Repository(
     }
 
     suspend fun insertWallet(wallet: Wallet) {
-
         try {
             databaseInstance.dao.insertWallet(wallet)
         } catch (e: Exception) {

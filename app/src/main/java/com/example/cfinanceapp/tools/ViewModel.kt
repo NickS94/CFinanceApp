@@ -637,7 +637,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     /**
-     * This function updates the price in a coroutine from the saved asset in our database
+     * This function updates the price from the saved asset in our database
      * to the actual coin price.
      * @param asset is for the asset element we have in our database.
      */
@@ -670,7 +670,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
 
 
     /**
-     * This function finds the asset coin inside a coroutine and give it the actual
+     * This function finds the asset coin and give it the actual
      * data of this coin from the API so when we navigate from our watchlist to this specific coin
      * we get the actual measurements so we are not outdated.
      * @param favorite is for the favorite element in our recycler view.
