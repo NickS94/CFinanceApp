@@ -34,6 +34,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     private val firebaseAuthentication = Firebase.auth
 
 
+
     var cryptoList = repository.coinsList
     val accounts = repository.accounts
 
