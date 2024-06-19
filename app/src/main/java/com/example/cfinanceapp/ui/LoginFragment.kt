@@ -28,7 +28,14 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.firebaseUser.observe(viewLifecycleOwner){user ->
+            if (user != null){
+                findNavController().navigate(R.id.homeFragment)
+            }
+        }
+
         viewModel.accounts.observe(viewLifecycleOwner){
+
         }
 
         viewBinding.btnLogin.setOnClickListener {
@@ -39,9 +46,7 @@ class LoginFragment : Fragment() {
                 etPassword.isEmpty() -> showToast("Please give your password.")
                 !viewModel.isAccountAlreadyRegistered(etEmail) -> showToast("You are not Registered , Please REGISTER an ACCOUNT.")
                 else -> viewModel.loginAuthentication(etEmail, etPassword) {
-                    viewModel.findAccountByEmail(etEmail)
                     showToast("Welcome!")
-                    findNavController().navigate(R.id.homeFragment)
                 }
             }
         }

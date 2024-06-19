@@ -29,6 +29,9 @@ class WalletFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        viewModel.loadWalletData()
+
         viewBinding = FragmentWalletBinding.inflate(inflater)
         return viewBinding.root
     }
@@ -38,70 +41,31 @@ class WalletFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = AssetsAdapter(viewModel = viewModel, context = this.requireContext())
-        viewBinding.rvAssetsWallet.adapter = adapter
-
-        viewModel.currentAccount.observe(viewLifecycleOwner) { account ->
-            viewModel.findWalletByUserId(account.id)
-            viewModel.findAccountByEmail(account.email)
-            viewBinding.btnCreateNewWallet.setOnClickListener {
-                if (viewModel.currentWallet.value?.accountId != account.id) {
-                    viewModel.createNewWallet()
-                    showToast("Your WALLET have been CREATED SUCCESSFULLY ")
-                } else {
-                    showToast("You Already have a wallet created")
-                }
-            }
-        }
-
-        viewModel.wallets.observe(viewLifecycleOwner) {
-            if (viewModel.currentAccount.value != null) {
-                viewModel.findWalletByUserId(viewModel.currentAccount.value!!.id)
-            }
-        }
-
-        viewModel.assets.observe(viewLifecycleOwner) {
-            if (viewModel.currentWallet.value != null) {
-                viewModel.findAssetsByWalletId(viewModel.currentWallet.value!!.id)
-            }
-
-        }
-
-        viewModel.transactions.observe(viewLifecycleOwner) {
-            if (viewModel.currentWallet.value != null) {
-                viewModel.findTransactionsByWalletId(viewModel.currentWallet.value!!.id)
+        viewModel.currentTransactions.observe(viewLifecycleOwner) {
+            if (viewModel.currentWallet.value != null){
+                viewBinding.currentBalanceText.text =
+                    "${String.format("%.2f", viewModel.currentBalance())}$"
+                profitLossCount()
                 viewBinding.tvProfit.stringFormat(viewModel.profitOrLoss())
-                when {
-                    viewModel.profitOrLoss() > 0 -> viewBinding.tvProfit.setTextColor(
-                        requireContext().getColor(
-                            R.color.green
-                        )
-                    )
-                    viewModel.profitOrLoss() < 0 -> viewBinding.tvProfit.setTextColor(
-                        requireContext().getColor(
-                            R.color.red
-                        )
-                    )
-                    else -> viewBinding.tvProfit.setTextColor(requireContext().getColor(R.color.white))
-                }
-                viewBinding.tvChangePercentageAssets.setChangeText(viewModel.profitOrLossPercentage())
             }
 
 
         }
 
         viewModel.currentAssets.observe(viewLifecycleOwner) {
-            if (viewModel.currentWallet.value != null) {
-                adapter.submitList(viewModel.currentAssets.value!!)
-                viewBinding.currentBalanceText.text =
-                    "${String.format("%.2f", viewModel.currentBalance())}$"
-
+            if (viewModel.currentWallet.value != null){
+                viewBinding.rvAssetsWallet.adapter = AssetsAdapter(it, viewModel, requireContext())
             }
-
-
         }
 
-
+        viewBinding.btnCreateNewWallet.setOnClickListener {
+            if (viewModel.currentWallet.value?.accountId != viewModel.currentAccount.value!!.id) {
+                viewModel.createNewWallet()
+                showToast("Your WALLET have been CREATED SUCCESSFULLY ")
+            } else {
+                showToast("You Already have a wallet created")
+            }
+        }
 
         viewBinding.btnDeposit.setOnClickListener {
             if (viewModel.currentWallet.value != null) {
@@ -111,18 +75,39 @@ class WalletFragment : Fragment() {
             }
         }
 
-
         viewBinding.btnHistory.setOnClickListener {
             when {
                 viewModel.currentWallet.value != null -> {
-                    viewModel.findTransactionsByWalletId(viewModel.currentWallet.value!!.id)
+                    viewModel.findTransactionsByWalletId()
                     findNavController().navigate(R.id.transactionsFragment)
                 }
 
                 else -> showToast("You have to CREATE a WALLET first")
-
             }
         }
+
+        viewBinding.btnSend.setOnClickListener {
+            showToast("Coming Soon!")
+        }
+    }
+
+    private fun profitLossCount() {
+        when {
+            viewModel.profitOrLoss() > 0 -> viewBinding.tvProfit.setTextColor(
+                requireContext().getColor(
+                    R.color.green
+                )
+            )
+
+            viewModel.profitOrLoss() < 0 -> viewBinding.tvProfit.setTextColor(
+                requireContext().getColor(
+                    R.color.red
+                )
+            )
+
+            else -> viewBinding.tvProfit.setTextColor(requireContext().getColor(R.color.white))
+        }
+        viewBinding.tvChangePercentageAssets.setChangeText(viewModel.profitOrLossPercentage())
     }
 
     private fun showToast(message: String) {
@@ -138,22 +123,31 @@ class WalletFragment : Fragment() {
         text = formattedText
     }
 
-
+    /**
+     * This function shows the bottom sheet window for the deposit transaction.
+     * @param viewModel is because the update or insert amount happens inside the dialog.
+     */
     @SuppressLint("InflateParams")
     private fun showDepositDialog(viewModel: ViewModel) {
+        viewModel.loadWalletData()
         val dialog = BottomSheetDialog(requireContext())
         val viewLayout = layoutInflater.inflate(R.layout.bottom_sheet_dialog_buy_layout, null)
         val btnConfirm = viewLayout.findViewById<AppCompatButton>(R.id.btnConfirm)
         val btnCancel = viewLayout.findViewById<AppCompatButton>(R.id.btnCancel)
         val etAmount = viewLayout.findViewById<TextInputEditText>(R.id.etAmount)
+        val btnMax = viewLayout.findViewById<AppCompatButton>(R.id.btnMax)
         val textInputHint = viewLayout.findViewById<TextInputLayout>(R.id.textInputLayoutAmount)
+
+        btnMax.visibility = View.GONE
+
         textInputHint.hint = getText(R.string.amount)
+
         btnConfirm.setOnClickListener {
             val amountText = etAmount.text
             if (amountText!!.isNotEmpty()) {
                 val amount = amountText.toString().toDouble()
                 viewModel.updateOrInsertFiatCurrencyAmounts(amount)
-                showToast("Deposit $amount$ COMPLETED ")
+                showToast("Deposit $amount$ COMPLETED,")
                 dialog.dismiss()
             } else {
                 showToast("Please enter a valid amount")

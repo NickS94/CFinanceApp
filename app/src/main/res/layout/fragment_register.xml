@@ -45,6 +45,8 @@
         app:boxStrokeColor="@color/turquoise_50"
         app:cursorColor="@color/turquoise_50"
         app:endIconMode="clear_text"
+        app:helperText="Required*"
+        app:helperTextTextColor="@color/green"
         app:hintTextColor="@color/turquoise_50"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -69,6 +71,10 @@
         app:cursorColor="@color/turquoise_50"
         app:endIconMode="password_toggle"
         app:hintTextColor="@color/turquoise_50"
+        app:helperText="Required* -min. 8/max. 12"
+        app:helperTextTextColor="@color/green"
+        app:counterMaxLength="12"
+        app:counterEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -78,6 +84,7 @@
             android:id="@+id/etPasswordRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLength="12"
             android:inputType="textPassword"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -92,6 +99,10 @@
         app:cursorColor="@color/turquoise_50"
         app:endIconMode="password_toggle"
         app:hintTextColor="@color/turquoise_50"
+        app:helperText="Required* -min. 8/max. 12"
+        app:helperTextTextColor="@color/green"
+        app:counterMaxLength="12"
+        app:counterEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout4">
@@ -100,6 +111,7 @@
             android:id="@+id/etPasswordRegisterRepeat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLength="12"
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 

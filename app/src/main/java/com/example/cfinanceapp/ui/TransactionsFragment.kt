@@ -32,18 +32,20 @@ class TransactionsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.findTransactionsByWalletId()
+
         val spinnerOptions = resources.getStringArray(R.array.optionsTransactions)
         val arrayAdapter = ArrayAdapter(requireContext(), R.layout.drop_down_item, spinnerOptions)
         viewBinding.textOptionsDropDownMenuTransactions.setAdapter(
             arrayAdapter
         )
 
-        val adapter = TransactionsAdapter(context = this.requireContext(), viewModel = viewModel)
-        viewBinding.rvTransactions.adapter = adapter
-
-
-        viewModel.currentTransactions.observe(viewLifecycleOwner) {
-            adapter.submitListTransactions(viewModel.currentTransactions.value!!.sortedByDescending { it.date })
+        viewModel.currentTransactions.observe(viewLifecycleOwner) { transactionsList ->
+            viewBinding.rvTransactions.adapter = TransactionsAdapter(
+                transactionsList.sortedByDescending { it.date },
+                requireContext(),
+                viewModel
+            )
         }
 
         viewBinding.btnBackTransactions.setOnClickListener {
@@ -51,6 +53,7 @@ class TransactionsFragment : Fragment() {
         }
     }
 
+    // Here i also use the onResume function so i can save the current state of filtering.
     override fun onResume() {
         super.onResume()
 
@@ -60,14 +63,25 @@ class TransactionsFragment : Fragment() {
             arrayAdapter
         )
 
-        val adapter = TransactionsAdapter(context = this.requireContext(), viewModel = viewModel)
-        viewBinding.rvTransactions.adapter = adapter
+        viewBinding.rvTransactions.adapter = TransactionsAdapter(
+            viewModel.currentTransactions.value!!.sortedByDescending { it.date },
+            requireContext(),
+            viewModel
+        )
 
         viewBinding.textOptionsDropDownMenuTransactions.addTextChangedListener {
-            adapter.submitListTransactions(viewModel.filteredTransactionsList(viewBinding.textOptionsDropDownMenuTransactions.text.toString()))
+            viewBinding.rvTransactions.adapter = TransactionsAdapter(
+                viewModel.filteredTransactionsList(viewBinding.textOptionsDropDownMenuTransactions.text.toString()),
+                requireContext(),
+                viewModel
+            )
         }
 
-        adapter.submitListTransactions(viewModel.filteredTransactionsList(viewBinding.textOptionsDropDownMenuTransactions.text.toString()))
+        viewBinding.rvTransactions.adapter = TransactionsAdapter(
+            viewModel.filteredTransactionsList(viewBinding.textOptionsDropDownMenuTransactions.text.toString()),
+            requireContext(),
+            viewModel
+        )
 
 
     }

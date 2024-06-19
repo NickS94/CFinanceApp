@@ -20,17 +20,15 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        viewModel.findFavoritesByAccountId()
         viewBinding = FragmentHomeBinding.inflate(inflater)
         return viewBinding.root
-
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val adapter = WatchListAdapter(viewModel = viewModel)
-        viewBinding.rvWatchlist.adapter = adapter
 
 
         val recyclerViewHot = viewBinding.rvHotMarketList
@@ -38,18 +36,8 @@ class HomeFragment : Fragment() {
             recyclerViewHot.adapter = HotListAdapter(viewModel.loadHotList(), viewModel)
         }
 
-
-        viewModel.favorites.observe(viewLifecycleOwner) {
-            if (viewModel.currentAccount.value != null ) {
-                viewModel.findFavoritesByAccountId(viewModel.currentAccount.value!!.id)
-            }
-
-        }
-
         viewModel.currentFavorites.observe(viewLifecycleOwner) { watchlist ->
-            if (viewModel.currentFavorites.value != null) {
-                adapter.submitList(watchlist)
-            }
+                viewBinding.rvWatchlist.adapter = WatchListAdapter(watchlist,viewModel)
         }
 
 

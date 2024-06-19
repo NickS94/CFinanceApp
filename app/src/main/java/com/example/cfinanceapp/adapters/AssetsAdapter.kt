@@ -15,17 +15,11 @@ import com.example.cfinanceapp.tools.AssetType
 import com.example.cfinanceapp.tools.ViewModel
 
 class AssetsAdapter(
-    private var assetsData: MutableList<Asset> = mutableListOf(),
+    private var assetsData: MutableList<Asset>,
     val viewModel: ViewModel,
     val context: Context
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun submitList(list: MutableList<Asset>) {
-        assetsData = list
-        notifyDataSetChanged()
-    }
 
     companion object {
         private const val VIEW_TYPE_USD_ASSET = 1
@@ -42,7 +36,7 @@ class AssetsAdapter(
     override fun getItemViewType(position: Int): Int {
         val asset = assetsData[position]
 
-        return when (AssetType.fromAssetType(asset.fiat?:"USD")) {
+        return when (AssetType.fromAssetType(asset.fiat ?: "USD")) {
             AssetType.ASSET_TYPE_USD -> VIEW_TYPE_USD_ASSET
             AssetType.ASSET_TYPE_CRYPTO -> VIEW_TYPE_CRYPTO_ASSET
 
@@ -76,7 +70,7 @@ class AssetsAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val asset = assetsData[position]
 
-        when (getItemViewType(position)){
+        when (getItemViewType(position)) {
             VIEW_TYPE_CRYPTO_ASSET -> {
                 val cryptoAsset = holder as CryptoAssetsViewHolder
                 cryptoAsset.binding.ivLogoMarketItem.load(viewModel.getCoinLogo(asset.cryptoCurrency!!.id.toString()))
@@ -84,12 +78,9 @@ class AssetsAdapter(
                 cryptoAsset.binding.tvCurrentPriceMarket.text = asset.amount.toString()
                 cryptoAsset.binding.tvCoinSymbol.text = asset.cryptoCurrency!!.symbol
                 cryptoAsset.binding.tvChangePercentageMarket.text =
-                    "$${
-                        String.format(
-                            "%.2f",
-                            viewModel.actualCoinPriceUpdater(asset) * asset.amount
-                        )
-                    }"
+                    viewModel.formatDecimalsAmount(viewModel.actualCoinPriceUpdater(asset) * asset.amount)
+
+
                 when {
                     viewModel.profitOrLossInAsset(asset) > 0 -> cryptoAsset.binding.tvProfitOrLoss.setTextColor(
                         context.getColor(R.color.green)

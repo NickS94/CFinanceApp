@@ -23,31 +23,35 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
-
 class DetailsFragment : Fragment() {
     private lateinit var viewBinding: FragmentDetailsBinding
     private val viewModel: ViewModel by activityViewModels()
+
+    //This variable checks together with our isFavorite function from view model if the current crypto is in the watchlist.
     private var isFavorite: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        viewModel.loadWalletData()
+
         viewBinding = FragmentDetailsBinding.inflate(inflater)
         return viewBinding.root
     }
-
 
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // This variable sets the button to null every time we get out of our detail fragment and gives it value every time we press the specific button we want.
+        // I used it for the enabled animation on the chart timeframe buttons.
         var selectedButton: Button? = null
 
 
-        viewModel.currentCrypto.observe(viewLifecycleOwner) { cryptoCurrency ->
 
-            viewModel.findWalletByUserId(viewModel.currentAccount.value!!.id)
+        viewModel.currentCrypto.observe(viewLifecycleOwner) { cryptoCurrency ->
 
             loadChart(cryptoCurrency, "D")
 
@@ -58,10 +62,10 @@ class DetailsFragment : Fragment() {
             viewBinding.tvCoinSymbolDetails.text = cryptoCurrency.symbol
 
             viewBinding.tvChangePercentageDetails.text =
-                "${String.format("%.02f", cryptoCurrency.quote.usdData.percentChange24h)}%"
+                "${String.format("%.2f", cryptoCurrency.quote.usdData.percentChange24h)}%"
 
             viewBinding.tvCurrentPriceDetails.text =
-                "${String.format("%.02f", cryptoCurrency.quote.usdData.price)}$"
+                "${String.format("%.2f", cryptoCurrency.quote.usdData.price)}$"
 
             when {
                 cryptoCurrency.quote.usdData.percentChange24h > 0 -> {
@@ -108,15 +112,34 @@ class DetailsFragment : Fragment() {
                 viewBinding.tvMaxSupplyDetail.text = "Max: $formattedMaxSupply"
             }
 
-            isFavorite = viewModel.isFavorite(viewModel.currentCrypto.value!!)
+            isFavorite = viewModel.isFavorite(cryptoCurrency)
+
+
+
 
         }
+
+        viewBinding.btnBuyDetails.setOnClickListener {
+            if (viewModel.currentWallet.value != null) {
+                showBuyCryptoDialog(viewModel.currentCrypto.value!!, viewModel)
+            } else {
+                showToast("Please CREATE a WALLET for transactions")
+            }
+        }
+
+        viewBinding.btnSell.setOnClickListener {
+            if (viewModel.currentWallet.value != null) {
+                showSellCryptoDialog(viewModel.currentCrypto.value!!, viewModel)
+            } else {
+                showToast("Please CREATE a WALLET for transactions")
+            }
+        }
+
         viewBinding.btn1h.setOnClickListener {
 
             selectedButton?.setBackgroundResource(android.R.color.transparent)
             selectedButton = viewBinding.btn1h
             viewBinding.btn1h.setBackgroundResource(R.drawable.round_transparent)
-
 
             loadChart(viewModel.currentCrypto.value!!, viewBinding.btn1h.text.toString())
 
@@ -139,6 +162,7 @@ class DetailsFragment : Fragment() {
         }
 
 
+        // Sets the favorite drawable.
         if (viewModel.isFavorite(viewModel.currentCrypto.value!!)) {
             viewBinding.ivFavorite.setImageResource(R.drawable.favorite_icon_enabled)
         } else {
@@ -147,6 +171,7 @@ class DetailsFragment : Fragment() {
 
         viewBinding.ivFavorite.setOnClickListener {
 
+            // Changes the value of isFavorite variable from true to false and vice versa.
             isFavorite = !isFavorite
 
             viewModel.addToWatchlist(viewModel.currentCrypto.value!!)
@@ -156,33 +181,24 @@ class DetailsFragment : Fragment() {
             } else {
                 viewBinding.ivFavorite.setImageResource(R.drawable.favorite_icon_disable)
             }
-
         }
 
-        viewBinding.btnBuyDetails.setOnClickListener {
-            if (viewModel.currentWallet.value != null) {
-                showBuyCryptoDialog(viewModel.currentCrypto.value!!, viewModel)
-            } else {
-                showToast("Please CREATE a WALLET for transactions")
-            }
-        }
 
-        viewBinding.btnSell.setOnClickListener {
-            if (viewModel.currentWallet.value != null) {
-                showSellCryptoDialog(viewModel.currentCrypto.value!!, viewModel)
-            } else {
-                showToast("Please CREATE a WALLET for transactions")
-            }
-        }
 
         viewBinding.btnBackDetails.setOnClickListener {
             findNavController().navigateUp()
         }
     }
 
+
+    /**
+     * This function loads a web view with a chart from Trading View website based on the coin symbol
+     * and the timeframe we picked.
+     * @param coin is for the crypto we are looking for.
+     * @param timeframe is for the time frame we want to watch for.
+     */
     @SuppressLint("SetJavaScriptEnabled")
     private fun loadChart(coin: CryptoCurrency, timeframe: String) {
-
 
         viewBinding.wvChartDetails.settings.javaScriptEnabled = true
         viewBinding.wvChartDetails.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
@@ -195,6 +211,10 @@ class DetailsFragment : Fragment() {
         )
     }
 
+    /**
+     * This function shows a toast with a specific text we give .
+     * @param message is for the TOAST message we want to show.
+     */
     private fun showToast(message: String) {
         Toast.makeText(
             context, message, Toast.LENGTH_SHORT
@@ -202,6 +222,9 @@ class DetailsFragment : Fragment() {
 
     }
 
+    /**
+     * This function is to format a long double number.
+     */
     private fun Double.formatVolume(): String {
         return if (this >= 1_000_000_000) {
             String.format("%.2f Bil", this / 1_000_000_000)
@@ -210,6 +233,10 @@ class DetailsFragment : Fragment() {
         }
     }
 
+    /**
+     * This function is to change the format of a text view and the color.
+     * @param change is for the text in our text view.
+     */
     private fun TextView.setChangeText(change: Double) {
         val formattedChange = String.format("%.2f", change)
         text = formattedChange
@@ -222,33 +249,52 @@ class DetailsFragment : Fragment() {
         setTextColor(ContextCompat.getColor(context, colorResId))
     }
 
+    /**
+     * This function is to show the bottom sheet window for the buy transaction .
+     * Also make the transaction inside it from the view model.
+     * @param cryptoCurrency is for the crypto we want to transact.
+     * @param viewModel is for our view model.
+     */
     @SuppressLint("InflateParams")
     private fun showBuyCryptoDialog(cryptoCurrency: CryptoCurrency, viewModel: ViewModel) {
+
+        viewModel.loadWalletData()
+
         val dialog = BottomSheetDialog(requireContext())
         val viewLayout = layoutInflater.inflate(R.layout.bottom_sheet_dialog_buy_layout, null)
         val btnConfirm = viewLayout.findViewById<AppCompatButton>(R.id.btnConfirm)
         val btnCancel = viewLayout.findViewById<AppCompatButton>(R.id.btnCancel)
+        val btnMax = viewLayout.findViewById<AppCompatButton>(R.id.btnMax)
         val etAmount = viewLayout.findViewById<TextInputEditText>(R.id.etAmount)
 
+        viewModel.resetMaxAmount()
+
+        viewModel.maxAmount.observe(viewLifecycleOwner) { maxAmount ->
+            etAmount.setText(maxAmount.toString())
+        }
+
+        btnMax.setOnClickListener {
+            viewModel.maxToBuy(cryptoCurrency)
+        }
         btnConfirm.setOnClickListener {
-            val amountText = etAmount.text
-            viewModel.findAssetsByWalletId(viewModel.currentWallet.value!!.id)
+
+            val amountText = etAmount.text.toString()
             when {
-                amountText!!.isNotEmpty() && viewModel.isEnoughFiat(
-                    amountText.toString().toDouble()
-                ) -> {
+                amountText.isNotEmpty() && viewModel.isEnoughFiat(
+                    amountText.toDouble()
+                ) && amountText.toDouble() > 0 -> {
                     viewModel.updateOrInsertCryptoCurrencyAmounts(
-                        amountText.toString().toDouble(),
+                        amountText.toDouble(),
                         cryptoCurrency
                     )
                     showToast("Bought $amountText ${cryptoCurrency.name}")
                     dialog.dismiss()
                 }
 
-                amountText.isEmpty() -> showToast("Please enter a valid amount")
+                amountText.isEmpty() || amountText.toDouble() <= 0 -> showToast("Please enter a valid amount")
 
                 !viewModel.isEnoughFiat(
-                    amountText.toString().toDouble()
+                    amountText.toDouble()
                 ) -> showToast("Insufficient funds ")
             }
 
@@ -260,36 +306,55 @@ class DetailsFragment : Fragment() {
         dialog.show()
     }
 
+    /**
+     * This function does the same thing as the last one but for a sell transaction.
+     */
     @SuppressLint("InflateParams")
     private fun showSellCryptoDialog(cryptoCurrency: CryptoCurrency, viewModel: ViewModel) {
+
+        viewModel.loadWalletData()
+
         val dialog = BottomSheetDialog(requireContext())
         val viewLayout = layoutInflater.inflate(R.layout.bottom_sheet_dialog_buy_layout, null)
         val btnConfirm = viewLayout.findViewById<AppCompatButton>(R.id.btnConfirm)
         val btnCancel = viewLayout.findViewById<AppCompatButton>(R.id.btnCancel)
         val etAmount = viewLayout.findViewById<TextInputEditText>(R.id.etAmount)
+        val btnMax = viewLayout.findViewById<AppCompatButton>(R.id.btnMax)
         val textInputHint = viewLayout.findViewById<TextInputLayout>(R.id.textInputLayoutAmount)
 
         textInputHint.hint = getText(R.string.amountSell)
 
+        viewModel.resetMaxAmount()
+
+
+        viewModel.maxAmount.observe(viewLifecycleOwner) { maxAmount ->
+            etAmount.setText(maxAmount.toString())
+        }
+
+        btnMax.setOnClickListener {
+            viewModel.maxOfAsset(cryptoCurrency).toString()
+        }
+
         btnConfirm.setOnClickListener {
-            val amountText = etAmount.text
-            viewModel.findAssetsByWalletId(viewModel.currentWallet.value!!.id)
+
+            val amountText = etAmount.text.toString()
+
             when {
-                amountText!!.isNotEmpty() && viewModel.isEnoughCrypto(
-                    amountText.toString().toDouble()
-                ) -> {
+                amountText.isNotEmpty() && viewModel.isEnoughCrypto(
+                    amountText.toDouble(),cryptoCurrency
+                ) && amountText.toDouble() > 0 -> {
                     viewModel.sellCryptoCurrencyAsset(
                         cryptoCurrency,
-                        amountText.toString().toDouble()
+                        amountText.toDouble()
                     )
                     showToast("Sold $amountText ${cryptoCurrency.name}")
                     dialog.dismiss()
                 }
 
-                amountText.isEmpty() -> showToast("Please enter a valid amount")
+                amountText.isEmpty() || amountText.toDouble() <= 0 -> showToast("Please enter a valid amount")
 
                 !viewModel.isEnoughCrypto(
-                    amountText.toString().toDouble()
+                    amountText.toDouble(),cryptoCurrency
                 ) -> showToast("Insufficient funds ")
             }
 
@@ -300,6 +365,5 @@ class DetailsFragment : Fragment() {
         dialog.setContentView(viewLayout)
         dialog.show()
     }
-
 
 }

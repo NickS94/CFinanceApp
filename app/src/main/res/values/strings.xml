@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">CFinanceApp</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="log_in">Log in</string>
     <string name="email">Email</string>
@@ -53,7 +53,7 @@
     <string name="all">All</string>
     <string name="volume24h">Volume24h</string>
     <string name="_1ht">1H:</string>
-    <string name="_24ht">24H:</string>
+    <string name="_24ht">1D:</string>
     <string name="_7dt">7D:</string>
     <string name="supply">Supply</string>
 
@@ -92,4 +92,5 @@
     <string name="amount">Amount</string>
     <string name="transaction_price">Transaction Price</string>
     <string name="_0_00_percent">0.00%</string>
+    <string name="max">Max</string>
 </resources>

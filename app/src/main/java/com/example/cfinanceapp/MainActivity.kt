@@ -5,9 +5,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowInsetsCompat.Type.ime
-import androidx.core.view.WindowInsetsCompat.toWindowInsetsCompat
-import androidx.core.view.isGone
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -27,6 +24,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
+        // Here we hide the bottom navigation view in some those specific fragments.
         navHost.navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.detailsFragment -> viewBinding.bottomNavigationView.visibility = View.GONE

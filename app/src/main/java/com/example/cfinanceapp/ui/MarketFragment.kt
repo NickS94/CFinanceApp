@@ -56,16 +56,15 @@ class MarketFragment : Fragment() {
             }
         })
 
-        viewModel.cryptoList.observe(viewLifecycleOwner) {
-            recyclerView.adapter = MarketAdapter(it.data, this.requireContext(), viewModel)
-
+        viewModel.cryptoList.observe(viewLifecycleOwner) {apiResponse ->
+            recyclerView.adapter = MarketAdapter(apiResponse.data, this.requireContext(), viewModel)
         }
-
-
     }
 
+    // I used on resume lifecycle function so i save the current state of my search and sorting .
     override fun onResume() {
         super.onResume()
+
         val recyclerView = viewBinding.rvMarketList
 
         viewBinding.searchViewMarket.setQuery("",false)
@@ -79,7 +78,6 @@ class MarketFragment : Fragment() {
             this.requireContext(),
             viewModel
         )
-
 
     }
 

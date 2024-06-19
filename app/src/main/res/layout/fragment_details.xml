@@ -202,24 +202,24 @@
                 android:id="@+id/tv24hChangeDetail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/_24h_change"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="@+id/text24hCard"
-                app:layout_constraintStart_toEndOf="@+id/text24hCard"
+                app:layout_constraintEnd_toEndOf="@+id/tv1hChangeDetail"
+                app:layout_constraintStart_toStartOf="@+id/tv1hChangeDetail"
                 app:layout_constraintTop_toBottomOf="@+id/tv1hChangeDetail" />
 
             <TextView
                 android:id="@+id/tv7dChangeDetail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/_7d_change"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="@+id/text7dCard"
-                app:layout_constraintStart_toEndOf="@+id/text7dCard"
+                app:layout_constraintEnd_toEndOf="@+id/tv24hChangeDetail"
+                app:layout_constraintStart_toStartOf="@+id/tv24hChangeDetail"
                 app:layout_constraintTop_toBottomOf="@+id/tv24hChangeDetail" />
 
             <TextView
