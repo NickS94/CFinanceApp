@@ -37,3 +37,12 @@ Best regards,
 Nick Stavropoulos
 
 
+![Screenshot 2024-05-29 at 13 31 40](https://github.com/user-attachments/assets/e62ac44a-d58a-4194-8264-79b014192ae4)
+
+![Screenshot 2024-05-29 at 13 46 53](https://github.com/user-attachments/assets/ebe99434-791d-4ee4-94fe-1ee191eec286)
+
+![Screenshot 2024-05-29 at 13 59 25](https://github.com/user-attachments/assets/997d0d61-27a9-48f0-b3a3-fa5138105081)
+
+![Screenshot 2024-05-29 at 13 56 23](https://github.com/user-attachments/assets/261aca22-3223-41aa-8515-29f694a3e29f)
+
+![Screenshot 2024-05-29 at 13 54 27](https://github.com/user-attachments/assets/5c0e225a-d47f-46dd-93de-3a825d671b64)
